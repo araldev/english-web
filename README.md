@@ -21,5 +21,5 @@ This project is intended for people who want to learn English in a more engaging
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/araldev/english-web.git
 cd your-repo-name
