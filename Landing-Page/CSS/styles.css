@@ -2,12 +2,14 @@
     --padding-container: 100px 0;
     --color-principal-text: #000;
     --color-secondary-text: #333;
-    --color-text: white;
+    --color-text: #fff;
     --color-tittle: #1A3A6F;
     --color-subtittle: #1A4876;
     --btn-bg-color: #E76F51;
     --color-background: #ddd; 
-    --sidebar-bg-color: white;
+    --sidebar-bg-color: #fff;
+    --text-gradient: #fff;
+    --bg-gradient: linear-gradient(to right, #1a3a6f, #4a6fa5);
     --shadow-sidebar: 2px 2px 5px rgba(0, 0, 0, 0.15);
     --size-tittle: clamp(1.5rem, 4vw, 2.5rem);
     --size-subtittle: clamp(1rem, 3vw, 1.5rem);
@@ -611,24 +613,29 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
-    gap: 2rem;
+    gap: 3rem;
     --padding-container: 50px 0 ;
     
     .subtittle {
-        color: var(--color-tittle);
+        color: var(--color-text);
         font-size: var(--size-tittle);
+        background: var(--bg-gradient);
+        width: max-content;
+        height: auto;
+        padding: 10px;
+        text-align: center;
+        margin: 0 auto;
+        border-radius: 10px;
     }
 
     .section-paragraph {
         color: var(--color-subtittle);
         font-size: var(--size-subtittle);
+        max-width: 62ch;
+        text-align: center;
     }
-}
-
-#lessons .section {
-    --padding-container: 50px 0;
-    gap: 3rem;
 }
 
 #home .section-main {
@@ -688,6 +695,113 @@ main {
         font-weight: 400;
         color: var(--color-subtittle);
     }
+}
+
+/* Titles bg blur */
+.blur {
+    position: relative;
+    width: max-content;
+    height: auto;
+    padding: 10px;
+    font-size: var(--size-tittle);
+    font-weight: 500;
+    margin: 13px auto;
+    margin-bottom: 40px;
+    background: var(--bg-gradient);
+    text-align: center;
+    border-radius: 10px;
+    color: var(--color-text);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+
+    &::after {
+        content: "";
+        position:absolute;
+        background: var(--bg-gradient);
+        filter: blur(10px);
+        width: clamp(240px, 120%, 350px);
+        height: clamp(60px, 200%, 100px);
+        inset: -15px -25px;
+        border-radius: 50px;
+        z-index: -1;
+        opacity: .7;
+    }
+}
+@media (max-width: 950px) {
+    .blur::after {
+      height: 90px;
+    }
+}
+@media (max-width: 750px) {
+    .blur::after {
+      height: 80px;
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Tabla Verb Tenses */
+table {
+    width: 100%;
+    border-collapse: separate;
+    margin: auto;
+    position: relative;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+th {
+    background-color: var(--sidebar-bg-color);
+    border: 1px solid var(--color-background);
+    padding: 8px;
+    text-transform: uppercase;
+    height: 3.5rem;
+}
+tbody tr {
+    height: 3.5rem;
+
+    &:hover {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /* para safari */
+    }
+}
+tr:nth-child(even) {
+    td {
+        color: rgb(29, 228, 152);
+    }
+}
+tr:nth-child(odd) {
+    td {
+        color: rgb(229, 255, 0);
+    }
+}
+td {
+    border: 1px solid var(--color-background);
+    padding: 8px;
+    text-align: left;
+}
+.verb-col {
+    width: 27%;
+    background: var(--color-tittle);
+}
+td:nth-child(1) {
+    font-weight: 500;
+    border-bottom-left-radius: 10px;
+}
+.structure-col {
+    width: 35%;
+    background: var(--color-subtittle);
+}
+.example-col {
+    width: 38%;
+    background: var(--color-tittle);
+}
+td:nth-child(3) {
+    border-bottom-right-radius: 10px;
 }
 
 @media (max-width: 1267px) {
