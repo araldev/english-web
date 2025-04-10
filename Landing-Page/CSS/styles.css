@@ -1,0 +1,790 @@
+:root {
+    --padding-container: 100px 0;
+    --color-principal-text: #000;
+    --color-secondary-text: #333;
+    --color-text: white;
+    --color-tittle: #1A3A6F;
+    --color-subtittle: #1A4876;
+    --btn-bg-color: #E76F51;
+    --color-background: #ddd; 
+    --sidebar-bg-color: white;
+    --shadow-sidebar: 2px 2px 5px rgba(0, 0, 0, 0.15);
+    --size-tittle: clamp(1.5rem, 4vw, 2.5rem);
+    --size-subtittle: clamp(1rem, 3vw, 1.5rem);
+    --size-paragraph: clamp(0.8rem, 2vw, 1rem);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--color-background);
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+    "sidebar header"
+    "sidebar main"
+    "sidebar footer";
+    min-height: 100dvh;
+    transition: all .3s ease-in-out;
+
+    .hero {
+        grid-area: header;
+    }
+    .sidebar {
+        grid-area: sidebar;
+        min-height: 100dvh;
+    }
+    main {
+        grid-area: main;
+        transition: margin-bottom .3s ease-in-out;
+    }
+    footer {
+        grid-area: footer;
+    }
+}
+
+/* Sidebar */
+
+.sidebar {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 300px;
+    height: 100dvh;
+    max-height: 100%;
+    background-color: white;
+    z-index: 100;
+    scrollbar-gutter: stable both-edges; /* para que el scroll no modifique mi contenido */
+    box-shadow: var(--shadow-sidebar);
+    transition: all .3s ease-in-out;
+
+    .sidebar-size-btn {
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        position: absolute;
+        right: -.5rem;
+        top: 4rem;
+        background-color: white;
+        box-shadow: var(--shadow-sidebar);
+        cursor: pointer;
+        transition: all .3s ease;
+
+    }
+    
+    .sidebar-logo {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 4rem;
+        height: 5rem;
+        padding: 0.5rem;
+        gap: 1rem;
+        overflow: hidden;
+        transition: padding-left .3s ease;
+
+        .logo {
+            aspect-ratio: 1/1;
+            width: 5rem;
+            height: 5rem;
+        }
+
+        .logo-tittle {
+            font-size: 1.8rem;
+        }
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: min-content;
+        height: auto;
+        padding: .5rem 1rem;
+
+        .sidebar-links {
+            overflow: hidden;
+            list-style: none;
+            padding: .2rem;
+
+            .sidebar-link-icon {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            .sidebar-link {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                gap: 0.5rem;
+                padding: .3rem;
+                text-decoration: none;
+                color: var(--color-principal-text);
+                font-size: 1.3rem;
+                font-weight: 500;
+                width: 100%;
+                height: 3.3rem;
+            }
+        }
+    }
+
+    .sidebar-links-open {
+        margin-left: auto;
+        width: 1.3rem;
+        height: 1.3rem;
+        transition: all .3s ease-in-out;
+    }
+    
+    .sidebar-submenu {
+        overflow: hidden;
+        width: 100%;
+        height: 0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease-in-out; /* la animación de altura no funciona con valores auto */
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 0.07rem;
+            margin-left: 1.25rem;
+            background-color: var(--color-background);
+        }
+    
+        .submenu-links{
+            list-style: none;
+            margin-left: 3.5rem;
+            padding: .2rem;
+            width: fit-content;
+            max-width: 13rem;
+            
+            .submenu-link {
+                text-decoration: none; /* Quita el subrayado del enlace */
+                color: var(--color-secondary-text); /* Hace que el texto del <a> sea blanco */
+                display: block; /* Asegura que el enlace ocupe todo el <li> */
+                padding: 8px; 
+                font-size: 1.3rem;
+                font-weight: 400; 
+            }
+        }
+    }
+
+    .sidebar-user {
+        margin-top: auto;
+        flex-shrink: 0; /* Evita que la sección del usuario se encoja */
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: auto;
+        gap: .5rem;
+        padding: .5rem 1rem;
+
+        &::before {
+            display: block;
+            content:"";
+            position: absolute;
+            top: 0;
+            width: 80%;
+            height: auto;
+            border-top: 1px solid black;
+        }
+
+        .user-tittle {
+            color: var(--color-principal-text);
+        }
+
+        .user-data {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            width: 100%;
+            height: 3rem;
+            padding: .3rem;
+            gap: 1rem;
+            transition: padding-right .3s ease;
+
+            .user-img {
+                margin-left: auto;
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                object-fit: contain;
+            }
+        }
+
+        .user-sections {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            width: 100%;
+            height: 3rem;
+            padding: .3rem;
+            gap: 1rem;
+
+            .user-icons {
+                margin-left: auto;
+                margin-right: 3px;
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50%;
+                object-fit: contain;
+            }
+        }
+    }
+}
+
+.current {
+    background-color: var(--color-secondary-text);
+    border-radius: 15px;
+
+    span {
+        color: var(--color-text);
+    }
+    .sidebar-links-open {
+        filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
+        transition: all .3s ease-in-out;
+    }
+}
+
+.active .sidebar-link {
+    background-color: var(--color-background); 
+    border-radius: 15px;
+
+    span {
+        color: var(--color-principal-text);
+    }
+}
+
+.sidebar-links.active .sidebar-links-open {
+    transform: rotate(180deg);
+    transition: all .3s ease-in-out;
+}
+
+.sidebar-link:hover {
+    background-color: var(--color-background);
+    border-radius: 15px;
+    cursor: pointer;
+
+    span {
+        color: var(--color-principal-text);
+    }
+    .sidebar-links-open {
+        filter: none;
+    }
+}
+
+.submenu-links:hover {
+    background-color: var(--color-background);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.user-data:hover {
+    background-color: var(--color-background);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.user-sections:hover {
+    background-color: var(--color-background);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* Sidebar Minimize */
+.minimize{
+    width: 4.94rem;
+    transition: width .3s ease;
+}
+
+.minimize .sidebar-size-btn{
+    right: -1.5rem;
+    transform: rotate(180deg);
+    transition: transform .3s ease;      
+}
+
+.minimize .sidebar-logo {
+    justify-content: flex-start;
+    padding-left: 0;
+    transition: padding-left .3s ease;
+}
+
+.minimize .user-data {
+    padding-right: .23rem !important;    
+    transition: padding-right .3s ease;
+}
+
+.minimize .sidebar-links:hover,
+.minimize .sidebar-links.active/*,
+.minimize .sidebar-submenu */{
+    overflow: visible;
+}
+.minimize .sidebar-links:hover span,
+.minimize .active .sidebar-link span {
+    position: absolute;
+    /* height: 5rem; */
+    width: max-content;
+    left: 5.2rem;
+    padding: .5rem;
+    background-color: var(--color-secondary-text);
+    color: white;
+    border-radius: .4rem;
+    transition: all .3s ease;
+}
+.minimize .active .sidebar-links-open,
+.minimize .sidebar-links:hover .sidebar-links-open {
+    position: absolute;
+    left: 3.8rem;
+    transition: transform .3s ease-in-out;
+}
+.minimize .sidebar-submenu {
+    position: absolute;
+    margin-top: -.2rem;
+    width: max-content;
+    left: 5.2rem;
+    background-color: white;
+    border-radius: .4rem;
+    transition: all 0.3s ease-in-out;
+
+    &:before {
+        width: 0;
+    }
+    .submenu-links {
+        margin: 0 0.5rem;
+    }
+}
+.minimize .active .sidebar-submenu { 
+    transition: all 0.3s ease-in-out;
+
+    &::before {
+        width: 0;
+    }
+    .submenu-links {
+        margin: 0 0.5rem;
+    }
+}
+
+/* Ancho del contenido */
+
+main {
+    margin-bottom: 50px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: var(--padding-container);
+    transition: padding-left .3s ease-in-out;
+}
+
+/* Header */
+
+#home .hero {
+    width: 100%;
+    height: clamp(500px, 78dvh, 820px); /* Ajusta entre 500px y 820px según el viewport */
+    min-height: 500px; /* Evita que sea demasiado pequeño */
+    max-height: 820px;
+    position: relative;
+    display: grid;
+    grid-template-rows: clamp(50px, 10vh, 100px) 1fr;
+    color: var(--color-text);
+}
+
+#home .hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(180deg, #000000d7 0%, #0000009f 100% ), url('/Landing-Page/images/hero-img.webp');
+    background-size: cover;
+    background-position: center;
+    /* background-attachment: fixed; */
+    filter: brightness(70%); /* Reduce el brillo */
+    /* si clip-path tiene un elemento hijo con position fixed, este va a coger como limite el clip-path en vez de fijarse al navegador. Es por eso que lo añadimos en :before */
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 95%, 0 80%); 
+    z-index: -1;
+}
+
+#lessons .hero, #exercises .hero {
+    position: relative;
+    width: 100%;
+    height: clamp(50px, 8vw, 100px);
+    display: grid;
+    grid-template-rows: clamp(50px, 10vh, 100px) 1fr;
+    color: var(--color-text);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-image: url("/Landing-Page/images/hero-img.webp");
+        background-position: center;
+        background-size: cover;
+        filter: brightness(30%);
+    }
+}
+
+.nav {
+    --padding-container: 0;
+    height: clamp(50px, 8vw, 100px); /* usar vw para ajustar la altura dinámicamente en móviles */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid white;
+    position: sticky;
+}
+
+.nav-logo {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    align-items: center;
+    margin-right: auto;
+
+    .logo {
+        /* aspect-ratio: 1/1; */
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .nav-tittle {
+        font-weight: 400;
+        font-size:var(--size-subtittle);
+    }
+}
+
+.nav-links {
+    margin-left: auto;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 2em;
+}
+
+.nav-item {
+    list-style: none; /* para quitar los puntos de la <ul> */ 
+}
+
+.nav-link {
+    padding: 20px 0;
+    color: var(--color-text);
+    text-decoration: none; /* le quito el subrayado de los links */
+    font-size: var(--size-subtittle);
+
+    &:hover {
+        color: var(--btn-bg-color);
+    }
+}
+
+.nav-menu {
+    margin-left: auto;
+    cursor: pointer;
+    display: none; /* oculto excepto para dispositivos móviles */
+     &:hover {
+        filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
+     }
+}
+
+#footer-home {
+    position: sticky; 
+    bottom: 0;
+    width: 100%;
+    max-width: 100dvw;
+    overflow: hidden;
+
+    .nav-footer {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        --padding-container: 20px 30px;
+        background-color: var(--color-subtittle);
+    }
+
+    .nav-links {
+        margin: 0;
+        margin-left: auto;
+
+        .nav-item:nth-child(2)::before {
+            position: sticky;
+            content: "";
+            width: 2px;
+            height: 100%;
+            border: 1px solid var(--btn-bg-color);
+            margin-right: 2rem;    
+        }
+        .nav-item:nth-child(2)::after {
+            position: sticky;
+            content: "";
+            width: 2px;
+            height: 100%;
+            border: 1px solid var(--btn-bg-color);
+            margin-left: 2rem;    
+        }
+    }
+
+    .nav-subir {
+        position: sticky;
+        bottom: 0;
+        margin-left: auto;
+        cursor: pointer;
+
+        &:hover {
+            filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
+        }
+    }
+}
+
+.nav-img {
+    display: block;
+    width: 30px;
+}
+
+.nav-close {
+    display: none;
+}
+
+.hero-container {
+    max-width: 842px;
+    --padding-container: 0;
+    display: grid;
+    grid-auto-rows: max-content;
+    justify-items: center;
+    align-content: center;
+    gap: 2rem;
+    padding-bottom: 100px;
+}
+
+.hero-tittle {
+    max-width: 100%;
+    font-size: var(--size-tittle);
+    text-align: center;
+}
+
+.hero-paragraph {
+    max-width: 90%;
+    margin-bottom: 20px;
+    font-size: var(--size-subtittle);
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    font-size: var(--size-subtittle);
+    font-weight: 400;
+    color: var(--color-tittle);
+    background-color: var(--btn-bg-color);
+    justify-self: center;
+    text-decoration: none;
+    padding: 13px 30px;
+    border-radius: 32px;
+
+    &:hover {
+        background-color: var(--color-tittle);
+        color: var(--btn-bg-color);
+    }
+}
+
+/* Main */
+
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
+    --padding-container: 50px 0 ;
+    
+    .subtittle {
+        color: var(--color-tittle);
+        font-size: var(--size-tittle);
+    }
+
+    .section-paragraph {
+        color: var(--color-subtittle);
+        font-size: var(--size-subtittle);
+    }
+}
+
+#lessons .section {
+    --padding-container: 50px 0;
+    gap: 3rem;
+}
+
+#home .section-main {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: auto;
+    gap: 2rem;
+}
+
+#lessons .section-main {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    grid-auto-rows: minmax(200px, 1fr);
+    gap: 2rem;
+}
+
+.section-icons {
+    background-color: var(--color-text);
+    justify-self: center;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid var(--color-tittle);
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content;
+    justify-items: center;
+    align-content: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 20px;
+    line-height: 1.2; /* Para cambiar la altura entre linea y linea en <p> */
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .section-icon {
+        min-width: auto;
+        width: 3rem;
+        min-height: auto;
+        height: 3rem;
+    }
+
+    .section-tittle {
+        font-size: var(--size-tittle);
+        color: var(--color-tittle);
+    }
+
+    .section-paragraph {
+        font-size: var(--size-paragraph);
+        font-weight: 400;
+        color: var(--color-subtittle);
+    }
+}
+
+@media (max-width: 1267px) {
+    .last-row {
+        grid-column: 1/-1;
+    }
+}
+
+@media (max-width: 1030px) {
+    main {
+        margin-bottom: 0;
+    }
+
+    #footer-home .nav-footer {
+        visibility: hidden;
+        pointer-events: none;
+
+        .nav-subir {
+            position: sticky;
+            bottom: 0;
+            visibility: visible;
+            pointer-events: visible;
+        }
+    }
+    .nav-footer .nav-links {
+        display: none;
+    }
+}
+
+@media (max-width: 932px) {
+    .nav .nav-menu {
+        display: block;
+        position: fixed;
+        right: 2.5rem;
+        img {
+            border: .12rem solid var(--color-text);
+            border-radius: 50%;
+        }
+    }
+
+    .nav-links-menu {
+        display: flex;
+        position: fixed;
+        background-color: #000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 3rem;
+        z-index: 200;
+        visibility: hidden;
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none; /* para que no reconozca el mouse */
+        transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out, visibility 0s linear 0.7s; /* linear significa que el cambio será constante dutante 0.7s lo que significa que al no haber animación será in delay */
+    }
+
+    .nav-links-show {
+        visibility: visible;
+        transform: translateY(0%);
+        opacity: 1;
+        pointer-events: unset; /* valor original */
+        transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out, visibility 0s linear 0s;
+    }
+
+    .nav-links-no-transition {
+        transition: none !important; /* evita la transición en el cambio de tamaño de la pantalla */
+    }
+
+    .nav-close{
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 2rem;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        transition: filter .3s ease-in-out;
+
+        &:hover {
+            filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        grid-template-areas: 
+        "header header"
+        "main main"
+        "footer footer";
+    }
+    #sidebar {
+        transition: all .3s ease-in-out;
+    }
+}

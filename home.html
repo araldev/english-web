@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn English B1</title>
+    <link rel="shortcut icon" href="Landing-Page/images/favicon.webp" type="image/x-icon">
+    <link rel="stylesheet" href="./Landing-Page/CSS/normalize.css">
+    <link rel="stylesheet" href="./Landing-Page/CSS/styles.css">
+    <script defer type="module" src="/Landing-Page/js/menu.js"></script>
+    <script defer type="module" src="/Landing-Page/js/section-grid.js"></script>
+    <script defer type="module" src="Landing-Page/js/sidebar.js"></script>
+</head>
+<body id="home">
+    <aside id="sidebar" class="sidebar minimize">
+        <img id="sidebar-size-btn" class="sidebar-size-btn" src="/Landing-Page/images/arrow-minimize.svg"></img>
+        <div class="sidebar-logo">
+            <img class="logo" src="/Landing-Page/images/icon-sin-fondo.webp" alt="Logo">
+            <h2 class="logo-tittle">English B1</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-links menu-item-static">
+                <a href="home.html" class="sidebar-link">
+                    <img src="/Landing-Page/images/home.svg" alt="Home" class="sidebar-link-icon">
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li class="sidebar-links menu-item-dropdown">
+                <a href="" class="sidebar-link">
+                    <img src="/Landing-Page/images/lessons.svg" alt="Lessons" class="sidebar-link-icon">
+                    <span>Lessons</span>
+                    <img src="/Landing-Page/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+                </a>
+                <ul class="sidebar-submenu">
+                    <li class="submenu-links">
+                        <a href="lessons.html" class="submenu-link">Verb Tenses</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="" class="submenu-link">Modal & Auxiliary Verbs</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="" class="submenu-link">Conditional & Passive Voice</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-links menu-item-dropdown">
+                <a href="" class="sidebar-link">
+                    <img src="/Landing-Page/images/interactive-exercises.svg" alt="Interactive Exercises" class="sidebar-link-icon">
+                    <span>Interactive Exercises</span>
+                    <img src="/Landing-Page/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+                </a>
+                <ul class="sidebar-submenu">
+                    <li class="submenu-links">
+                        <a href="" class="submenu-link">Lorem ipsum 1</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="" class="submenu-link">Lorem ipsum 2</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="" class="submenu-link">Lorem ipsum 3</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <section class="sidebar-user">
+            <div class="user-data">
+                <h4 class="user-tittle">Arturo Alba</h4>
+                <img src="/Landing-Page/images/icon-sin-fondo.webp" alt="User image" class="user-img">
+            </div>
+
+            <div class="user-sections">
+                <h4 class="user-tittle">Notifications</h4>
+                <img src="/Landing-Page/images/notifications.svg" alt="Notifications" class="user-icons">
+            </div>
+
+            <div class="user-sections">
+                <h4 class="user-tittle">Settings</h4>
+                <img src="/Landing-Page/images/settings.svg" alt="Settings" class="user-icons">
+            </div>
+        </section>
+    </aside>
+
+    <header class="hero">
+        <nav class="nav container">
+            <div class="nav-logo">
+                <img class="logo" src="/Landing-Page/images/icon-sin-fondo.webp" alt="Logo">
+                <h2 class="nav-tittle">English B1</h2>
+            </div>
+
+            <ul class="nav-links nav-links-menu">
+                <li class="nav-item">
+                    <a href="home.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="lessons.html" class="nav-link">Lessons</a>
+                </li>
+                <li class="nav-item">
+                    <a href="exercises.html" class="nav-link">Interactive Exercises</a>
+                </li>
+                <li class="nav-item">
+                    <a href="signin.html" class="nav-link">Sign In</a>
+                </li>
+
+                <img src="/Landing-Page/images/close.svg" alt="Close menu" class="nav-close">
+            </ul>
+
+            <div class="nav-menu">
+                <img src="/Landing-Page/images/menu-button.svg" alt="Menu button" class="nav-img">
+            </div>
+        </nav>
+
+        <section class="hero-container container">
+            <h1 class="hero-tittle tittle">Master B1 English with Interactive Practice</h1>
+            <p class="hero-paragraph paragraph">Improve your grammar, vocabulary, and pronunciation with fun and effective exercises.</p>
+            <a href="lessons.html" class="btn"><strong>Get Started!</strong></a>
+        </section>
+    </header>
+    
+    <main>
+        <section class="container section">
+            <h2 class="subtittle">Master Grammar & Practice with Fun Exercises!</h2>
+            <p class="section-paragraph">Learn key grammar concepts and strengthen your skills with interactive exercises to boost your English confidence.</p>
+
+            <div class="section-main">
+                    <article onclick="location.href='lessons.html'" class="section-icons">
+                        <img class="section-icon" src="/Landing-Page/images/lessons.svg" alt="Lessons">
+                        <h3 class="section-tittle">Lessons</h3>
+                        <p class="section-paragraph">Explore essential topics like verb tenses, modals, conditionals, and passive voice through clear explanations and practical examples to build a strong foundation in English grammar.</p>
+                    </article>
+
+                    <article onclick="location.href='exercises.html'" class="section-icons">
+                        <img class="section-icon" src="/Landing-Page/images/interactive-exercises.svg" alt="Interactive exercises">
+                        <h3 class="section-tittle">Interactive Exercises</h3>
+                        <p class="section-paragraph">Practice what you’ve learned with engaging, interactive exercises designed to reinforce your understanding and help you apply grammar rules in real-life situations.</p>
+                    </article>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer-home">
+        <nav class="nav-footer container">
+            <ul id="n" class="nav-links nav-links-menu">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="lessons.html">Lessons</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="exercises.html">Interactive Exercises</a>
+                </li>
+            </ul>
+
+            <div onclick="window.scrollTo({top: 0})" class="nav-subir">
+                <img class="nav-img" src="/Landing-Page/images/up-arrow.svg" alt="Back to top">
+            </div>
+        </nav>
+    </footer>
+</body>
+</html>
