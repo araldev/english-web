@@ -628,7 +628,7 @@ main {
         height: auto;
         padding: 10px;
         text-align: center;
-        margin: 0 auto;
+        margin: 4rem auto 1.5rem;
         border-radius: 10px;
     }
 
@@ -637,6 +637,12 @@ main {
         font-size: var(--size-subtittle);
         max-width: 62ch;
         text-align: center;
+        margin-bottom: 4rem;
+        border: 1px solid var(--color-tittle);
+        border-radius: 10px;
+        padding: 2rem;
+        /* inset para hacer sombra interior */
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); 
     }
 }
 
@@ -659,12 +665,16 @@ main {
     gap: 2rem;
 }
 
+.section:has(.section-icons) {
+    overflow: visible;
+}
+
 .section-main a {
+    overflow: visible;
     background-color: var(--color-text);
     justify-self: center;
     width: 100%;
     max-width: 500px;
-    border: 1px solid var(--color-tittle);
     border-radius: 20px;
     display: grid;
     grid-template-columns: 1fr;
@@ -672,15 +682,29 @@ main {
     justify-items: center;
     align-content: center;
     text-align: center;
+    border: 2px solid var(--color-tittle);
+    position: relative;
 
     &:hover {
         cursor: pointer;
+
+        &::after {
+            background: inherit;
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            scale: 1.03;
+            filter: blur(25px) saturate(1.5);
+            z-index: -1;
+            overflow: visible;
+        }
     }
 
     .section-icons {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: max-content;
+        grid-template-rows: fit-content;
         justify-items: center;
         align-content: center;
         text-align: center;
@@ -705,7 +729,17 @@ main {
         font-size: var(--size-paragraph);
         font-weight: 400;
         color: var(--color-subtittle);
+        margin: 10px auto;
+        max-width: 30ch;
+        text-align: center;
+        box-shadow: none;
+        border: none;
+        padding: 0;
     }
+}
+/* para evitar section-icons de home que el <p> sea estrecho */
+#home .section-paragraph {
+    max-width: 60ch;
 }
 
 /* Titles bg blur */
@@ -780,25 +814,46 @@ main {
 /* Tabla Verb Tenses */
 table {
     width: 100%;
-    border-collapse: separate;
-    margin: auto;
+    border-collapse: collapse;
+    margin: 0 auto;
     position: relative;
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    gap: 20px
+
+    h2 {
+        margin-bottom: 4rem;
+    }
 }
 th {
     font-size: var(--size-subtittle);
-    background-color: var(--sidebar-bg-color);
-    border: 1px solid var(--color-background);
     padding: 8px;
     text-transform: uppercase;
     height: 3.5rem;
+
+    &:first-child {
+        border-top-left-radius: 10px;
+    }
+    &:last-child {
+        border-top-right-radius: 10px;
+    }
+}
+thead tr {
+    height: 4.5rem;
+    background: linear-gradient(to right, white 0%, #e0e0e0 40%, #cccccc 50%, #e0e0e0 60%, white 100%);
 }
 tbody tr {
     height: 3.5rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* para safari */
 
     &:hover {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /* para safari */
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+    &:last-child {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 }
 tr:nth-child(even) {
