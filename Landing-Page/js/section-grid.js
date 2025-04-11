@@ -1,7 +1,7 @@
 // Ajusta al mismo width que los demás el del grid 
 // de manera dinámica del desbordado en otra row.
 (function() {
-    const firstElGrid = document.querySelector('.section-icons');
+    const firstElGrid = document.querySelector('.example-row');
     const lastElGrid = document.querySelector('.last-row');
 
     if(!lastElGrid) return;

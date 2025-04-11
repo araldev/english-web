@@ -600,6 +600,7 @@ main {
     text-decoration: none;
     padding: 13px 30px;
     border-radius: 32px;
+    transition: all .2s ease;
 
     &:hover {
         background-color: var(--color-tittle);
@@ -622,6 +623,7 @@ main {
         color: var(--color-text);
         font-size: var(--size-tittle);
         background: var(--bg-gradient);
+        max-width: 80%;
         width: max-content;
         height: auto;
         padding: 10px;
@@ -657,7 +659,7 @@ main {
     gap: 2rem;
 }
 
-.section-icons {
+.section-main a {
     background-color: var(--color-text);
     justify-self: center;
     width: 100%;
@@ -670,12 +672,21 @@ main {
     justify-items: center;
     align-content: center;
     text-align: center;
-    gap: 0.5rem;
-    padding: 20px;
-    line-height: 1.2; /* Para cambiar la altura entre linea y linea en <p> */
 
     &:hover {
         cursor: pointer;
+    }
+
+    .section-icons {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content;
+        justify-items: center;
+        align-content: center;
+        text-align: center;
+        gap: 0.5rem;
+        padding: 20px;
+        line-height: 1.2;
     }
 
     .section-icon {
@@ -698,6 +709,26 @@ main {
 }
 
 /* Titles bg blur */
+.blur.large{
+    animation: fadeIn 1s forwards;
+    &::after{
+        width: clamp(240px, 110%, 925px);
+        height: clamp(60px, 200%, 100px);
+    }
+}
+@media (max-width: 1305px) {
+    .blur.large::after {
+        width: clamp(240px, 110%, 925px);
+        height: clamp(60px, 200%, 145px);
+    }
+}
+@media (max-width: 935px) {
+    .blur.large::after {
+        width: clamp(240px, 110%, 925px);
+        height: clamp(60px, 140%, 145px);
+    }
+}
+
 .blur {
     position: relative;
     width: max-content;
@@ -755,6 +786,7 @@ table {
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 th {
+    font-size: var(--size-subtittle);
     background-color: var(--sidebar-bg-color);
     border: 1px solid var(--color-background);
     padding: 8px;
@@ -780,6 +812,7 @@ tr:nth-child(odd) {
     }
 }
 td {
+    font-size: var(--size-paragraph);
     border: 1px solid var(--color-background);
     padding: 8px;
     text-align: left;
@@ -796,6 +829,10 @@ td:nth-child(1) {
     width: 35%;
     background: var(--color-subtittle);
 }
+td:nth-child(2) {
+    text-align:center;
+    word-spacing: 5px; /* aumenta el espacio entre palabras */
+}
 .example-col {
     width: 38%;
     background: var(--color-tittle);
@@ -804,7 +841,7 @@ td:nth-child(3) {
     border-bottom-right-radius: 10px;
 }
 
-@media (max-width: 1267px) {
+@media (max-width: 1266px) {
     .last-row {
         grid-column: 1/-1;
     }
@@ -859,7 +896,7 @@ td:nth-child(3) {
         transform: translateY(-100%);
         opacity: 0;
         pointer-events: none; /* para que no reconozca el mouse */
-        transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out, visibility 0s linear 0.7s; /* linear significa que el cambio será constante dutante 0.7s lo que significa que al no haber animación será in delay */
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0s linear 0.4s; /* linear significa que el cambio será constante dutante 0.7s lo que significa que al no haber animación será in delay */
     }
 
     .nav-links-show {
@@ -867,7 +904,7 @@ td:nth-child(3) {
         transform: translateY(0%);
         opacity: 1;
         pointer-events: unset; /* valor original */
-        transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out, visibility 0s linear 0s;
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0s linear 0s;
     }
 
     .nav-links-no-transition {
