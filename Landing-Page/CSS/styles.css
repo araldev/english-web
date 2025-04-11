@@ -16,6 +16,38 @@
     --size-paragraph: clamp(0.8rem, 2vw, 1rem);
 }
 
+/* Animación al bajar el scroll */
+@media(max-width: 750px) {
+    .section {
+        padding-bottom: 0px !important;
+    }
+    main h2 {
+        margin-top: 50px !important;
+    }
+    main > * {
+        animation-range: entry 0% cover 30%;
+    }
+}
+@keyframes show {
+    from {
+        opacity: 0; scale: 10%;
+    }
+
+    to {
+        opacity: 1; scale: 100%;
+    }
+}
+
+main > *:not(:first-child) {
+    view-timeline-name: --reveal;
+
+    animation-name: show;
+    animation-fill-mode: both;
+
+    animation-timeline: --reveal;
+    animation-range: entry 5% cover 40%;
+}
+ /* web */
 html {
     scroll-behavior: smooth;
 }
@@ -618,6 +650,7 @@ main {
     text-align: center;
     gap: 3rem;
     --padding-container: 50px 0 ;
+    padding-bottom: 25px;
     
     .subtittle {
         color: var(--color-text);
@@ -685,19 +718,23 @@ main {
     border: 2px solid var(--color-tittle);
     position: relative;
 
+    &::after {
+        background: inherit;
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        filter: blur(25px) saturate(1.5);
+        scale: .7;
+        z-index: -1;
+        transition: all .2s ease; 
+    }
+
     &:hover {
         cursor: pointer;
 
         &::after {
-            background: inherit;
-            position: absolute;
-            content: "";
-            width: 100%;
-            height: 100%;
             scale: 1.03;
-            filter: blur(25px) saturate(1.5);
-            z-index: -1;
-            overflow: visible;
         }
     }
 
@@ -820,10 +857,6 @@ table {
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     gap: 20px
-
-    h2 {
-        margin-bottom: 4rem;
-    }
 }
 th {
     font-size: var(--size-subtittle);
