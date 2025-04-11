@@ -52,7 +52,7 @@
     if(menuLinks.length === 0 || allSubmenuContainer.length === 0) return;
 
     menuLinks.forEach(link => {
-        if(window.location.href.includes('home.html') && link.querySelector('span').innerText === "Home"){
+        if(window.location.href.includes('index.html') && link.querySelector('span').innerText === "Home"){
             link.classList.add('current');
         }
         if(window.location.href.includes('lessons.html') && link.querySelector('span').innerText === "Lessons"){
