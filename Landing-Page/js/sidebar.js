@@ -32,6 +32,13 @@
         }
     });
 
+    // Para cerrar el sidebar si se clica fuera de él.
+    document.addEventListener('click', e => {
+        if(!sidebar.contains(e.target) && !sidebar.classList.contains('minimize')) {
+            sidebar.classList.add('minimize');
+        }
+    })
+
     sidebarBtn.addEventListener('click', e => {
         sidebar.classList.toggle('minimize');
 

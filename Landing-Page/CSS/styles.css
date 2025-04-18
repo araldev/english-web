@@ -15,9 +15,13 @@
     --size-subtittle: clamp(1rem, 3vw, 1.5rem);
     --size-paragraph: clamp(0.8rem, 2vw, 1rem);
 }
+/* Animación entre diferentes html */
+@view-transition {
+    navigation: auto;
+}
 
 /* Animación al bajar el scroll */
-@media(max-width: 750px) {
+/* @media(max-width: 750px) {
     .section {
         padding-bottom: 0px !important;
     }
@@ -37,19 +41,24 @@
         opacity: 1; scale: 100%;
     }
 }
-
 main > *:not(:first-child) {
     view-timeline-name: --reveal;
 
     animation-name: show;
+    animation-timing-function: linear;
     animation-fill-mode: both;
 
     animation-timeline: --reveal;
-    animation-range: entry 5% cover 40%;
-}
+    animation-range: entry 0% cover 40%;
+} */
+
  /* web */
 html {
     scroll-behavior: smooth;
+    /* se usa para darle padding al scroll y que el href sea exacto */
+    /* scroll-padding-top: 420px;  */
+    /* tengo que arreglar con js porque sino me hace scroll a partir de media página */
+    /* que se ponga el padding solo al hacer click en el <a> y despues se quite */
 }
 
 body {
@@ -798,6 +807,12 @@ main {
         width: clamp(240px, 110%, 925px);
         height: clamp(60px, 140%, 145px);
     }
+}    
+@media (max-width: 601px) {
+    .blur.large::after {
+        width: clamp(240px, 115%, 480px);
+        height: clamp(60px, 140%, 145px);
+    }
 }
 
 .blur {
@@ -880,10 +895,6 @@ tbody tr {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* para safari */
 
-    &:hover {
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-    }
     &:last-child {
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
@@ -927,6 +938,77 @@ td:nth-child(2) {
 }
 td:nth-child(3) {
     border-bottom-right-radius: 10px;
+}
+/* Sections Main Margins */
+#verb-tenses,
+#modals-auxiliary-verbs {
+    margin-top: 100px;
+
+    h3 {
+        margin: 90px auto 70px;
+    }
+}
+@media(max-width:1200px) {
+    #verb-tenses,
+    #modals-auxiliary-verbs {
+        margin-top: 50px;
+}
+}
+
+/* Cards */
+.card-sections {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.card-container {
+    cursor: pointer;
+    width: clamp(400px, 50dvw, 550px);
+    height: 300px;
+    perspective: 1000px; /* tiene que estar en el elemento padre del que rota */
+    &:hover .card {
+        transform: rotateY(180deg);
+    }
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+    
+    transform-style: preserve-3d; /* tiene que estar en el elemento que rota para que sea 3d */
+    transition: transform .3s ease;
+    
+
+    h4 {
+        font-size: 2.5rem;
+    }
+    p {
+        font-size: 1.5rem;
+        text-align: left;
+    }
+}
+.front-card,
+.back-card {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    backface-visibility: hidden; /* tiene que estar en el elemento que esta dado la vuelta para que no se vea */
+}
+.back-card {
+    transform: rotateY(180deg);
 }
 
 @media (max-width: 1266px) {
