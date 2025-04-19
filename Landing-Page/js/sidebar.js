@@ -34,8 +34,24 @@
 
     // Para cerrar el sidebar si se clica fuera de él.
     document.addEventListener('click', e => {
-        if(!sidebar.contains(e.target) && !sidebar.classList.contains('minimize')) {
-            sidebar.classList.add('minimize');
+        if(!sidebar.contains(e.target)) {
+            if(window.innerWidth > 600) {
+                sidebar.classList.add('minimize');
+                console.log(allSubmenuContainer)
+                allSubmenuContainer.forEach(container => {
+                    container.style.height = '0';
+                    container.parentElement.classList.remove('active');
+                });
+            }
+            if(window.innerWidth < 600) {
+                sidebar.style.transform = 'translateX(-100%)';
+                sidebar.classList.add('minimize');
+    
+                allSubmenuContainer.forEach(container => {
+                    container.style.height = '0';
+                    container.parentElement.classList.remove('active');
+                });
+            }
         }
     })
 
@@ -79,6 +95,7 @@
 
             allSubmenuContainer.forEach(container => {
                 if (container !== submenuContainer) {
+                    console.log(container.style.height)
                     container.style.height = '0';
                     container.classList.remove('toggle');
                     container.parentElement.classList.remove('active');
