@@ -37,7 +37,6 @@
         if(!sidebar.contains(e.target)) {
             if(window.innerWidth > 600) {
                 sidebar.classList.add('minimize');
-                console.log(allSubmenuContainer)
                 allSubmenuContainer.forEach(container => {
                     container.style.height = '0';
                     container.parentElement.classList.remove('active');
