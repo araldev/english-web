@@ -1028,6 +1028,48 @@ td:nth-child(3) {
     }
 }
 
+/* Conditionals Section */
+.conditionals-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-wrap: nowrap;
+    width: 600px;
+    height: 300px;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 15px;
+    background-color: white;
+    h4 {
+        font-size: 2rem;
+    }
+    p {
+        text-align: left;
+        font-size: 1.3rem;
+    }
+}
+
+/* Passive voices Section */
+.passive-voice-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-wrap: nowrap;
+    width: 600px;
+    height: 300px;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 15px;
+    background-color: white;
+    h4 {
+        font-size: 2rem;
+    }
+    p {
+        text-align: left;
+        font-size: 1.3rem;
+    }
+}
+
 @media (max-width: 1266px) {
     .last-row {
         grid-column: 1/-1;
