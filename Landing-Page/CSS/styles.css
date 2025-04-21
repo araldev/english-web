@@ -1232,4 +1232,10 @@ td:nth-child(3) {
     #sidebar {
         transition: all .3s ease-in-out;
     }
+    .conditionals-container,
+    .passive-voice-container {
+    width: clamp(300px, 80dvw, 550px);
+    height: clamp(300px, 50dvh, 500px);
+    padding: 20px;
+    };
 }
