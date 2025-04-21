@@ -1058,11 +1058,12 @@ td:nth-child(3) {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     width: clamp(300px, 80dvw, 550px);
     height: clamp(300px, 50dvh, 400px);
+    min-height: fit-content;
     gap: 20px;
-    padding: 50px;
+    padding: 40px;
     border-radius: 12px;
     color: var(--color-text);
     background: #b0b0b0;
