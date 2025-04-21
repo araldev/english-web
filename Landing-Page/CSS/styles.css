@@ -1234,8 +1234,8 @@ td:nth-child(3) {
     }
     .conditionals-container,
     .passive-voice-container {
-    width: clamp(300px, 80dvw, 550px);
-    height: clamp(300px, 50dvh, 500px);
+    width: clamp(300px, 80vw, 550px);
+    height: clamp(300px, 50vh, 500px);
     padding: 20px;
     };
 }
