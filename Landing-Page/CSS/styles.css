@@ -6,9 +6,10 @@
     --color-tittle: #1A3A6F;
     --color-subtittle: #1A4876;
     --btn-bg-color: #E76F51;
-    --color-background: #ddd; 
+    --color-background-infinite: repeating-linear-gradient(45deg, #d1d1d1 0%, #e3e3e3 4%, #b0b0b0 8%, #e3e3e3 12%, #d1d1d1 16%);
+    --color-background: linear-gradient(135deg, #d1d1d1 0%, #e3e3e3 25%, #b0b0b0 50%, #e3e3e3 75%, #d1d1d1 100%);
     --sidebar-bg-color: #fff;
-    --text-gradient: #fff;
+    --text-gradient: linear-gradient( 90deg, var(--color-tittle) 0%, var(--color-subtittle) 35%, var(--btn-bg-color) 100%);
     --bg-gradient: linear-gradient(to right, #1a3a6f, #4a6fa5);
     --shadow-sidebar: 2px 2px 5px rgba(0, 0, 0, 0.15);
     --size-tittle: clamp(1.5rem, 4vw, 2.5rem);
@@ -55,14 +56,10 @@ main > *:not(:first-child) {
  /* web */
 html {
     scroll-behavior: smooth;
-    /* se usa para darle padding al scroll y que el href sea exacto */
-    /* scroll-padding-top: 420px;  */
-    /* tengo que arreglar con js porque sino me hace scroll a partir de media página */
-    /* que se ponga el padding solo al hacer click en el <a> y despues se quite */
 }
 
 body {
-    background-color: var(--color-background);
+    background-image: var(--color-background-infinite);
     display: grid;
     grid-template-columns: 5rem 1fr;
     grid-template-rows: auto 1fr auto;
@@ -198,7 +195,7 @@ body {
             height: 100%;
             width: 0.07rem;
             margin-left: 1.25rem;
-            background-color: var(--color-background);
+            background: var(--color-secondary-text);
         }
     
         .submenu-links{
@@ -301,7 +298,7 @@ body {
 }
 
 .active .sidebar-link {
-    background-color: var(--color-background); 
+    background: var(--color-background); 
     border-radius: 15px;
 
     span {
@@ -315,7 +312,7 @@ body {
 }
 
 .sidebar-link:hover {
-    background-color: var(--color-background);
+    background: var(--color-background);
     border-radius: 15px;
     cursor: pointer;
 
@@ -328,19 +325,19 @@ body {
 }
 
 .submenu-links:hover {
-    background-color: var(--color-background);
+    background: var(--color-background);
     border-radius: 15px;
     cursor: pointer;
 }
 
 .user-data:hover {
-    background-color: var(--color-background);
+    background: var(--color-background);
     border-radius: 15px;
     cursor: pointer;
 }
 
 .user-sections:hover {
-    background-color: var(--color-background);
+    background: var(--color-background);
     border-radius: 15px;
     cursor: pointer;
 }
@@ -419,7 +416,6 @@ body {
 }
 
 /* Ancho del contenido */
-
 main {
     margin-bottom: 50px;
 }
@@ -456,7 +452,7 @@ main {
     background-image: linear-gradient(180deg, #000000d7 0%, #0000009f 100% ), url('../images/hero-img.webp');
     background-size: cover;
     background-position: center;
-    /* background-attachment: fixed; */
+    background-attachment: fixed;
     filter: brightness(70%); /* Reduce el brillo */
     /* si clip-path tiene un elemento hijo con position fixed, este va a coger como limite el clip-path en vez de fijarse al navegador. Es por eso que lo añadimos en :before */
     clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 95%, 0 80%); 
@@ -650,7 +646,6 @@ main {
 }
 
 /* Main */
-
 .section {
     display: flex;
     flex-direction: column;
@@ -660,6 +655,9 @@ main {
     gap: 3rem;
     --padding-container: 50px 0 ;
     padding-bottom: 25px;
+    &:first-child {
+        padding-top: 0;
+    }
     
     .subtittle {
         color: var(--color-text);
@@ -912,7 +910,7 @@ tr:nth-child(odd) {
 }
 td {
     font-size: var(--size-paragraph);
-    border: 1px solid var(--color-background);
+    border: 1px solid var(--color-text);
     padding: 8px;
     text-align: left;
 }
@@ -941,7 +939,8 @@ td:nth-child(3) {
 }
 /* Sections Main Margins */
 #verb-tenses,
-#modals-auxiliary-verbs {
+#modals-auxiliary-verbs,
+#conditionals-passive-voice {
     margin-top: 100px;
 
     h3 {
@@ -983,17 +982,37 @@ td:nth-child(3) {
     height: 100%;
     border-radius: 15px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
-    
+    background: linear-gradient(to bottom,
+                rgba(0, 0, 0, .4) 0%,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, .4) 100%
+        );
     transform-style: preserve-3d; /* tiene que estar en el elemento que rota para que sea 3d */
     transition: transform .3s ease;
     
-
     h4 {
         font-size: 2.5rem;
+        background: var(--text-gradient);
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        background-clip: text; 
+        color: transparent; 
     }
     p {
         font-size: 1.5rem;
         text-align: left;
+        color: var(--color-text);        
+        border-radius: 5px;
+        strong:nth-child(1) {
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text; 
+            color: transparent;
+        }
+        strong:nth-child(n+2) {
+            color: var(--color-principal-text);
+        }
     }
 }
 .front-card,
@@ -1017,7 +1036,7 @@ td:nth-child(3) {
       }
     .card {
         h4 {
-            font-size: 2rem; 
+            font-size: 2rem;
         }
         p {
             font-size: 1rem;
@@ -1028,45 +1047,91 @@ td:nth-child(3) {
     }
 }
 
-/* Conditionals Section */
-.conditionals-container {
+/* Conditionals Section & Passive voices Section */
+.section:has(.conditionals-container, .passive-voice-container) {
+    overflow: visible;
+}
+.conditionals-container,
+.passive-voice-container {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     flex-wrap: nowrap;
-    width: 600px;
-    height: 300px;
     justify-content: center;
+    align-items: center;
+    width: clamp(300px, 80dvw, 550px);
+    height: clamp(300px, 50dvh, 400px);
+    gap: 20px;
     padding: 50px;
-    border-radius: 15px;
-    background-color: white;
+    border-radius: 12px;
+    color: var(--color-text);
+    background: #b0b0b0;
+    isolation: isolate; /* aisla el elemento (stacking context) */
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    transition: transform .2s ease;
+    &:hover {
+        transform: scale(1.1) translateY(-10px);
+        z-index: 999;
+    }
     h4 {
         font-size: 2rem;
+        background: var(--text-gradient);
+        -webkit-background-clip: text; /* Clip del fondo al texto */
+        -webkit-text-fill-color: transparent; /* Hace el texto "transparente" para que se vea el fondo */
+        background-clip: text; /* Para navegadores compatibles */
+        color: transparent; /* Por si acaso, como fallback */
     }
     p {
+        position: relative;
         text-align: left;
         font-size: 1.3rem;
+        color: var(--color-text);
+        padding: 5px;
+        background: linear-gradient(to bottom,
+                rgba(0, 0, 0, .6) 0%,
+                rgba(0, 0, 0, 0) 100%
+        );
+        border-radius: 5px;
+        strong:nth-child(1) {
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text; 
+            color: transparent;
+        }
+        strong:nth-child(n+2) {
+            color: var(--color-principal-text);
+        }
+    }
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+    }
+    &::before {
+        background-image: conic-gradient(
+            var(--color-tittle) 0deg,
+            transparent 60deg,
+            transparent 180deg,
+            var(--btn-bg-color) 180deg,
+            transparent 240deg
+        );
+        inset: -60%; /* para que se expanda por fuera de la card */
+        z-index: -3;
+        animation: border 8s linear infinite;
+    }
+    &::after {
+        --inset: 0.25rem;
+        background: linear-gradient(135deg, #d1d1d1 0%, #e3e3e3 25%, #b0b0b0 50%, #e3e3e3 75%, #d1d1d1 100%);
+        inset: var(--inset);
+        border-radius: calc(12px - var(--inset)); /* se queda el borde mas redondeado */
+        z-index: -2;
     }
 }
-
-/* Passive voices Section */
-.passive-voice-container{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex-wrap: nowrap;
-    width: 600px;
-    height: 300px;
-    justify-content: center;
-    padding: 50px;
-    border-radius: 15px;
-    background-color: white;
-    h4 {
-        font-size: 2rem;
-    }
-    p {
-        text-align: left;
-        font-size: 1.3rem;
+@keyframes border {
+    to {
+        transform: rotateZ(-360deg);
     }
 }
 
