@@ -1236,6 +1236,7 @@ td:nth-child(3) {
     .passive-voice-container {
     width: clamp(300px, 80vw, 550px);
     height: clamp(300px, 50vh, 500px);
+    min-height: fit-content;
     padding: 20px;
     };
 }
