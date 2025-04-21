@@ -1126,7 +1126,7 @@ td:nth-child(3) {
         --inset: 0.25rem;
         background: linear-gradient(135deg, #d1d1d1 0%, #e3e3e3 25%, #b0b0b0 50%, #e3e3e3 75%, #d1d1d1 100%);
         inset: var(--inset);
-        border-radius: calc(12px - var(--inset)); /* se queda el borde mas redondeado */
+        border-radius: calc(12px - var(--inset)); 
         z-index: -2;
     }
 }
@@ -1191,7 +1191,7 @@ td:nth-child(3) {
         transform: translateY(-100%);
         opacity: 0;
         pointer-events: none; /* para que no reconozca el mouse */
-        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0s linear 0.4s; /* linear significa que el cambio será constante dutante 0.7s lo que significa que al no haber animación será in delay */
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0s linear 0.4s; /* le metemos un delay a visibility para que se vea la transición de las otras propiedades */
     }
 
     .nav-links-show {
