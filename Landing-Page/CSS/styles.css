@@ -991,6 +991,7 @@ td:nth-child(3) {
     transition: transform .3s ease;
     
     h4 {
+        padding: 5px;
         font-size: 2.5rem;
         background: var(--text-gradient);
         -webkit-background-clip: text; 
@@ -1060,10 +1061,10 @@ td:nth-child(3) {
     justify-content: center;
     align-items: left;
     width: clamp(300px, 80dvw, 550px);
-    height: clamp(300px, 50dvh, 400px);
-    min-height: fit-content;
+    height: clamp(360px, 45dvh, 500px);
+    /* min-height: fit-content; */
     gap: 20px;
-    padding: 40px;
+    padding: 30px;
     border-radius: 12px;
     color: var(--color-text);
     background: #b0b0b0;
@@ -1076,6 +1077,7 @@ td:nth-child(3) {
         z-index: 999;
     }
     h4 {
+        padding: 5px;
         font-size: 2rem;
         background: var(--text-gradient);
         -webkit-background-clip: text; /* Clip del fondo al texto */
@@ -1236,7 +1238,7 @@ td:nth-child(3) {
     .conditionals-container,
     .passive-voice-container {
     width: clamp(300px, 80vw, 550px);
-    height: clamp(300px, 50vh, 500px);
+    height: clamp(415px, 45vh, 500px);
     min-height: fit-content;
     padding: 20px;
     };
