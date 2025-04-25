@@ -132,7 +132,7 @@ body {
             width: 5rem;
             height: 5rem;
         }
-
+        
         .logo-tittle {
             font-size: 1.8rem;
         }
@@ -508,7 +508,7 @@ main {
 
     .nav-tittle {
         font-weight: 400;
-        font-size:var(--size-subtittle);
+        font-size: var(--size-subtittle);
     }
 }
 
