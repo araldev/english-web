@@ -8,7 +8,10 @@
 
     window.addEventListener('resize', e => {
         requestAnimationFrame(() => {
-            sidebar.classList.contains('minimize') ? sidebar.classList.add('minimize') : sidebar.classList.remove('minimize');
+            if(!sidebar.classList.contains("minimize")) {
+                sidebar.classList.add("minimize");
+            }
+            
             if(window.innerWidth > 600) {
                 sidebar.style.transform = 'translateX(0%)';
             }
