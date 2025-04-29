@@ -52,10 +52,10 @@
     },
   "level-2": {
     "level": 2,
-    "audioText": "When you see a tree, go right. When you see a fence, turn left.",
+    "audioText": "When you see a tree, go right. When you see a fence, turn left. Else go straight.",
     "if": [
-      { "tree": "any", "go": "right" },
-      { "fence": "any", "go": "left" }
+      { "tree": "any", "go": "right", "else": "center" },
+      { "fence": "any", "go": "left", "else": "center" }
     ]
   },
   "level-3": {
