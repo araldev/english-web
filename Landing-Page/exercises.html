@@ -7,11 +7,13 @@
     <link rel="shortcut icon" href="images/favicon.webp" type="image/x-icon">
     <link rel="stylesheet" href="./CSS/normalize.css">
     <link rel="stylesheet" href="./CSS/styles.css">
-    <link rel="preload" as="image" href="./images/hero-img.webp">
-    <script defer type="module" src="./js/menu.js"></script>
-    <script defer type="module" src="./js/section-grid.js"></script>
-    <script defer type="module" src="./js/sidebar.js"></script>
-    <script defer type="module" src="./js/animations.js"></script>
+    <link rel="stylesheet" href="./CSS/games.css">
+    <!-- <link rel="preload" as="image" href="./images/hero-img.webp"> -->
+    <script type="module" src="./js/menu.js"></script>
+    <script type="module" src="./js/section-grid.js"></script>
+    <script type="module" src="./js/sidebar.js"></script>
+    <script type="module" src="./js/animations.js"></script>
+    <script type="module" src="./games/listening-maze.js"></script>
 </head>
 <body id="exercises">
     <aside id="sidebar" class="sidebar minimize">
@@ -117,7 +119,9 @@
     </header>
     
     <main>
-
+        <section id="game-container" class="container section">
+            <canvas height="500" class="games" id="listening-maze"></canvas>
+        </section>
     </main>
 
     <footer id="footer-home">

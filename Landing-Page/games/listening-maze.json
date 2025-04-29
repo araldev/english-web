@@ -1,0 +1,123 @@
+{
+  "character": {
+    "1": {
+      "x": 1,
+      "y": 430,
+      "width": 30,
+      "height": 50
+    }
+  },
+  "obstacles": {
+      "rock": {
+          "type": "rock",
+          "x": 280,
+          "y": 200,
+          "width": 30,
+          "height": 30
+        },
+      "tree": {
+        "type": "tree",
+        "x": 450,
+        "y": 200,
+        "radius": 30,
+        "width": 20,
+        "height": 50
+      },
+      "fence": {
+        "type": "fence",
+        "x": 100,
+        "y": 200,
+        "width": 50,
+        "height": 10
+      }
+  },
+  "paths": {
+    "1": { "left": "", "center": "rock", "right": "" },
+    "2": { "left": "rock", "center": "", "right": "fence" },
+    "3": { "left": "tree", "center": "rock", "right": "" },
+    "4": { "left": "rock", "center": "fence", "right": "" },
+    "5": { "left": "", "center": "rock", "right": "" },
+    "6": { "left": "tree", "center": "", "right": "rock" },
+    "7": { "left": "fence", "center": "tree", "right": "" },
+    "8": { "left": "", "center": "fence", "right": "rock" },
+    "9": { "left": "rock", "center": "", "right": "tree" },
+    "10": { "left": "tree", "center": "fence", "right": "rock" }
+  },
+  "level-1": {
+      "level": 1,
+      "audioText": "If there is a rock ahead, turn left. If the path is clear, go straight.",
+      "if": [
+        { "rock": "center", "go": "left", "else": "center" }
+      ]
+    },
+  "level-2": {
+    "level": 2,
+    "audioText": "When you see a tree, go right. When you see a fence, turn left.",
+    "if": [
+      { "tree": "any", "go": "right" },
+      { "fence": "any", "go": "left" }
+    ]
+  },
+  "level-3": {
+    "level": 3,
+    "audioText": "Go straight if there’s a rock, otherwise turn left.",
+    "if": [
+      { "rock": "center", "go": "center", "else": "left" }
+    ]
+  },
+  "level-4": {
+    "level": 4,
+    "audioText": "If the path has a fence, go straight. If there's a rock, go left.",
+    "if": [
+      { "fence": "any", "go": "center" },
+      { "rock": "any", "go": "left" }
+    ]
+  },
+  "level-5": {
+    "level": 5,
+    "audioText": "Rocks ahead? Turn right. Otherwise, go straight.",
+    "if": [
+      { "rock": "any", "go": "right", "else": "center" }
+    ]
+  },
+  "level-6": {
+    "level": 6,
+    "audioText": "If you see a tree, go left. If you see a rock, go right.",
+    "if": [
+      { "tree": "any", "go": "left" },
+      { "rock": "any", "go": "right" }
+    ]
+  },
+  "level-7": {
+    "level": 7,
+    "audioText": "When there is a tree straight ahead, continue. If there’s a fence, go left.",
+    "if": [
+      { "tree": "center", "go": "center" },
+      { "fence": "any", "go": "left" }
+    ]
+  },
+  "level-8": {
+    "level": 8,
+    "audioText": "Fence ahead? Go straight. Rock to the right? Avoid it and turn left.",
+    "if": [
+      { "fence": "center", "go": "center" },
+      { "rock": "right", "go": "left" }
+    ]
+  },
+  "level-9": {
+    "level": 9,
+    "audioText": "If there’s a rock on the left, avoid it. Go right if there’s a tree.",
+    "if": [
+      { "rock": "left", "go": "center" },
+      { "tree": "any", "go": "right" }
+    ]
+  },
+  "level-10": {
+    "level": 10,
+    "audioText": "Choose wisely. If you see all three objects, go straight. If only the tree is visible, turn left.",
+    "if": [
+      { "all": ["rock", "tree", "fence"], "go": "center" },
+      { "tree": "any", "go": "left" }
+    ]
+  }
+}
