@@ -16,35 +16,48 @@
     const container = document.getElementById("game-container");
     const canvas = document.getElementById("listening-maze");    
     const ctx = canvas.getContext("2d");
+
     const rockString = "rock";
     let rockPosition;
     const treeString = "tree";
     let treePosition;
     const fenceString = "fence";
     let fencePosition;
+
     let recWidth;
     let calculateScale = 600;
     let perspective = recWidth / calculateScale;
+
     let startCharacterY = 430;        
     let splitCharacterY = 350;
     let endCharacterY = 200;
-    let drawLeftX = 100;
-    let drawCenterX = 280;
-    let drawRightX = 450;
-    let level = 2;
-    let maxLevel = 10;
+
+    const drawLeftX = 100;
+    const drawCenterX = 280;
+    const drawRightX = 450;
+
+    let level = 1;
+    const maxLevel = 10;
     let regexLevel;
     let CURRENT_LEVEL;
     let path = 1;
-    let maxPath = 10;
+    const maxPath = 10;
     let regexPath;
     let CURRENT_PATH;
-    let position = {
+
+    const position = {
         left: "left",
         center: "center",
         right: "right",
         any: "any"
     }
+
+    const keyDown = {
+        arrowLeft: "ArrowLeft",
+        arrowUp: "ArrowUp",
+        arrowRight: "ArrowRight"
+    };
+
     let correctPath = [];
     let indexCorrectPath;
 
@@ -57,19 +70,15 @@
         CURRENT_PATH = data.paths[regexPath];
         console.log("StateGame Path: ",path, CURRENT_PATH);
     };
-    
-    let characterPathingActive = false;
-    function characterPathing(data, CHARACTER) {
-        if(characterPathingActive) return;
-        characterPathingActive = characterPathingActive === false ? true : false;
-
-        document.addEventListener("keydown", e => {
-            if(e.key !== "ArrowLeft" && e.key !== "ArrowUp" && e.key !== "ArrowRight") return;
+// Solucionar handleCorrectPath() y putCorrectPath()
+    function handleCorrectPath(data, CHARACTER) {
+        return (e) => {
+            if(e.key !== keyDown.arrowLeft && e.key !== keyDown.arrowUp && e.key !== keyDown.arrowRight) return;
             // console.log(e.key);
             putCorrectPath(CHARACTER);
-
+    
             let index;
-            if(e.key === "ArrowLeft"){
+            if(e.key === keyDown.arrowLeft){
                 if(
                     correctPath.some((path, i) => {
                         index = i;
@@ -86,8 +95,8 @@
                     throw new Error("You miss...");
                 }
             };
-
-            if(e.key === "ArrowUp"){
+    
+            if(e.key === keyDown.arrowUp){
                 if (
                     correctPath.some((path, i) => {
                         index = i;
@@ -104,8 +113,8 @@
                     throw new Error("You miss...");
                 }
             };
-
-            if(e.key === "ArrowRight"){
+    
+            if(e.key === keyDown.arrowRight){
                 if(
                     correctPath.some((path, i) => {
                         index = i;
@@ -122,196 +131,203 @@
                     throw new Error("You miss...");
                 }
             };
-        });
-        
-        function putCorrectPath(CHARACTER) {
-            let activate = false;
-            
-            CURRENT_LEVEL.if.forEach((condition, i) => {
-                if(
-                    (condition.hasOwnProperty(rockString) && rockPosition === position.left && !activate) ||
-                    (condition.hasOwnProperty(treeString) && treePosition === position.left && !activate) ||
-                    (condition.hasOwnProperty(fenceString) && fencePosition === position.left && !activate)
-                ) {
-                    activate = true;
-                    correctPath.push(1);
-                    indexCorrectPath = correctPath.lenght - 1;
-                    // console.log("CorrectPath Rock Left", correctPath);
-                    
-                    if(condition.go === position.left) {
-                        correctPath[i] = correctPath[i] - 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    } else if(condition.else === position.left) {
-                        correctPath[i] = 1;
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    };
-                    
-                    if(condition.go === position.center) {
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    } else if(condition.else === position.center) {
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    };
-
-                    if(condition.go === position.right) {
-                        correctPath[i] = correctPath[i] + 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    } else if(condition.else === position.right) {
-                        correctPath[i] = 3;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    };
-                };
-
-                if(
-                    (condition.hasOwnProperty(rockString) && rockPosition === position.center && !activate) ||
-                    (condition.hasOwnProperty(treeString) && treePosition === position.center && !activate) ||
-                    (condition.hasOwnProperty(fenceString) && fencePosition === position.center && !activate) 
-                ) {
-                    
-                    activate = true;
-                    correctPath.push(2);
-                    indexCorrectPath = correctPath.lenght - 1;
-                    // console.log("CorrectPath Rock center", correctPath);
-
-                    if(condition.go === position.left) {                        
-                        correctPath[i] = correctPath[i] - 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    } else if(condition.else === position.left) {
-                        correctPath[i] = 1;
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    };
-
-                    if(condition.go === position.center) {                        
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    } else if(
-                        (condition.else === position.center && rockPosition !== position.center) ||
-                        (true)
-                    ) {
-                        console.log("funciona");
-                        
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    };
-
-                    if(condition.go === position.right) {                        
-                        correctPath[i] = correctPath[i] + 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    } else if(condition.else === position.right) {
-                        correctPath[i] = 3;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    };
-                    // console.log("CorrectPath Rock center", correctPath);
-                };
-
-                if(
-                    (condition.hasOwnProperty(rockString) && rockPosition === position.right && !activate) ||
-                    (condition.hasOwnProperty(treeString) && treePosition === position.right && !activate) ||
-                    (condition.hasOwnProperty(fenceString) && fencePosition ===position.right && !activate)
-                ) {
-                    activate = true;
-                    correctPath.push(3);
-                    indexCorrectPath = correctPath.lenght - 1;
-                    console.log("CorrectPath Rock Right", correctPath);
-                    
-                    if(condition.go === position.left) {
-                        correctPath[i] = correctPath[i] - 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    } else if(condition.else === position.left) {
-                        correctPath[i] = 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawLeftX;
-                    };
-
-                    if(condition.go === position.center) {
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    }else if(condition.else === position.center) {
-                        correctPath[i] = 2;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawCenterX;
-                    };
-
-                    if(condition.go === position.right) {
-                        correctPath[i] = correctPath[i] + 1;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    } else if(condition.else === position.right) {
-                        correctPath[i] = 3;
-
-                        CHARACTER.y = splitCharacterY;
-                        CHARACTER.y = endCharacterY;
-                        CHARACTER.y /= perspective * 1.7;
-                        CHARACTER.x = perspective * drawRightX;
-                    };
-                };
-                // console.log("putCorrectPath activate: ", activate);
-            });
         };
+    };
+    
+    function putCorrectPath(CHARACTER) {
+        let activate = false;
+        
+        CURRENT_LEVEL.if.forEach((condition, i) => {
+            if(
+                (condition.hasOwnProperty(rockString) && rockPosition === position.left && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.left && !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition === position.left && !activate)
+            ) {
+                activate = true;
+                correctPath.push(1);
+                indexCorrectPath = correctPath.length - 1;
+                // console.log("CorrectPath Rock Left", correctPath);
+                
+                if(condition.go === position.left) {
+                    correctPath[i] = correctPath[i] - 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                } else if(condition.else === position.left) {
+                    correctPath[i] = 1;
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                };
+                
+                if(condition.go === position.center) {
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                } else if(condition.else === position.center) {
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                };
+
+                if(condition.go === position.right) {
+                    correctPath[i] = correctPath[i] + 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                } else if(condition.else === position.right) {
+                    correctPath[i] = 3;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                };
+            };
+
+            if(
+                (condition.hasOwnProperty(rockString) && rockPosition === position.center && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.center && !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition === position.center && !activate) 
+            ) {
+                
+                activate = true;
+                correctPath.push(2);
+                indexCorrectPath = correctPath.length - 1;
+                // console.log("CorrectPath Rock center", correctPath);
+
+                if(condition.go === position.left) {                        
+                    correctPath[i] = correctPath[i] - 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                } else if(condition.else === position.left) {
+                    correctPath[i] = 1;
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                };
+
+                if(condition.go === position.center) {                        
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                } else if(
+                    (condition.else === position.center && rockPosition !== position.center) 
+                ) {
+                    console.log("funciona");
+                    
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                };
+
+                if(condition.go === position.right) {                        
+                    correctPath[i] = correctPath[i] + 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                } else if(condition.else === position.right) {
+                    correctPath[i] = 3;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                };
+                // console.log("CorrectPath Rock center", correctPath);
+            };
+
+            if(
+                (condition.hasOwnProperty(rockString) && rockPosition === position.right && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.right && !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition ===position.right && !activate)
+            ) {
+                activate = true;
+                correctPath.push(3);
+                indexCorrectPath = correctPath.length - 1;
+                console.log("CorrectPath Rock Right", correctPath);
+                
+                if(condition.go === position.left) {
+                    correctPath[i] = correctPath[i] - 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                } else if(condition.else === position.left) {
+                    correctPath[i] = 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawLeftX;
+                };
+
+                if(condition.go === position.center) {
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                }else if(condition.else === position.center) {
+                    correctPath[i] = 2;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawCenterX;
+                };
+
+                if(condition.go === position.right) {
+                    correctPath[i] = correctPath[i] + 1;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                } else if(condition.else === position.right) {
+                    correctPath[i] = 3;
+
+                    CHARACTER.y = splitCharacterY;
+                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y /= perspective * 1.7;
+                    CHARACTER.x = perspective * drawRightX;
+                };
+            };
+            // console.log("putCorrectPath activate: ", activate);
+        });
+    };
+    
+    // let characterPathingActive = false;
+    function characterPathing(data, CHARACTER) {
+        // characterPathingActive = characterPathingActive === false ? true : false;
+        // if(characterPathingActive) return;
+
+        document.addEventListener("keydown", handleCorrectPath(data, CHARACTER));
     };
     
     let activate = false;
