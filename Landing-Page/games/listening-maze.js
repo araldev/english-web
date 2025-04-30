@@ -28,10 +28,13 @@
     let calculateScale = 600;
     let perspective = recWidth / calculateScale;
 
-    let startCharacterY = 430;        
-    let splitCharacterY = 350;
-    let endCharacterY = 200;
+    const characterPlace = {
+        startY: 430,
+        splitY: 350,
+        endY: 200
+    };
 
+    // Game State
     let level = 1;
     const maxLevel = 10;
     let regexLevel;
@@ -147,14 +150,14 @@
                 if(condition.go === position.left.key) {
                     correctPath[i] = correctPath[i] - 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 };
@@ -162,15 +165,15 @@
                 if(condition.go === position.center.key) {
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 } else if(condition.else === position.center.key) {
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 };
@@ -178,15 +181,15 @@
                 if(condition.go === position.right.key) {
                     correctPath[i] = correctPath[i] + 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 };
@@ -206,14 +209,14 @@
                 if(condition.go === position.left.key) {                        
                     correctPath[i] = correctPath[i] - 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 };
@@ -221,8 +224,8 @@
                 if(condition.go === position.center.key) {                        
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 } else if(
@@ -232,8 +235,8 @@
                     
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 };
@@ -241,15 +244,15 @@
                 if(condition.go === position.right.key) {                        
                     correctPath[i] = correctPath[i] + 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 };
@@ -269,15 +272,15 @@
                 if(condition.go === position.left.key) {
                     correctPath[i] = correctPath[i] - 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.left.drawX;
                 };
@@ -285,15 +288,15 @@
                 if(condition.go === position.center.key) {
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 }else if(condition.else === position.center.key) {
                     correctPath[i] = 2;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.center.drawX;
                 };
@@ -301,15 +304,15 @@
                 if(condition.go === position.right.key) {
                     correctPath[i] = correctPath[i] + 1;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
-                    CHARACTER.y = splitCharacterY;
-                    CHARACTER.y = endCharacterY;
+                    CHARACTER.y = characterPlace.splitY;
+                    CHARACTER.y = characterPlace.endY;
                     CHARACTER.y /= perspective * 1.7;
                     CHARACTER.x = perspective * position.right.drawX;
                 };
@@ -330,7 +333,7 @@
     function drawCharacter(CHARACTER) {
             if(!activate) {
                 CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
-                CHARACTER.y = startCharacterY;
+                CHARACTER.y = characterPlace.startY;
             };
 
             ctx.fillStyle = "Black";
