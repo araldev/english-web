@@ -69,277 +69,130 @@
         CURRENT_PATH = data.paths[regexPath];
         console.log("StateGame Path: ",path, CURRENT_PATH);
     };
-// Solucionar handleCorrectPath() y putCorrectPath()
+
     function handleCorrectPath(data, CHARACTER) {
         return (e) => {
-            if(e.key !== keyDown.arrowLeft && e.key !== keyDown.arrowUp && e.key !== keyDown.arrowRight) return;
-            // console.log(e.key);
-            putCorrectPath(CHARACTER);
-    
-            let index;
-            if(e.key === keyDown.arrowLeft){
-                if(
-                    correctPath.some((path, i) => {
-                        index = i;
-                        return path === 1;
-                    })
-                ) {
-                    drawCharacter(CHARACTER);
-                    correctPath.splice(indexCorrectPath, 1);
-                    path++;
-                    if(path > maxPath) level++, path = 1;            
-                    init(data);
-                } else {
-                    correctPath.splice(indexCorrectPath, 1);
-                    throw new Error("You miss...");
-                }
-            };
-    
-            if(e.key === keyDown.arrowUp){
-                if (
-                    correctPath.some((path, i) => {
-                        index = i;
-                        return path === 2;
-                    })
-                ) {
-                    drawCharacter(CHARACTER);
-                    correctPath.splice(indexCorrectPath, 1);
-                    path++;
-                    if(path > maxPath) level++, path = 1; 
-                    init(data);
-                } else {
-                    correctPath.splice(indexCorrectPath, 1);
-                    throw new Error("You miss...");
-                }
-            };
-    
-            if(e.key === keyDown.arrowRight){
-                if(
-                    correctPath.some((path, i) => {
-                        index = i;
-                        return path === 3;
-                    })
-                ) {
-                    drawCharacter(CHARACTER);
-                    correctPath.splice(indexCorrectPath, 1);
-                    path++;
-                    if(path > maxPath) level++, path = 1; 
-                    init(data);
-                } else {
-                    correctPath.splice(indexCorrectPath, 1);
-                    throw new Error("You miss...");
-                }
-            };
+            if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
+            
+            const selectedPath = getPathFromKey(e.key);
+            const isCorrect = checkIfPathIsCorrect(selectedPath);
+            
+            if(isCorrect) {
+                moveCharacterToPath(CHARACTER, selectedPath);
+                advanceToNextPathOrLevel();
+                init(data);
+            } else {
+                handleIncorrectMove();
+            }
         };
     };
+
+    function getPathFromKey(key) {
+        return {
+            [keyDown.arrowLeft]: 1,
+            [keyDown.arrowUp]: 2,
+            [keyDown.arrowRight]: 3
+        }[key];
+    };
+
+    function checkIfPathIsCorrect(selectedPath) {
+        return correctPath.includes(selectedPath);
+    };
+
+    function moveCharacterToPath(CHARACTER, path) {
+        const positionMap = {
+            1: position.left.drawX,
+            2: position.center.drawX,
+            3: position.right.drawX
+        };
+
+        CHARACTER.y = characterPlace.splitY;
+        CHARACTER.y = characterPlace.endY;
+        CHARACTER.y /= perspective * 1.7;
+        CHARACTER.x = perspective * positionMap[path];
+    };
+
+    function advanceToNextPathOrLevel() {
+        path++;
+        if(path > maxPath) {
+            level++;
+            path = 1;
+        }
+    };
+
+    function handleIncorrectMove() {
+        console.error("Movimiento incorrecto!");
+        // Aquí puedes añadir efectos visuales/sonoros de error
+    }
     
-    function putCorrectPath(CHARACTER) {
-        let activate = false;
+// Arreglar esta parte:
+// ----------------------------------------------------------->
+
+    function putCorrectPath() {
+        correctPath = []; // Resetear caminos correctos
         
-        CURRENT_LEVEL.if.forEach((condition, i) => {
-            if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.left.key && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.left.key&& !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition === position.left.key && !activate)
-            ) {
-                activate = true;
-                correctPath.push(1);
-                indexCorrectPath = correctPath.length - 1;
-                // console.log("CorrectPath Rock Left", correctPath);
+        CURRENT_LEVEL.if.forEach(rule => {
+            // Manejar reglas con "all" (como en level-10)
+            console.log("Esto es la rule: ", rule);
+            
+            if(Object.values(rule).some(value => value === position.any)) {
+                // if(rule.all.every(obs => Object.values(CURRENT_PATH).includes(obs))) {
+                //     correctPath.push(getPathValue(rule.go));
+                // }
+                // return;
+            }
+            
+            // Manejar reglas normales
+            for(const [obstacle, obstaclePosition] of Object.entries(rule)) {
+                if(obstacle === "go" || obstacle === "else") continue;
                 
-                if(condition.go === position.left.key) {
-                    correctPath[i] = correctPath[i] - 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                } else if(condition.else === position.left.key) {
-                    correctPath[i] = 1;
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                };
+                const obstacleIsPresent = checkObstaclePosition(obstacle, obstaclePosition);                
                 
-                if(condition.go === position.center.key) {
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                } else if(condition.else === position.center.key) {
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                };
-
-                if(condition.go === position.right.key) {
-                    correctPath[i] = correctPath[i] + 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                } else if(condition.else === position.right.key) {
-                    correctPath[i] = 3;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                };
-            };
-
-            if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.center.key && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.center.key && !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition === position.center.key && !activate) 
-            ) {
-                
-                activate = true;
-                correctPath.push(2);
-                indexCorrectPath = correctPath.length - 1;
-                // console.log("CorrectPath Rock center", correctPath);
-
-                if(condition.go === position.left.key) {                        
-                    correctPath[i] = correctPath[i] - 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                } else if(condition.else === position.left.key) {
-                    correctPath[i] = 1;
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                };
-
-                if(condition.go === position.center.key) {                        
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                } else if(
-                    (condition.else === position.center.key && rockPosition !== position.center.key) 
-                ) {
-                    console.log("funciona");
-                    
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                };
-
-                if(condition.go === position.right.key) {                        
-                    correctPath[i] = correctPath[i] + 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                } else if(condition.else === position.right.key) {
-                    correctPath[i] = 3;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                };
-                // console.log("CorrectPath Rock center", correctPath);
-            };
-
-            if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.right.key && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.right.key && !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition ===position.right.key && !activate)
-            ) {
-                activate = true;
-                correctPath.push(3);
-                indexCorrectPath = correctPath.length - 1;
-                console.log("CorrectPath Rock Right", correctPath);
-                
-                if(condition.go === position.left.key) {
-                    correctPath[i] = correctPath[i] - 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                } else if(condition.else === position.left.key) {
-                    correctPath[i] = 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.left.drawX;
-                };
-
-                if(condition.go === position.center.key) {
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                }else if(condition.else === position.center.key) {
-                    correctPath[i] = 2;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.center.drawX;
-                };
-
-                if(condition.go === position.right.key) {
-                    correctPath[i] = correctPath[i] + 1;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                } else if(condition.else === position.right.key) {
-                    correctPath[i] = 3;
-
-                    CHARACTER.y = characterPlace.splitY;
-                    CHARACTER.y = characterPlace.endY;
-                    CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * position.right.drawX;
-                };
-            };
-            // console.log("putCorrectPath activate: ", activate);
+                if(obstacleIsPresent) {
+                    correctPath.push(getPathValue(rule.go));
+                } else if(rule.else) {
+                    correctPath.push(getPathValue(rule.else));
+                }
+            }
         });
+        
+        // Si no hay caminos definidos, usar centro como default
+        if(correctPath.length === 0) correctPath.push(2);
     };
-    
-    // let characterPathingActive = false;
+
+    function checkObstaclePosition(obstacle, positionToCheck) {
+        if(positionToCheck === "any") {
+            return Object.values(CURRENT_PATH).includes(obstacle);
+        }
+        return CURRENT_PATH[positionToCheck] === obstacle;
+    };
+
+    function getPathValue(position) {
+        return {
+            left: 1,
+            center: 2,
+            right: 3
+        }[position] || 2; // Default to center if invalid
+    };
+
+// ----------------------------------------------------------------->
+
+    let currentKeyHandler;
     function characterPathing(data, CHARACTER) {
-        // characterPathingActive = characterPathingActive === false ? true : false;
-        // if(characterPathingActive) return;
-
-        document.addEventListener("keydown", handleCorrectPath(data, CHARACTER));
+        if (currentKeyHandler) {
+            document.removeEventListener("keydown", currentKeyHandler);
+            currentKeyHandler = null;
+        }
+        currentKeyHandler = (e) => handleCorrectPath(data, CHARACTER);
+        document.addEventListener("keydown", currentKeyHandler());
     };
     
-    let activate = false;
     function drawCharacter(CHARACTER) {
-            if(!activate) {
-                CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
-                CHARACTER.y = characterPlace.startY;
-            };
+        CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
+        CHARACTER.y = characterPlace.startY;
 
-            ctx.fillStyle = "Black";
-            ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height);
-            activate = activate ===  false ? true : false;
-            // console.log("drawCharacter activate: ", activate);   
+        ctx.fillStyle = "Black";
+        ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height);
     };
 
     function drawPathToObjects(obstacle1, obstacle2, obstacle3) {
@@ -539,6 +392,8 @@
 
     function init(data) {
         stateGame(data);
+        putCorrectPath();
+        console.log("Caminos correctos:", correctPath);
         requestAnimationFrame(() => draw(data));
         window.addEventListener("resize", () => requestAnimationFrame(() => draw(data)));
     };
