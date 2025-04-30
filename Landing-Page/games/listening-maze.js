@@ -32,10 +32,6 @@
     let splitCharacterY = 350;
     let endCharacterY = 200;
 
-    const drawLeftX = 100;
-    const drawCenterX = 280;
-    const drawRightX = 450;
-
     let level = 1;
     const maxLevel = 10;
     let regexLevel;
@@ -46,9 +42,9 @@
     let CURRENT_PATH;
 
     const position = {
-        left: "left",
-        center: "center",
-        right: "right",
+        left: {drawX: 100, key: "left"},
+        center: {drawX: 280, key: "center"},
+        right: {drawX: 450, key: "right"},
         any: "any"
     }
 
@@ -139,67 +135,67 @@
         
         CURRENT_LEVEL.if.forEach((condition, i) => {
             if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.left && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.left && !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition === position.left && !activate)
+                (condition.hasOwnProperty(rockString) && rockPosition === position.left.key && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.left.key&& !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition === position.left.key && !activate)
             ) {
                 activate = true;
                 correctPath.push(1);
                 indexCorrectPath = correctPath.length - 1;
                 // console.log("CorrectPath Rock Left", correctPath);
                 
-                if(condition.go === position.left) {
+                if(condition.go === position.left.key) {
                     correctPath[i] = correctPath[i] - 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
-                } else if(condition.else === position.left) {
+                    CHARACTER.x = perspective * position.left.drawX;
+                } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
+                    CHARACTER.x = perspective * position.left.drawX;
                 };
                 
-                if(condition.go === position.center) {
+                if(condition.go === position.center.key) {
                     correctPath[i] = 2;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
-                } else if(condition.else === position.center) {
+                    CHARACTER.x = perspective * position.center.drawX;
+                } else if(condition.else === position.center.key) {
                     correctPath[i] = 2;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
+                    CHARACTER.x = perspective * position.center.drawX;
                 };
 
-                if(condition.go === position.right) {
+                if(condition.go === position.right.key) {
                     correctPath[i] = correctPath[i] + 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
-                } else if(condition.else === position.right) {
+                    CHARACTER.x = perspective * position.right.drawX;
+                } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
+                    CHARACTER.x = perspective * position.right.drawX;
                 };
             };
 
             if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.center && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.center && !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition === position.center && !activate) 
+                (condition.hasOwnProperty(rockString) && rockPosition === position.center.key && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.center.key && !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition === position.center.key && !activate) 
             ) {
                 
                 activate = true;
@@ -207,30 +203,30 @@
                 indexCorrectPath = correctPath.length - 1;
                 // console.log("CorrectPath Rock center", correctPath);
 
-                if(condition.go === position.left) {                        
+                if(condition.go === position.left.key) {                        
                     correctPath[i] = correctPath[i] - 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
-                } else if(condition.else === position.left) {
+                    CHARACTER.x = perspective * position.left.drawX;
+                } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
+                    CHARACTER.x = perspective * position.left.drawX;
                 };
 
-                if(condition.go === position.center) {                        
+                if(condition.go === position.center.key) {                        
                     correctPath[i] = 2;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
+                    CHARACTER.x = perspective * position.center.drawX;
                 } else if(
-                    (condition.else === position.center && rockPosition !== position.center) 
+                    (condition.else === position.center.key && rockPosition !== position.center.key) 
                 ) {
                     console.log("funciona");
                     
@@ -239,83 +235,83 @@
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
+                    CHARACTER.x = perspective * position.center.drawX;
                 };
 
-                if(condition.go === position.right) {                        
+                if(condition.go === position.right.key) {                        
                     correctPath[i] = correctPath[i] + 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
-                } else if(condition.else === position.right) {
+                    CHARACTER.x = perspective * position.right.drawX;
+                } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
+                    CHARACTER.x = perspective * position.right.drawX;
                 };
                 // console.log("CorrectPath Rock center", correctPath);
             };
 
             if(
-                (condition.hasOwnProperty(rockString) && rockPosition === position.right && !activate) ||
-                (condition.hasOwnProperty(treeString) && treePosition === position.right && !activate) ||
-                (condition.hasOwnProperty(fenceString) && fencePosition ===position.right && !activate)
+                (condition.hasOwnProperty(rockString) && rockPosition === position.right.key && !activate) ||
+                (condition.hasOwnProperty(treeString) && treePosition === position.right.key && !activate) ||
+                (condition.hasOwnProperty(fenceString) && fencePosition ===position.right.key && !activate)
             ) {
                 activate = true;
                 correctPath.push(3);
                 indexCorrectPath = correctPath.length - 1;
                 console.log("CorrectPath Rock Right", correctPath);
                 
-                if(condition.go === position.left) {
+                if(condition.go === position.left.key) {
                     correctPath[i] = correctPath[i] - 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
-                } else if(condition.else === position.left) {
+                    CHARACTER.x = perspective * position.left.drawX;
+                } else if(condition.else === position.left.key) {
                     correctPath[i] = 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawLeftX;
+                    CHARACTER.x = perspective * position.left.drawX;
                 };
 
-                if(condition.go === position.center) {
+                if(condition.go === position.center.key) {
                     correctPath[i] = 2;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
-                }else if(condition.else === position.center) {
+                    CHARACTER.x = perspective * position.center.drawX;
+                }else if(condition.else === position.center.key) {
                     correctPath[i] = 2;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawCenterX;
+                    CHARACTER.x = perspective * position.center.drawX;
                 };
 
-                if(condition.go === position.right) {
+                if(condition.go === position.right.key) {
                     correctPath[i] = correctPath[i] + 1;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
-                } else if(condition.else === position.right) {
+                    CHARACTER.x = perspective * position.right.drawX;
+                } else if(condition.else === position.right.key) {
                     correctPath[i] = 3;
 
                     CHARACTER.y = splitCharacterY;
                     CHARACTER.y = endCharacterY;
                     CHARACTER.y /= perspective * 1.7;
-                    CHARACTER.x = perspective * drawRightX;
+                    CHARACTER.x = perspective * position.right.drawX;
                 };
             };
             // console.log("putCorrectPath activate: ", activate);
@@ -381,9 +377,9 @@
     
     function drawRock(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(rockString)) return;
-        if(CURRENT_PATH.left.includes(rockString)) x = drawLeftX, rockPosition = position.left;
-        if(CURRENT_PATH.center.includes(rockString)) x = drawCenterX, rockPosition = position.center;
-        if(CURRENT_PATH.right.includes(rockString)) x = drawRightX, rockPosition = position.right;        
+        if(CURRENT_PATH.left.includes(rockString)) x = position.left.drawX, rockPosition = position.left.key;
+        if(CURRENT_PATH.center.includes(rockString)) x = position.center.drawX, rockPosition = position.center.key;
+        if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX, rockPosition = position.right.key;        
 
         x = perspective * x;
         y /= perspective * 1.4;
@@ -420,9 +416,9 @@
 
     function drawTree(x, y, radius, width, height) {
         if(!Object.values(CURRENT_PATH).includes(treeString)) return;
-        if(CURRENT_PATH.left.includes(treeString)) x = drawLeftX, treePosition = position.left;
-        if(CURRENT_PATH.center.includes(treeString)) x = drawCenterX, treePosition = position.center;
-        if(CURRENT_PATH.right.includes(treeString)) x = drawRightX, treePosition = position.right;
+        if(CURRENT_PATH.left.includes(treeString)) x = position.left.drawX, treePosition = position.left.key;
+        if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX, treePosition = position.center.key;
+        if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX, treePosition = position.right.key;
 
         x = perspective * x;
         y /= perspective * 1.5;
@@ -464,9 +460,9 @@
 
     function drawFence(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(fenceString)) return;
-        if(CURRENT_PATH.left.includes(fenceString)) x = drawLeftX, fencePosition = position.left;
-        if(CURRENT_PATH.center.includes(fenceString)) x = drawCenterX, fencePosition = position.center;
-        if(CURRENT_PATH.right.includes(fenceString)) x = drawRightX, fencePosition = position.right;
+        if(CURRENT_PATH.left.includes(fenceString)) x = position.left.drawX, fencePosition = position.left.key;
+        if(CURRENT_PATH.center.includes(fenceString)) x = position.center.drawX, fencePosition = position.center.key;
+        if(CURRENT_PATH.right.includes(fenceString)) x = position.right.drawX, fencePosition = position.right.key;
 
         x = perspective * x - 40;
         y /= perspective * 1.4;
