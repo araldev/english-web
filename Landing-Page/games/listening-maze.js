@@ -1,3 +1,6 @@
+// 1. Crear estados del juego: Waiting, Playing, Game Over.
+// 2. Averiguar porque me da doble input las flechas cuando paso al siguiente nivel.
+// ----------------------------------------------------------------->
 (function() {  
     fetch("./games/listening-maze.json")
         .then(res => {
@@ -18,11 +21,8 @@
     const ctx = canvas.getContext("2d");
 
     const rockString = "rock";
-    let rockPosition;
     const treeString = "tree";
-    let treePosition;
     const fenceString = "fence";
-    let fencePosition;
 
     let recWidth;
     let calculateScale = 600;
@@ -63,27 +63,25 @@
     function stateGame(data) {
         regexLevel = `level-${level}`;
         CURRENT_LEVEL = data[regexLevel];
-        console.log("StateGame Level: ", CURRENT_LEVEL);
+        console.log("CURRENT_LEVEL: ", CURRENT_LEVEL);
 
         regexPath = `${path}`;
         CURRENT_PATH = data.paths[regexPath];
-        console.log("StateGame Path: ",path, CURRENT_PATH);
+        console.log("CURRENT_PATH: ",path, CURRENT_PATH);
     };
 
-    function handleCorrectPath(data, CHARACTER) {
-        return (e) => {
-            if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
-            
-            const selectedPath = getPathFromKey(e.key);
-            const isCorrect = checkIfPathIsCorrect(selectedPath);
-            
-            if(isCorrect) {
-                moveCharacterToPath(CHARACTER, selectedPath);
-                advanceToNextPathOrLevel();
-                init(data);
-            } else {
-                handleIncorrectMove();
-            }
+    function handleCorrectPath(e, data, CHARACTER) {
+        if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
+        
+        const selectedPath = getPathFromKey(e.key);
+        const isCorrect = checkIfPathIsCorrect(selectedPath);
+        
+        if(isCorrect) {
+            moveCharacterToPath(CHARACTER, selectedPath);
+            advanceToNextPathOrLevel();
+            init(data);
+        } else {
+            handleIncorrectMove();
         };
     };
 
@@ -99,6 +97,8 @@
         return correctPath.includes(selectedPath);
     };
 
+// Cambiar esta función para incrementar la posición hasta el camino correcto:
+// ----------------------------------------------------------------->
     function moveCharacterToPath(CHARACTER, path) {
         const positionMap = {
             1: position.left.drawX,
@@ -111,80 +111,98 @@
         CHARACTER.y /= perspective * 1.7;
         CHARACTER.x = perspective * positionMap[path];
     };
+// ----------------------------------------------------------------->
 
     function advanceToNextPathOrLevel() {
         path++;
         if(path > maxPath) {
             level++;
             path = 1;
-        }
+        };
+        if(level > maxLevel) {
+            alert("You win")
+            level= 1;
+            path = 1;
+        };
     };
 
+// Restar Vidas y si llega a 0 resetear.
+// ----------------------------------------------------------------->
     function handleIncorrectMove() {
         console.error("Movimiento incorrecto!");
         // Aquí puedes añadir efectos visuales/sonoros de error
     }
-    
-// Arreglar esta parte:
-// ----------------------------------------------------------->
+// ----------------------------------------------------------------->
 
+// Agregar la funcionalidad de all(si están todos los obstacles)
+// ----------------------------------------------------------------->
     function putCorrectPath() {
         correctPath = []; // Resetear caminos correctos
+        let result = 0;
+        let index;
         
         CURRENT_LEVEL.if.forEach(rule => {
-            // Manejar reglas con "all" (como en level-10)
             console.log("Esto es la rule: ", rule);
             
-            if(Object.values(rule).some(value => value === position.any)) {
-                // if(rule.all.every(obs => Object.values(CURRENT_PATH).includes(obs))) {
-                //     correctPath.push(getPathValue(rule.go));
-                // }
-                // return;
-            }
-            
             // Manejar reglas normales
-            for(const [obstacle, obstaclePosition] of Object.entries(rule)) {
-                if(obstacle === "go" || obstacle === "else") continue;
+            for(const [key, value] of Object.entries(rule)) {
+                if(key === "go" || key === "else") continue;
+                if(correctPath.length > 0) return;
                 
-                const obstacleIsPresent = checkObstaclePosition(obstacle, obstaclePosition);                
+                const obstacleIsPresent = checkObstaclePosition(key, value);   
+                console.log("obstacleIsPresent??????????????---->", obstacleIsPresent);
                 
                 if(obstacleIsPresent) {
-                    correctPath.push(getPathValue(rule.go));
-                } else if(rule.else) {
+                    result = getPathValue(obstacleIsPresent) + calculatePath(rule.go);
+                    correctPath.push(result);
+                } else if(correctPath.length < 1 && rule.else) {
                     correctPath.push(getPathValue(rule.else));
                 }
+
+                if(!correctPath.some(num => [1, 2, 3].includes(num))) {
+                    index = correctPath.findIndex(num => ![1, 2, 3].includes(num))
+                    correctPath.splice(index, 1);
+                };
             }
         });
-        
         // Si no hay caminos definidos, usar centro como default
-        if(correctPath.length === 0) correctPath.push(2);
+        if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);        
+    };
+// ----------------------------------------------------------------->
+
+    // Función para sumar averiguar el camino dinámicamente dependiendo donde está el objeto 
+    function calculatePath(go) {
+        return {
+            left: -1,
+            center: 0,
+            right: +1
+        }[go] || 0;
     };
 
     function checkObstaclePosition(obstacle, positionToCheck) {
-        if(positionToCheck === "any") {
-            return Object.values(CURRENT_PATH).includes(obstacle);
+        if(positionToCheck === position.any) {
+            let index = Object.values(CURRENT_PATH).findIndex(value => value === obstacle);            
+            return index === -1 ? false : Object.keys(CURRENT_PATH)[index];
         }
-        return CURRENT_PATH[positionToCheck] === obstacle;
+        return CURRENT_PATH[positionToCheck] === obstacle ? positionToCheck : false;
     };
 
     function getPathValue(position) {
         return {
             left: 1,
             center: 2,
-            right: 3
-        }[position] || 2; // Default to center if invalid
+            right: 3,
+        }[position];
     };
 
-// ----------------------------------------------------------------->
-
     let currentKeyHandler;
-    function characterPathing(data, CHARACTER) {
+    function eventPathing(data, CHARACTER) {
         if (currentKeyHandler) {
             document.removeEventListener("keydown", currentKeyHandler);
             currentKeyHandler = null;
         }
-        currentKeyHandler = (e) => handleCorrectPath(data, CHARACTER);
-        document.addEventListener("keydown", currentKeyHandler());
+        currentKeyHandler = (e) => handleCorrectPath(e, data, CHARACTER);
+        document.addEventListener("keydown", currentKeyHandler);
     };
     
     function drawCharacter(CHARACTER) {
@@ -233,9 +251,9 @@
     
     function drawRock(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(rockString)) return;
-        if(CURRENT_PATH.left.includes(rockString)) x = position.left.drawX, rockPosition = position.left.key;
-        if(CURRENT_PATH.center.includes(rockString)) x = position.center.drawX, rockPosition = position.center.key;
-        if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX, rockPosition = position.right.key;        
+        if(CURRENT_PATH.left.includes(rockString)) x = position.left.drawX;
+        if(CURRENT_PATH.center.includes(rockString)) x = position.center.drawX;
+        if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX;        
 
         x = perspective * x;
         y /= perspective * 1.4;
@@ -272,9 +290,9 @@
 
     function drawTree(x, y, radius, width, height) {
         if(!Object.values(CURRENT_PATH).includes(treeString)) return;
-        if(CURRENT_PATH.left.includes(treeString)) x = position.left.drawX, treePosition = position.left.key;
-        if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX, treePosition = position.center.key;
-        if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX, treePosition = position.right.key;
+        if(CURRENT_PATH.left.includes(treeString)) x = position.left.drawX;
+        if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX;
+        if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX;
 
         x = perspective * x;
         y /= perspective * 1.5;
@@ -316,9 +334,9 @@
 
     function drawFence(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(fenceString)) return;
-        if(CURRENT_PATH.left.includes(fenceString)) x = position.left.drawX, fencePosition = position.left.key;
-        if(CURRENT_PATH.center.includes(fenceString)) x = position.center.drawX, fencePosition = position.center.key;
-        if(CURRENT_PATH.right.includes(fenceString)) x = position.right.drawX, fencePosition = position.right.key;
+        if(CURRENT_PATH.left.includes(fenceString)) x = position.left.drawX;
+        if(CURRENT_PATH.center.includes(fenceString)) x = position.center.drawX;
+        if(CURRENT_PATH.right.includes(fenceString)) x = position.right.drawX;
 
         x = perspective * x - 40;
         y /= perspective * 1.4;
@@ -367,6 +385,8 @@
         canvas.width = container.offsetWidth - 5;
         recWidth = canvas.width;
 
+        ctx.clearRect(0, 0, recWidth, canvas.height);
+
         ctx.fillStyle = "#A0522D";
         ctx.fillRect(0, 0, recWidth, 500);
         
@@ -377,7 +397,7 @@
 
         drawPathToObjects(ROCK, TREE, FENCE);
         drawCharacter(CHARACTER);
-        characterPathing(data, CHARACTER);
+        eventPathing(data, CHARACTER);
 
         if(ROCK && ROCK.x) {
             drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height)
@@ -393,8 +413,8 @@
     function init(data) {
         stateGame(data);
         putCorrectPath();
-        console.log("Caminos correctos:", correctPath);
         requestAnimationFrame(() => draw(data));
+        console.log("Caminos correctos -------------->", correctPath);
         window.addEventListener("resize", () => requestAnimationFrame(() => draw(data)));
     };
 })()

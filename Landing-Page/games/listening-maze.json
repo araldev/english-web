@@ -8,28 +8,28 @@
     }
   },
   "obstacles": {
-      "rock": {
-          "type": "rock",
-          "x": 280,
-          "y": 200,
-          "width": 30,
-          "height": 30
-        },
-      "tree": {
-        "type": "tree",
-        "x": 450,
-        "y": 200,
-        "radius": 30,
-        "width": 20,
-        "height": 50
-      },
-      "fence": {
-        "type": "fence",
-        "x": 100,
-        "y": 200,
-        "width": 50,
-        "height": 10
-      }
+    "rock": {
+      "type": "rock",
+      "x": 280,
+      "y": 200,
+      "width": 30,
+      "height": 30
+    },
+    "tree": {
+      "type": "tree",
+      "x": 450,
+      "y": 200,
+      "radius": 30,
+      "width": 20,
+      "height": 50
+    },
+    "fence": {
+      "type": "fence",
+      "x": 100,
+      "y": 200,
+      "width": 50,
+      "height": 10
+    }
   },
   "paths": {
     "1": { "left": "", "center": "rock", "right": "" },
@@ -106,7 +106,7 @@
   },
   "level-9": {
     "level": 9,
-    "audioText": "If there’s a rock on the left, avoid it. Go right if there’s a tree.",
+    "audioText": "If there’s a rock on the left, jump over it. Go right if there’s a tree.",
     "if": [
       { "rock": "left", "go": "center" },
       { "tree": "any", "go": "right" }
