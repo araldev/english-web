@@ -58,7 +58,6 @@
     };
 
     let correctPath = [];
-    let indexCorrectPath;
 
     function stateGame(data) {
         regexLevel = `level-${level}`;
@@ -161,7 +160,7 @@
 
                 if(!correctPath.some(num => [1, 2, 3].includes(num))) {
                     index = correctPath.findIndex(num => ![1, 2, 3].includes(num))
-                    correctPath.splice(index, 1);
+                    if(index !== -1) correctPath.splice(index, 1);
                 };
             }
         });
