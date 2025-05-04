@@ -2,7 +2,7 @@
 // 2. Averiguar porque me da doble input las flechas cuando paso al siguiente nivel.
 // ----------------------------------------------------------------->
 (function() {  
-    fetch("./games/listening-maze.json")
+    fetch("./src/assets/games/listening-maze.json")
         .then(res => {
             if(!res.ok) {
                 throw new Error("No se ha encontrado los datos del juego")
