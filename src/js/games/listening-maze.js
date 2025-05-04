@@ -1,11 +1,12 @@
 // 1. Crear estados del juego: Waiting, Playing, Game Over.
-// 2. Averiguar porque me da doble input las flechas cuando paso al siguiente nivel.
+// 2. Agregar audios con rules.
+// 3. Cuando minimizo con el botón no me hace el event resize.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
         .then(res => {
             if(!res.ok) {
-                throw new Error("No se ha encontrado los datos del juego")
+                console.error("No se ha encontrado los datos del juego")
             }
             return res.json();
         })
@@ -69,6 +70,14 @@
         console.log("CURRENT_PATH: ",path, CURRENT_PATH);
     };
 
+    function updateStateAndDraw(data) {
+        advanceToNextPathOrLevel();
+        stateGame(data);
+        putCorrectPath();
+        requestAnimationFrame(() => draw(data));
+        console.log("Caminos correctos -------------->", correctPath);
+    };
+
     function handleCorrectPath(e, data, CHARACTER) {
         if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
         
@@ -76,9 +85,7 @@
         const isCorrect = checkIfPathIsCorrect(selectedPath);
         
         if(isCorrect) {
-            moveCharacterToPath(CHARACTER, selectedPath);
-            advanceToNextPathOrLevel();
-            init(data);
+            moveCharacterToPath(data, CHARACTER, selectedPath, () => updateStateAndDraw(data));
         } else {
             handleIncorrectMove();
         };
@@ -96,19 +103,59 @@
         return correctPath.includes(selectedPath);
     };
 
-// Cambiar esta función para incrementar la posición hasta el camino correcto:
+// Arreglar la X y Y para que en todos los tamaños realice bien el recorrido:
 // ----------------------------------------------------------------->
-    function moveCharacterToPath(CHARACTER, path) {
+    function moveCharacterToPath(data, CHARACTER, path, callback) {
         const positionMap = {
             1: position.left.drawX,
             2: position.center.drawX,
             3: position.right.drawX
         };
 
-        CHARACTER.y = characterPlace.splitY;
-        CHARACTER.y = characterPlace.endY;
-        CHARACTER.y /= perspective * 1.7;
-        CHARACTER.x = perspective * positionMap[path];
+        const targetX = positionMap[path] * perspective;
+        const targetY = characterPlace.endY / (perspective * 1.7);
+
+        const ROCK = data.obstacles.rock;
+        const TREE = data.obstacles.tree;
+        const FENCE = data.obstacles.fence;
+
+        
+        function animate() {
+            const tolerance = 1;
+            const doneX = Math.abs(CHARACTER.x - targetX) <= tolerance;
+            const doneY = Math.abs(CHARACTER.y - targetY) <= tolerance;
+            let done = doneX && doneY;
+                        
+            ctx.clearRect(0, 0, recWidth, canvas.height);
+            ctx.fillStyle = "#A0522D";
+            ctx.fillRect(0, 0, recWidth, 500);
+            drawPathToObjects(ROCK, TREE, FENCE);
+            drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
+            drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height);
+            drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
+
+            if (!doneY) {
+                CHARACTER.y += -2;
+            };
+            if (!doneX && CHARACTER.y <= characterPlace.splitY - CHARACTER.height / 2) {
+                CHARACTER.x += CHARACTER.x < targetX ? 2 : -2;
+            };
+
+            console.log("CHARACTER.x:", CHARACTER.x, "TARGET_X:", targetX - CHARACTER.x / 2);
+            console.log("CHARACTER.y:", CHARACTER.y, "TARGET_Y:", targetY);
+            console.log(done);
+
+            ctx.fillStyle = "Black"
+            ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height)
+
+            if (!done) {
+                requestAnimationFrame(animate);
+            } else if(callback) {
+                callback(); // Llamar función cuando termine el movimiento
+            }
+        };
+    
+    requestAnimationFrame(animate);
     };
 // ----------------------------------------------------------------->
 
@@ -232,7 +279,7 @@
         ctx.lineTo(startX, splitY);
         ctx.stroke();
     
-        // Función auxiliar para rama hacia un objeto
+        // Función auxiliar para las ramas hacia cada objeto
         function drawBranch(toX, toY) {
             toX = perspective * toX;
             toY /= perspective * 1.5;
@@ -400,20 +447,28 @@
 
         if(ROCK && ROCK.x) {
             drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height)
-        }
+        };
         if(TREE && TREE.x) {
             drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height)
-        }
+        };
         if(FENCE && FENCE.x) {
             drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height)
-        }
+        };
     };
 
+    let handleEventDraw;
     function init(data) {
         stateGame(data);
         putCorrectPath();
-        requestAnimationFrame(() => draw(data));
+        draw(data);
+
+        if(handleEventDraw) {
+            window.removeEventListener("resize", handleEventDraw);
+            handleEventDraw = null;
+        };
+
+        handleEventDraw = (e) => draw(data);
+        window.addEventListener("resize", handleEventDraw);
         console.log("Caminos correctos -------------->", correctPath);
-        window.addEventListener("resize", () => requestAnimationFrame(() => draw(data)));
     };
 })()
