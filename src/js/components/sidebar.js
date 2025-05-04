@@ -10,11 +10,11 @@
         requestAnimationFrame(() => {
             if(!sidebar.classList.contains("minimize")) {
                 sidebar.classList.add("minimize");
-            }
+            };
             
             if(window.innerWidth > 600) {
                 sidebar.style.transform = 'translateX(0%)';
-            }
+            };
             if(window.innerWidth < 600) {
                 sidebar.style.transform = 'translateX(-100%)';
                 sidebar.classList.add('minimize');
@@ -23,61 +23,55 @@
                     container.style.height = '0';
                     container.parentElement.classList.remove('active');
                 });
-            }
+            };
         });
     });
 
     window.addEventListener('load', e => {
-        requestAnimationFrame(() => {
-            if(window.innerWidth <= 600) {
-                sidebar.style.transform = 'translateX(-100%)';
-                sidebar.classList.add('minimize');
-            } else {
-                // sidebar.classList.remove('minimize');
-            }
-        });
+        if(window.innerWidth <= 600) {
+            sidebar.style.transform = 'translateX(-100%)';
+            sidebar.classList.add('minimize');
+        } else {
+            // sidebar.classList.remove('minimize');
+        };
     });
 
     // Para cerrar el sidebar si se clica fuera de él.
     document.addEventListener('click', e => {
-        requestAnimationFrame(() => {
-            if(!sidebar.contains(e.target)) {
-                if(window.innerWidth > 600) {
-                    sidebar.classList.add('minimize');
-                    allSubmenuContainer.forEach(container => {
-                        container.style.height = '0';
-                        container.parentElement.classList.remove('active');
-                    });
-                }
-                if(window.innerWidth < 600) {
-                    sidebar.style.transform = 'translateX(-100%)';
-                    sidebar.classList.add('minimize');
-        
-                    allSubmenuContainer.forEach(container => {
-                        container.style.height = '0';
-                        container.parentElement.classList.remove('active');
-                    });
-                }
-            }
-        });
+        if(sidebar.contains(e.target)) return;
+
+        if(window.innerWidth > 600) {
+            sidebar.classList.add('minimize');
+            allSubmenuContainer.forEach(container => {
+                container.style.height = '0';
+                container.parentElement.classList.remove('active');
+            });
+        };
+        if(window.innerWidth < 600) {
+            sidebar.style.transform = 'translateX(-100%)';
+            sidebar.classList.add('minimize');
+
+            allSubmenuContainer.forEach(container => {
+                container.style.height = '0';
+                container.parentElement.classList.remove('active');
+            });
+        };
     })
 
     sidebarBtn.addEventListener('click', e => {
-        requestAnimationFrame(() => {
-            sidebar.classList.toggle('minimize');
-    
-            if (window.innerWidth <= 600) {
-                if (sidebar.style.transform === 'translateX(0%)') {
-                    sidebar.style.transform = 'translateX(-100%)';
-                    allSubmenuContainer.forEach(container => {
-                        container.style.height = '0';
-                        container.parentElement.classList.remove('active');
-                    });
-                } else {
-                    sidebar.style.transform = 'translateX(0%)';
-                }
-            }
-        });
+        sidebar.classList.toggle('minimize');
+
+        if (window.innerWidth > 600) return;
+
+        if (sidebar.style.transform === 'translateX(0%)') {
+            sidebar.style.transform = 'translateX(-100%)';
+            allSubmenuContainer.forEach(container => {
+                container.style.height = '0';
+                container.parentElement.classList.remove('active');
+            });
+        } else {
+            sidebar.style.transform = 'translateX(0%)';
+        };
     });
 
     if(menuLinks.length === 0 || allSubmenuContainer.length === 0) return;
