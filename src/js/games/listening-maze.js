@@ -21,6 +21,11 @@
     const canvas = document.getElementById("listening-maze");    
     const ctx = canvas.getContext("2d");
 
+    let CHARACTER;
+    let ROCK;
+    let TREE;
+    let FENCE;
+
     const rockString = "rock";
     const treeString = "tree";
     const fenceString = "fence";
@@ -59,6 +64,7 @@
     };
 
     let correctPath = [];
+    let isAnswered = false;
 
     function stateGame(data) {
         regexLevel = `level-${level}`;
@@ -75,6 +81,7 @@
         stateGame(data);
         putCorrectPath();
         requestAnimationFrame(() => draw(data));
+        isAnswered = false;
         console.log("Caminos correctos -------------->", correctPath);
     };
 
@@ -85,8 +92,10 @@
         const isCorrect = checkIfPathIsCorrect(selectedPath);
         
         if(isCorrect) {
-            moveCharacterToPath(data, CHARACTER, selectedPath, () => updateStateAndDraw(data));
+            isAnswered = true;
+            moveCharacterToPath(CHARACTER, selectedPath, () => updateStateAndDraw(data));
         } else {
+            isAnswered = true;
             handleIncorrectMove();
         };
     };
@@ -105,7 +114,7 @@
 
 // Arreglar la X y Y para que en todos los tamaños realice bien el recorrido:
 // ----------------------------------------------------------------->
-    function moveCharacterToPath(data, CHARACTER, path, callback) {
+    function moveCharacterToPath(CHARACTER, path, callback) {
         const positionMap = {
             1: position.left.drawX,
             2: position.center.drawX,
@@ -114,11 +123,6 @@
 
         const targetX = positionMap[path] * perspective;
         const targetY = characterPlace.endY / (perspective * 1.7);
-
-        const ROCK = data.obstacles.rock;
-        const TREE = data.obstacles.tree;
-        const FENCE = data.obstacles.fence;
-
         
         function animate() {
             const tolerance = 1;
@@ -127,8 +131,8 @@
             let done = doneX && doneY;
                         
             ctx.clearRect(0, 0, recWidth, canvas.height);
-            ctx.fillStyle = "#A0522D";
-            ctx.fillRect(0, 0, recWidth, 500);
+
+            drawBackground();
             drawPathToObjects(ROCK, TREE, FENCE);
             drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
             drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height);
@@ -141,12 +145,7 @@
                 CHARACTER.x += CHARACTER.x < targetX ? 2 : -2;
             };
 
-            console.log("CHARACTER.x:", CHARACTER.x, "TARGET_X:", targetX - CHARACTER.x / 2);
-            console.log("CHARACTER.y:", CHARACTER.y, "TARGET_Y:", targetY);
-            console.log(done);
-
-            ctx.fillStyle = "Black"
-            ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height)
+            drawCharacter(CHARACTER);
 
             if (!done) {
                 requestAnimationFrame(animate);
@@ -252,8 +251,10 @@
     };
     
     function drawCharacter(CHARACTER) {
-        CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
-        CHARACTER.y = characterPlace.startY;
+        if(!isAnswered) {
+            CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
+            CHARACTER.y = characterPlace.startY;
+        };
 
         ctx.fillStyle = "Black";
         ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height);
@@ -427,33 +428,28 @@
         ctx.fillRect(x, y + height * 0.65, width, railHeight);
     };
 
+    function drawBackground() {
+        ctx.fillStyle = "#A0522D";
+        ctx.fillRect(0, 0, recWidth, 500);
+    };
+
     function draw(data) {
+        CHARACTER = data.character[1];
+        ROCK = data.obstacles.rock;
+        TREE = data.obstacles.tree;
+        FENCE = data.obstacles.fence;
         canvas.width = container.offsetWidth - 5;
         recWidth = canvas.width;
 
         ctx.clearRect(0, 0, recWidth, canvas.height);
 
-        ctx.fillStyle = "#A0522D";
-        ctx.fillRect(0, 0, recWidth, 500);
-        
-        const CHARACTER = data.character[1];
-        const ROCK = data.obstacles.rock;
-        const TREE = data.obstacles.tree;
-        const FENCE = data.obstacles.fence;
-
+        drawBackground();
         drawPathToObjects(ROCK, TREE, FENCE);
+        drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height)
+        drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height)
+        drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height)
         drawCharacter(CHARACTER);
         eventPathing(data, CHARACTER);
-
-        if(ROCK && ROCK.x) {
-            drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height)
-        };
-        if(TREE && TREE.x) {
-            drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height)
-        };
-        if(FENCE && FENCE.x) {
-            drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height)
-        };
     };
 
     let handleEventDraw;
