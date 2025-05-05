@@ -17,9 +17,45 @@
             console.error("Error al cargar los datos del juego", error)
         });
 
+    const $level = document.getElementById("level");
+    const $path = document.getElementById("path");
+    const $lives = document.getElementById("lives");
+
+    const $newHeart = () => {
+        const $heart = document.createElement("img");
+        $heart.src = routeHeartSvg;
+        $heart.alt = "remaining lives";
+        $lives.appendChild($heart);
+    };
+    const isAlive = () => $lives.getAttribute("data-isalive").includes("alive");
+    const kill = () => $lives.setAttribute("data-isalive", "dead");
+    const revive = () => $lives.setAttribute("data-isalive", "alive");
+    
     const container = document.getElementById("game-container");
     const canvas = document.getElementById("listening-maze");    
     const ctx = canvas.getContext("2d");
+    
+    let recWidth;
+    let calculateScale = 600;
+    let perspective = recWidth / calculateScale;
+
+    // Initial Values
+    const initialLevel = 1;
+    const initialPath = 1;
+    const initialLives = 3;
+
+    // Game State
+    let level = initialLevel;
+    const maxLevel = 10;
+    let regexLevel;
+    let CURRENT_LEVEL;
+    let path = initialPath;
+    const maxPath = 10;
+    let regexPath;
+    let CURRENT_PATH;
+    const routeHeartSvg = "./public/images/heart.svg";
+    const maxLives = initialLives;
+    let lives = initialLives;
 
     let CHARACTER;
     let ROCK;
@@ -30,25 +66,11 @@
     const treeString = "tree";
     const fenceString = "fence";
 
-    let recWidth;
-    let calculateScale = 600;
-    let perspective = recWidth / calculateScale;
-
     const characterPlace = {
         startY: 430,
         splitY: 350,
         endY: 200
     };
-
-    // Game State
-    let level = 1;
-    const maxLevel = 10;
-    let regexLevel;
-    let CURRENT_LEVEL;
-    let path = 1;
-    const maxPath = 10;
-    let regexPath;
-    let CURRENT_PATH;
 
     const position = {
         left: {drawX: 100, key: "left"},
@@ -66,6 +88,46 @@
     let correctPath = [];
     let isAnswered = false;
 
+    let handleEventDraw;
+    function init(data) {
+        stateGame(data);
+        putCorrectPath();
+        draw(data);
+        showGameInfo();
+
+        if(handleEventDraw) {
+            window.removeEventListener("resize", handleEventDraw);
+            handleEventDraw = null;
+        };
+
+        handleEventDraw = (e) => draw(data);
+        window.addEventListener("resize", handleEventDraw);
+        console.log("Caminos correctos -------------->", correctPath);
+    };
+
+    function reset(data) {
+        level = initialLevel;
+        path = initialPath;
+        lives = initialLives;
+
+        stateGame(data);
+        putCorrectPath();
+        requestAnimationFrame(() => draw(data));
+        showGameInfo();
+    };
+
+    function showGameInfo() {
+        $level.innerHTML = `<strong>Level: ${level}</strong> / ${maxLevel}`;
+        $path.innerHTML = `<strong>Path: ${path}</strong> / ${maxPath}`;
+    
+        if(isAlive()) return;
+        console.log("Esta Muerto");
+        for(let i = 1; i <= lives; i++) {
+            $newHeart();
+        };
+        revive();
+    };
+
     function stateGame(data) {
         regexLevel = `level-${level}`;
         CURRENT_LEVEL = data[regexLevel];
@@ -77,10 +139,11 @@
     };
 
     function updateStateAndDraw(data) {
-        advanceToNextPathOrLevel();
+        advanceToNextPathOrLevel(data);
         stateGame(data);
         putCorrectPath();
         requestAnimationFrame(() => draw(data));
+        showGameInfo(data);
         isAnswered = false;
         console.log("Caminos correctos -------------->", correctPath);
     };
@@ -96,7 +159,7 @@
             moveCharacterToPath(CHARACTER, selectedPath, () => updateStateAndDraw(data));
         } else {
             isAnswered = true;
-            handleIncorrectMove();
+            handleIncorrectMove(data);
         };
     };
 
@@ -158,26 +221,32 @@
     };
 // ----------------------------------------------------------------->
 
-    function advanceToNextPathOrLevel() {
+    function advanceToNextPathOrLevel(data) {
         path++;
         if(path > maxPath) {
             level++;
             path = 1;
+            if(lives >= maxLives) return;
+            lives++;
+            $newHeart();
         };
         if(level > maxLevel) {
             alert("You win")
-            level= 1;
-            path = 1;
+            reset(data);
         };
     };
 
-// Restar Vidas y si llega a 0 resetear.
-// ----------------------------------------------------------------->
-    function handleIncorrectMove() {
+    function handleIncorrectMove(data) {
         console.error("Movimiento incorrecto!");
-        // Aquí puedes añadir efectos visuales/sonoros de error
+        if(lives > 0) {
+            lives--;
+            $lives.removeChild($lives.lastChild);
+        }; 
+        if(lives === 0) {
+            kill();
+            reset(data);
+        };
     }
-// ----------------------------------------------------------------->
 
 // Agregar la funcionalidad de all(si están todos los obstacles)
 // ----------------------------------------------------------------->
@@ -450,21 +519,5 @@
         drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height)
         drawCharacter(CHARACTER);
         eventPathing(data, CHARACTER);
-    };
-
-    let handleEventDraw;
-    function init(data) {
-        stateGame(data);
-        putCorrectPath();
-        draw(data);
-
-        if(handleEventDraw) {
-            window.removeEventListener("resize", handleEventDraw);
-            handleEventDraw = null;
-        };
-
-        handleEventDraw = (e) => draw(data);
-        window.addEventListener("resize", handleEventDraw);
-        console.log("Caminos correctos -------------->", correctPath);
     };
 })()

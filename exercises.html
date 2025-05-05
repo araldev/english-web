@@ -11,7 +11,7 @@
     <script defer type="module" src="./src/js/components/menu.js"></script>
     <script defer type="module" src="./src/js/components/section-grid.js"></script>
     <script defer type="module" src="./src/js/components/sidebar.js"></script>
-    <script type="module" src="./src/js/games/listening-maze.js"></script>
+    <script defer type="module" src="./src/js/games/listening-maze.js"></script>
 </head>
 <body id="exercises">
     <aside id="sidebar" class="sidebar minimize">
@@ -118,6 +118,11 @@
     
     <main>
         <section id="game-container" class="container section">
+            <header>
+                <span id="level"></span>
+                <span id="path"></span>
+                <span id="lives" data-isalive="dead"></span>
+            </header>
             <canvas height="500" class="games" id="listening-maze"></canvas>
         </section>
     </main>
