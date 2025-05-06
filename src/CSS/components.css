@@ -1,0 +1,11 @@
+@import './variables.css';
+
+.text-gradiant {
+    padding: 5px;
+    font-size: 2.5rem;
+    background: var(--text-gradient);
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    background-clip: text; 
+    color: transparent; 
+};
