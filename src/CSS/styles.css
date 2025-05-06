@@ -1,21 +1,5 @@
-:root {
-    --padding-container: 100px 0;
-    --color-principal-text: #000;
-    --color-secondary-text: #333;
-    --color-text: #fff;
-    --color-tittle: #1A3A6F;
-    --color-subtittle: #1A4876;
-    --btn-bg-color: #E76F51;
-    --color-background-infinite: repeating-linear-gradient(45deg, #d1d1d1 0%, #e3e3e3 4%, #b0b0b0 8%, #e3e3e3 12%, #d1d1d1 16%);
-    --color-background: linear-gradient(135deg, #d1d1d1 0%, #e3e3e3 25%, #b0b0b0 50%, #e3e3e3 75%, #d1d1d1 100%);
-    --sidebar-bg-color: #fff;
-    --text-gradient: linear-gradient( 90deg, var(--color-tittle) 0%, var(--color-subtittle) 35%, var(--btn-bg-color) 100%);
-    --bg-gradient: linear-gradient(to right, #1a3a6f, #4a6fa5);
-    --shadow-sidebar: 2px 2px 5px rgba(0, 0, 0, 0.15);
-    --size-tittle: clamp(1.5rem, 4vw, 2.5rem);
-    --size-subtittle: clamp(1rem, 3vw, 1.5rem);
-    --size-paragraph: clamp(0.8rem, 2vw, 1rem);
-}
+@import './variables.css';
+
 /* Animación entre diferentes html */
 @view-transition {
     navigation: auto;
