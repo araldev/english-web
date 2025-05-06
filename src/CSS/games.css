@@ -1,4 +1,60 @@
-.games {
-    margin: 40px auto;
-    border: 2px solid black;
+@import "./variables.css";
+
+/* Listening Maze */
+.container:has(.canvas) {
+    overflow: visible;
 }
+
+.canvas-container {
+    #rules {
+        text-align: start;
+
+        h2 {
+            text-align: center;
+        }
+    };
+
+    p {
+        font-size: 1.5rem;
+    }
+
+    .current-info {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: end;
+        width: 100%;
+        max-height: 90px;
+        height: auto;
+
+        #lives {
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: end;
+            max-width: 35%;
+            width: auto;
+            max-height: 90px;
+            height: auto;
+
+            img {
+                width: fit-content;
+                height: 30px;
+            }
+        }
+    };
+
+    .canvas {
+        margin: 20px auto;
+        border: 1px solid black;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgb(0, 0, 0, 0.7);
+        background-image: linear-gradient(180deg, #0000001f 0%, #0000005b 100% ), url("/public/images/grass-anime-bck.webp");
+        background-size: cover;
+    };
+
+    #audioText {
+        text-align: start;
+        padding: 10px;
+    };
+};
