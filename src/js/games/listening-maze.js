@@ -1,4 +1,4 @@
-// 1. Crear estados del juego: Waiting, Playing, Game Over.
+// 1. Crear estados del juego: Start, Playing, Game Over, You Win.
 // 2. Agregar audios con rules.
 // 3. Cuando minimizo con el botón no me hace el event resize.
 // ----------------------------------------------------------------->
@@ -17,16 +17,24 @@
             console.error("Error al cargar los datos del juego", error)
         });
 
+    // Get Images to canvas
+    const $rock = document.getElementById("rock");
+    const $tree = document.getElementById("tree");
+    const $fence = document.getElementById("fence");
+
+    // DOM elements and behavior management
     const $level = document.getElementById("level");
     const $path = document.getElementById("path");
     const $lives = document.getElementById("lives");
-
     const $newHeart = () => {
         const $heart = document.createElement("img");
-        $heart.src = routeHeartSvg;
+        $heart.src = "./public/images/heart.svg";
         $heart.alt = "remaining lives";
         $lives.appendChild($heart);
     };
+    const $rules = document.getElementById("rules");
+    const $audioText = document.getElementById("audioText");
+
     const isAlive = () => $lives.getAttribute("data-isalive").includes("alive");
     const kill = () => $lives.setAttribute("data-isalive", "dead");
     const revive = () => $lives.setAttribute("data-isalive", "alive");
@@ -43,6 +51,16 @@
     const initialLevel = 1;
     const initialPath = 1;
     const initialLives = 3;
+    const initialRules = `
+    <h2 class="text-gradiant">Rules:</h2><br>
+    <p>
+    <b>1.</b> If no rule/path is possible, you must take the central path.<br><br>
+    <b>2.</b> The first rule that is met disables the others.<br><br>
+    <b>3.</b> Every 10 paths, you advance a level, and each time you level up, you gain a life.<br><br>
+    <b>4.</b> If you run out of lives, you’ll start over from the beginning.<br><br>
+    <b>5.</b> <b>Choose the correct path using the arrow keys on your keyboard: ⬅️ ⬆️ ➡️
+    </p>
+    `;
 
     // Game State
     let level = initialLevel;
@@ -53,15 +71,18 @@
     const maxPath = 10;
     let regexPath;
     let CURRENT_PATH;
-    const routeHeartSvg = "./public/images/heart.svg";
-    const maxLives = initialLives;
     let lives = initialLives;
+    const maxLives = initialLives;
 
+    // Pjs
     let CHARACTER;
+
+    // Obstacles
     let ROCK;
     let TREE;
     let FENCE;
 
+    // Auxliliary Variables
     const rockString = "rock";
     const treeString = "tree";
     const fenceString = "fence";
@@ -69,7 +90,7 @@
     const characterPlace = {
         startY: 430,
         splitY: 350,
-        endY: 200
+        endY: 100
     };
 
     const position = {
@@ -77,7 +98,7 @@
         center: {drawX: 280, key: "center"},
         right: {drawX: 450, key: "right"},
         any: "any"
-    }
+    };
 
     const keyDown = {
         arrowLeft: "ArrowLeft",
@@ -85,6 +106,7 @@
         arrowRight: "ArrowRight"
     };
 
+    // Varaibles to manage answer and character movement
     let correctPath = [];
     let isAnswered = false;
 
@@ -117,11 +139,15 @@
     };
 
     function showGameInfo() {
+        // Info rules.
+        $rules.innerHTML = initialRules;
+        $audioText.innerHTML = `<b>${CURRENT_LEVEL.audioText}</b>`;
+        
+        // Info lvl, path, lives.
         $level.innerHTML = `<strong>Level: ${level}</strong> / ${maxLevel}`;
         $path.innerHTML = `<strong>Path: ${path}</strong> / ${maxPath}`;
     
         if(isAlive()) return;
-        console.log("Esta Muerto");
         for(let i = 1; i <= lives; i++) {
             $newHeart();
         };
@@ -175,8 +201,6 @@
         return correctPath.includes(selectedPath);
     };
 
-// Arreglar la X y Y para que en todos los tamaños realice bien el recorrido:
-// ----------------------------------------------------------------->
     function moveCharacterToPath(CHARACTER, path, callback) {
         const positionMap = {
             1: position.left.drawX,
@@ -184,42 +208,55 @@
             3: position.right.drawX
         };
 
-        const targetX = positionMap[path] * perspective;
+        const targetX = (positionMap[path] - CHARACTER.width / 2) * perspective;
+        const splitY = characterPlace.splitY - CHARACTER.height / 2;
         const targetY = characterPlace.endY / (perspective * 1.7);
         
-        function animate() {
-            const tolerance = 1;
-            const doneX = Math.abs(CHARACTER.x - targetX) <= tolerance;
-            const doneY = Math.abs(CHARACTER.y - targetY) <= tolerance;
-            let done = doneX && doneY;
-                        
+        function drawScene() {
             ctx.clearRect(0, 0, recWidth, canvas.height);
-
-            drawBackground();
             drawPathToObjects(ROCK, TREE, FENCE);
             drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
-            drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height);
+            drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
             drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
-
-            if (!doneY) {
-                CHARACTER.y += -2;
-            };
-            if (!doneX && CHARACTER.y <= characterPlace.splitY - CHARACTER.height / 2) {
-                CHARACTER.x += CHARACTER.x < targetX ? 2 : -2;
-            };
-
             drawCharacter(CHARACTER);
-
-            if (!done) {
-                requestAnimationFrame(animate);
-            } else if(callback) {
-                callback(); // Llamar función cuando termine el movimiento
-            }
-        };
+        }
     
-    requestAnimationFrame(animate);
+        function moveToSplitY() {
+            const done = Math.abs(CHARACTER.y - splitY) <= 1;
+            if (!done) {
+                CHARACTER.y -= 2;
+                drawScene();
+                requestAnimationFrame(moveToSplitY);
+            } else {
+                requestAnimationFrame(moveToTargetX);
+            }
+        }
+    
+        function moveToTargetX() {
+            const done = Math.abs(CHARACTER.x - targetX) <= 1;
+            if (!done) {
+                CHARACTER.x += CHARACTER.x < targetX ? 2 : -2;
+                drawScene();
+                requestAnimationFrame(moveToTargetX);
+            } else {
+                requestAnimationFrame(moveToTargetY);
+            }
+        }
+    
+        function moveToTargetY() {
+            const done = Math.abs(CHARACTER.y - targetY) <= 1;
+            if (!done) {
+                CHARACTER.y -= 2;
+                drawScene();
+                requestAnimationFrame(moveToTargetY);
+            } else {
+                drawScene();
+                if (callback) callback();
+            }
+        }
+    
+        moveToSplitY(); // Empieza el movimiento
     };
-// ----------------------------------------------------------------->
 
     function advanceToNextPathOrLevel(data) {
         path++;
@@ -246,45 +283,67 @@
             kill();
             reset(data);
         };
-    }
+    };
 
-// Agregar la funcionalidad de all(si están todos los obstacles)
-// ----------------------------------------------------------------->
     function putCorrectPath() {
-        correctPath = []; // Resetear caminos correctos
+        correctPath = []; // Reset correct paths
         let result = 0;
         let index;
+        let obstacleIsPresent = false;
         
-        CURRENT_LEVEL.if.forEach(rule => {
-            console.log("Esto es la rule: ", rule);
+        CURRENT_LEVEL.if.forEach( (r, i) => {
+            console.log(`Rule Nº${i + 1}:`, r)
+        });
+        for (const rule of CURRENT_LEVEL.if) {
             
-            // Manejar reglas normales
+            // Management rules
             for(const [key, value] of Object.entries(rule)) {
+                obstacleIsPresent = false;
                 if(key === "go" || key === "else") continue;
-                if(correctPath.length > 0) return;
+
+                // Handle when all obstacles are drawn
+                if(key === "all") {
+                    const areAllObstacle = value.every(obstacle => checkObstaclePosition(obstacle, position.any));
+
+                    if(!areAllObstacle) continue;
+                    
+                    const refObstacle = rule.choose;
+                    obstacleIsPresent = checkObstaclePosition(refObstacle, position.any);
+                    result = getPathValue(obstacleIsPresent) + calculatePath(rule.go);
+                    correctPath.push(result);
+                    if(!correctPath.some(num => [1, 2, 3].includes(num))) {
+                        index = correctPath.findIndex(num => ![1, 2, 3].includes(num))
+                        if(index !== -1) correctPath.splice(index, 1);
+                    };
+                    if(correctPath.length > 0) return;
+                    continue;
+                };
                 
-                const obstacleIsPresent = checkObstaclePosition(key, value);   
-                console.log("obstacleIsPresent??????????????---->", obstacleIsPresent);
+                // Handle standar rules
+                obstacleIsPresent = checkObstaclePosition(key, value);   
                 
                 if(obstacleIsPresent) {
                     result = getPathValue(obstacleIsPresent) + calculatePath(rule.go);
                     correctPath.push(result);
-                } else if(correctPath.length < 1 && rule.else) {
-                    correctPath.push(getPathValue(rule.else));
-                }
+                    if(!correctPath.some(num => [1, 2, 3].includes(num))) {
+                        index = correctPath.findIndex(num => ![1, 2, 3].includes(num))
+                        if(index !== -1) correctPath.splice(index, 1);
+                    };
+                    if(correctPath.length > 0) return;
+                }; 
+            };
+            
+            if(correctPath.length < 1 && rule.else) {
+                correctPath.push(getPathValue(rule.else));
+                return;
+            };
+        };
 
-                if(!correctPath.some(num => [1, 2, 3].includes(num))) {
-                    index = correctPath.findIndex(num => ![1, 2, 3].includes(num))
-                    if(index !== -1) correctPath.splice(index, 1);
-                };
-            }
-        });
-        // Si no hay caminos definidos, usar centro como default
+        // If no paths are defined, use the centre as the default
         if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);        
     };
-// ----------------------------------------------------------------->
 
-    // Función para sumar averiguar el camino dinámicamente dependiendo donde está el objeto 
+    // Function to dynamically determine the path based on the object's current position
     function calculatePath(go) {
         return {
             left: -1,
@@ -329,41 +388,53 @@
         ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height);
     };
 
-    function drawPathToObjects(obstacle1, obstacle2, obstacle3) {
-        if (!obstacle1 || !obstacle2 || !obstacle3) return;
+    function drawPathToObjects(...obstacles) {
+        if (obstacles.length !== 3) return;        
 
         perspective = recWidth / calculateScale;
-        
-        // Base del camino principal
+
+        // Main road coordinates
         const startX = recWidth / 2;
         const startY = 500;
         const splitY = 350;
     
+        // Road color and visualize;
         ctx.strokeStyle = "#8B4513";
         ctx.lineWidth = 20;
         ctx.lineCap = "round";
     
-        // Camino principal
+        // Start road
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX, splitY);
         ctx.stroke();
+
+        // Road diversion
+        obstacles.forEach(obstacle => {
+            drawBranchX(obstacle.x);
+            drawBranchY(obstacle.x, obstacle.y);
+        })
     
-        // Función auxiliar para las ramas hacia cada objeto
-        function drawBranch(toX, toY) {
+        // Helper functions for branches to each object
+        function drawBranchX(toX) {
             toX = perspective * toX;
-            toY /= perspective * 1.5;
     
             ctx.beginPath();
             ctx.moveTo(startX, splitY);
-            ctx.lineTo(toX, toY + 10); // Ajustamos la altura para conectar visualmente
+            ctx.lineTo(toX, splitY);
             ctx.stroke();
-        }
-    
-        drawBranch(obstacle1.x, obstacle1.y);
-        drawBranch(obstacle2.x, obstacle2.y);
-        drawBranch(obstacle3.x, obstacle3.y);
-    }
+        };
+
+        function drawBranchY(toX, toY) {
+            toX = perspective * toX;
+            toY /= perspective * 1.9;
+
+            ctx.beginPath();
+            ctx.moveTo(toX, splitY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+        };
+    };
     
     function drawRock(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(rockString)) return;
@@ -371,81 +442,26 @@
         if(CURRENT_PATH.center.includes(rockString)) x = position.center.drawX;
         if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX;        
 
-        x = perspective * x;
-        y /= perspective * 1.4;
-        
+        x = perspective * x * 0.85;
+        y /= perspective * 3.5;
         width = perspective * width;
         height = perspective * height;
 
-        // Crear forma irregular con Path2D
-        const Rock = new Path2D();
-        Rock.moveTo(x, y);
-        Rock.lineTo(x + width * 0.3, y - height * 0.2);
-        Rock.lineTo(x + width * 0.7, y - height * 0.1);
-        Rock.lineTo(x + width * .8, y);
-        Rock.lineTo(x + width * 0.9, y + height * 0.6);
-        Rock.lineTo(x + width * .3, y + height);
-        Rock.lineTo(x + width * -.3, y + height * 0.7);
-        Rock.closePath();
-
-        // Crear sombreado con gradiente radial
-        const gradient = ctx.createRadialGradient(
-            x + width / 2, y + height / 2, width / 10,
-            x + width / 2, y + height / 2, width
-        );
-        gradient.addColorStop(0, "#999999");
-        gradient.addColorStop(0.5, "#777777");
-        gradient.addColorStop(1, "#444444");
-
-        ctx.fillStyle = gradient;
-        ctx.fill(Rock);
-        ctx.strokeStyle = "#222";
-        ctx.lineWidth = 2;
-        ctx.stroke(Rock);
+        ctx.drawImage($rock, 0, 0, $rock.width, $rock.height, x, y, width, height);
     };
 
-    function drawTree(x, y, radius, width, height) {
+    function drawTree(x, y, width, height) {
         if(!Object.values(CURRENT_PATH).includes(treeString)) return;
         if(CURRENT_PATH.left.includes(treeString)) x = position.left.drawX;
         if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX;
         if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX;
 
-        x = perspective * x;
-        y /= perspective * 1.5;
-        radius = perspective * radius * .8;
+        x = perspective * x * 0.45;
+        y /= perspective * 5.8;
         width = perspective * width * .8;
         height = perspective * height * .8;
 
-        // Dibujar el tronco con gradiente
-        const trunkGradient = ctx.createLinearGradient(x, y, x + width, y + height);
-        trunkGradient.addColorStop(0, "#8B5A2B");
-        trunkGradient.addColorStop(1, "#5C4033");
-
-        ctx.fillStyle = trunkGradient;
-        ctx.fillRect(x - width / 2, y + radius, width, height);
-
-        // Dibujar varias copas para simular un árbol frondoso
-        const foliageColors = ["#2E8B57", "#3CB371", "#228B22"];
-
-        const foliage = [
-            { offsetX: 0, offsetY: 0 },
-            { offsetX: -radius * 0.7, offsetY: radius * 0.2 },
-            { offsetX: radius * 0.7, offsetY: radius * 0.2 },
-            { offsetX: -radius * 0.4, offsetY: -radius * 0.5 },
-            { offsetX: radius * 0.4, offsetY: -radius * 0.5 },
-        ];
-
-        foliage.forEach((pos, i) => {
-            ctx.beginPath();
-            ctx.fillStyle = foliageColors[i % foliageColors.length];
-            ctx.arc(x + pos.offsetX, y + pos.offsetY, radius * 0.8, 0, 2 * Math.PI);
-            ctx.fill();
-
-            // Sombra ligera
-            ctx.strokeStyle = "#1e4d2b";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        });        
+        ctx.drawImage($tree, 0, 0, $tree.width, $tree.height, x, y, width, height);    
     };
 
     function drawFence(x, y, width, height) {
@@ -454,52 +470,12 @@
         if(CURRENT_PATH.center.includes(fenceString)) x = position.center.drawX;
         if(CURRENT_PATH.right.includes(fenceString)) x = position.right.drawX;
 
-        x = perspective * x - 40;
-        y /= perspective * 1.4;
+        x = perspective * x * 0.85;
+        y /= perspective * 3.5;
         width = perspective * width * 2;
         height = perspective * height * 2;
 
-        const postCount = 7; // Más listones
-        const postWidth = width / postCount * 0.6;
-        const postGap = width / postCount * 0.4;
-
-        for (let i = 0; i < postCount; i++) {
-            const postX = x + i * (postWidth + postGap);
-            const postTop = y;
-            const postBottom = y + height;
-
-            // Cuerpo del listón
-            const gradient = ctx.createLinearGradient(postX, postTop, postX, postBottom);
-            gradient.addColorStop(0, "#deb887");
-            gradient.addColorStop(1, "#a0522d");
-
-            ctx.fillStyle = gradient;
-            ctx.fillRect(postX, postTop, postWidth, height);
-
-            // Pico triangular en la parte superior
-            ctx.beginPath();
-            ctx.moveTo(postX, postTop);
-            ctx.lineTo(postX + postWidth / 2, postTop - postWidth / 2);
-            ctx.lineTo(postX + postWidth, postTop);
-            ctx.closePath();
-            ctx.fill();
-
-            // Contorno
-            ctx.strokeStyle = "#5a2d0c";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(postX, postTop, postWidth, height);
-        }
-
-        // Barrotes horizontales (más gruesos y destacados)
-        ctx.fillStyle = "#cd853f";
-        const railHeight = height * 0.08;
-        ctx.fillRect(x, y + height * 0.3, width, railHeight);
-        ctx.fillRect(x, y + height * 0.65, width, railHeight);
-    };
-
-    function drawBackground() {
-        ctx.fillStyle = "#A0522D";
-        ctx.fillRect(0, 0, recWidth, 500);
+        ctx.drawImage($fence, 0, 0, $fence.width, $fence.height, x, y, width, height);
     };
 
     function draw(data) {
@@ -512,12 +488,11 @@
 
         ctx.clearRect(0, 0, recWidth, canvas.height);
 
-        drawBackground();
         drawPathToObjects(ROCK, TREE, FENCE);
-        drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height)
-        drawTree(TREE.x, TREE.y, TREE.radius, TREE.width, TREE.height)
-        drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height)
+        drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
+        drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
+        drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
         drawCharacter(CHARACTER);
-        eventPathing(data, CHARACTER);
+        eventPathing(data, CHARACTER);        
     };
-})()
+})();
