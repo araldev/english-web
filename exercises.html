@@ -6,7 +6,9 @@
     <title>Learn English B1</title>
     <link rel="shortcut icon" href="./public/images/favicon.webp" type="image/x-icon">
     <link rel="stylesheet" href="./src/CSS/normalize.css">
+    <link rel="stylesheet" href="./src/CSS/components.css">
     <link rel="stylesheet" href="./src/CSS/styles.css">
+    <link rel="stylesheet" href="./src/CSS/games.css">
     <link rel="preload" as="image" href="./public/images/hero-img.webp">
     <script defer type="module" src="./src/js/components/menu.js"></script>
     <script defer type="module" src="./src/js/components/section-grid.js"></script>
@@ -14,6 +16,10 @@
     <script defer type="module" src="./src/js/games/listening-maze.js"></script>
 </head>
 <body id="exercises">
+    <img hidden id="rock" src="./public/images/rock.webp" alt="rock">
+    <img hidden id="tree" src="./public/images/tree.webp" alt="tree">
+    <img hidden id="fence" src="./public/images/fence.webp" alt="fence">
+
     <aside id="sidebar" class="sidebar minimize">
         <img id="sidebar-size-btn" class="sidebar-size-btn" src="./public/images/arrow-minimize.svg"></img>
         <div class="sidebar-logo">
@@ -117,13 +123,20 @@
     </header>
     
     <main>
-        <section id="game-container" class="container section">
-            <header>
-                <span id="level"></span>
-                <span id="path"></span>
-                <span id="lives" data-isalive="dead"></span>
-            </header>
-            <canvas height="500" class="games" id="listening-maze"></canvas>
+        <section id="game-container" class="container section canvas-container">
+            <h1 class="subtittle blur large">LISTENING MAZE</h1>
+            
+            <article id="rules" class="section-paragraph"></article>
+
+            <aside>
+                <div class="current-info">
+                    <p id="level"></p>
+                    <p id="path"></p>
+                    <span id="lives" data-isalive="dead"></span>
+                </div>
+                <canvas height="500" class="canvas" id="listening-maze"></canvas>
+                <p id="audioText"></p>
+            </aside>
         </section>
     </main>
 
