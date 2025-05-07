@@ -1,6 +1,5 @@
-// 1. Crear estados del juego: Start, Playing, Game Over, You Win.
+// 1. Agregar settings.
 // 2. Agregar audios con rules.
-// 3. Cuando minimizo con el botón no me hace el event resize.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -11,7 +10,7 @@
             return res.json();
         })
         .then(data => {
-            init(data);
+            waiting(data);
         })
         .catch(error => {
             console.error("Error al cargar los datos del juego", error)
@@ -21,6 +20,30 @@
     const $rock = document.getElementById("rock");
     const $tree = document.getElementById("tree");
     const $fence = document.getElementById("fence");
+
+    // Buttons to select mode
+    const $btnEasy = document.getElementById("easy");
+    const $btnMedium = document.getElementById("medium");
+    const $btnHard = document.getElementById("hard");
+    const $btnLegend = document.getElementById("legend");
+
+    // Button to start
+    const $start = document.getElementById("start");
+
+    // Buttons to play
+    const $btnLeft = document.getElementById("btn-left");
+    const $btnUp = document.getElementById("btn-up");
+    const $btnRight = document.getElementById("btn-right");
+
+    // Game Over Modal
+    const $modalGame = document.getElementById("game-over");
+    // Button to close Modal
+    const $closeModalGame = document.getElementById("close-modal-game-over");
+    // Button to go Waiting Room
+    const $closeModaAndWaiting = document.getElementById("reset-waiting-room");
+    // Player info Game Over
+    const $lostOrWinInfo = document.getElementById("lost-or-win");
+    const $playerStatistics = document.getElementById("player-statistics");
 
     // DOM elements and behavior management
     const $level = document.getElementById("level");
@@ -50,9 +73,9 @@
     // Initial Values
     const initialLevel = 1;
     const initialPath = 1;
-    const initialLives = 3;
+    let initialLives = 4;
     const initialRules = `
-    <h2 class="text-gradiant">Rules:</h2><br>
+    <h2 class="text-gradient">Rules:</h2><br>
     <p>
     <b>1.</b> If no rule/path is possible, you must take the central path.<br><br>
     <b>2.</b> The first rule that is met disables the others.<br><br>
@@ -73,6 +96,20 @@
     let CURRENT_PATH;
     let lives = initialLives;
     const maxLives = initialLives;
+    const gameSettings = {
+        states: {
+            waiting: true,
+            playing: false,
+            gameOver: false,
+            youWin: false
+        },
+        modes: {
+            easy: 5,
+            medium: 4,
+            hard: 3,
+            legend: 1
+        }
+    };
 
     // Pjs
     let CHARACTER;
@@ -87,14 +124,22 @@
     const treeString = "tree";
     const fenceString = "fence";
 
+    const waitingString = "waiting";
+    const playingString = "playing";
+    const gameOverString = "gameOver";
+    const youWinString = "youWin";
+
     const characterPlace = {
         startY: 430,
         splitY: 350,
-        endY: 100
+        endY: 100,
+        left: 100,
+        center: 270,
+        right: 450
     };
 
     const position = {
-        left: {drawX: 100, key: "left"},
+        left: {drawX: 50, key: "left"},
         center: {drawX: 280, key: "center"},
         right: {drawX: 450, key: "right"},
         any: "any"
@@ -110,48 +155,248 @@
     let correctPath = [];
     let isAnswered = false;
 
-    let handleEventDraw;
-    function init(data) {
+    let eventModeClick = null;
+    function settings() {
+        if(gameSettings.states.playing === true) return;
+
+        if(eventModeClick) {
+            $btnEasy.removeEventListener("click", eventModeClick);
+            $btnMedium.removeEventListener("click", eventModeClick);
+            $btnHard.removeEventListener("click", eventModeClick);
+            $btnLegend.removeEventListener("click", eventModeClick);
+            eventModeClick = null;
+        };
+
+        eventModeClick = (e) => {
+            if(e.currentTarget === $btnEasy) {
+                initialLives = gameSettings.modes.easy;
+                lives = initialLives;
+            };
+            if(e.currentTarget === $btnMedium) {
+                initialLives = gameSettings.modes.medium;
+                lives = initialLives;
+            };
+            if(e.currentTarget === $btnHard) {
+                initialLives = gameSettings.modes.hard;
+                lives = initialLives;
+            };
+            if(e.currentTarget === $btnLegend) {
+                initialLives = gameSettings.modes.legend;
+                lives = initialLives;
+            };
+            showGameInfo()
+            settings();
+        };
+
+        $btnEasy.addEventListener("click", eventModeClick);
+        $btnMedium.addEventListener("click", eventModeClick);
+        $btnHard.addEventListener("click", eventModeClick);
+        $btnLegend.addEventListener("click", eventModeClick);
+
+        kill();
+    };
+
+    function selectState(selectedState) {
+        for (let state in gameSettings.states) {
+            if(state !== selectedState) {
+                gameSettings.states[state] = false;
+            } else {
+                gameSettings.states[state] = true;
+            };
+        };
+        console.log("States: ",gameSettings.states);
+    };
+
+    let currentStartHandler = null;
+    function waiting(data) {
+        selectState(waitingString);
+        eventResize(data);
+
+        eventKeyDown(data, CHARACTER);
+        eventButtonClick(data, CHARACTER); 
+
+        level = initialLevel;
+        path = initialPath;
+        lives = initialLives;
+
+        if($start.classList.contains("hidden")) $start.classList.remove("hidden");
+        stateGame(data);
+        showGameInfo();
+        draw(data);
+
+        if(currentStartHandler) {
+            $start.removeEventListener("click", currentStartHandler);
+            currentButtonHandler = null;
+        };
+
+        currentStartHandler = (e) => {
+            start(data);
+        };
+
+        $start.addEventListener("click", currentStartHandler);
+
+        settings();
+    };
+
+    let handleEventModal = null;
+    let handleComeBackWaitingRoom = null;
+    function gameOver(data) {        
+        selectState(gameOverString);
+
+    // Delete buttons and keyDown events
+    if (currentKeyHandler) {
+        document.removeEventListener("keydown", currentKeyHandler);
+        currentKeyHandler = null;
+    }
+    
+    if (currentButtonHandler) {
+        $btnLeft.removeEventListener("click", currentButtonHandler);
+        $btnUp.removeEventListener("click", currentButtonHandler);
+        $btnRight.removeEventListener("click", currentButtonHandler);
+        currentButtonHandler = null;
+    }
+
+        $lostOrWinInfo.innerHTML = `
+        <strong>GAME OVER!</strong>
+        `
+        $playerStatistics.innerHTML = `
+        <p>You've reached level <strong>${level}</strong>, next time will be!</p>
+        `;
+
+        if(handleEventModal) {
+            $closeModalGame.removeEventListener("click", handleEventModal);
+            handleEventModal = null;
+            $closeModaAndWaiting.removeEventListener("click", handleComeBackWaitingRoom);
+            handleComeBackWaitingRoom = null;
+        };
+
+        handleEventModal = (e) => {
+            $modalGame.close();
+            reset(data);
+        };
+        $closeModalGame.addEventListener("click", handleEventModal);
+
+        handleComeBackWaitingRoom = (e) => {
+            $modalGame.close();
+            waiting(data);
+        };
+        $closeModaAndWaiting.addEventListener("click", handleComeBackWaitingRoom);
+
+        $modalGame.showModal();
+    };
+
+    function youWin(data) {
+        selectState(youWinString);
+
+        $lostOrWinInfo.innerHTML = `
+        <strong>YOU WIN, CONGRATULATIONS!</strong>
+        `
+        $playerStatistics.innerHTML = `
+        <p>Congratulations, you reached the last level!</p>
+        `;
+
+        if(handleEventModal) {
+            $closeModalGame.removeEventListener("click", handleEventModal);
+            handleEventModal = null;
+            $closeModaAndWaiting.removeEventListener("click", handleComeBackWaitingRoom);
+            handleComeBackWaitingRoom = null;
+        };
+
+        handleEventModal = (e) => {
+            $modalGame.close();
+            reset(data);
+        };
+        $closeModalGame.addEventListener("click", handleEventModal);
+
+        handleComeBackWaitingRoom = (e) => {
+            $modalGame.close();
+            waiting(data);
+        };
+        $closeModaAndWaiting.addEventListener("click", handleComeBackWaitingRoom);
+
+        $modalGame.showModal();
+    };
+
+    function start(data) {
+        revive();
+        selectState(playingString);
+        settings();
+        $start.classList.add("hidden");
+        
+        CHARACTER = data.character[1];
+
+        eventKeyDown(data, CHARACTER);
+        eventButtonClick(data, CHARACTER); 
+
         stateGame(data);
         putCorrectPath();
         draw(data);
         showGameInfo();
-
-        if(handleEventDraw) {
-            window.removeEventListener("resize", handleEventDraw);
-            handleEventDraw = null;
-        };
-
-        handleEventDraw = (e) => draw(data);
-        window.addEventListener("resize", handleEventDraw);
-        console.log("Caminos correctos -------------->", correctPath);
     };
 
     function reset(data) {
+        selectState(playingString);
+        settings();
+        $start.classList.add("hidden");
+
+        eventKeyDown(data, CHARACTER);
+        eventButtonClick(data, CHARACTER); 
+
         level = initialLevel;
         path = initialPath;
         lives = initialLives;
 
         stateGame(data);
         putCorrectPath();
-        requestAnimationFrame(() => draw(data));
+        draw(data);
         showGameInfo();
     };
 
+    let currentEventResize;
+    function eventResize(data) {
+        if(currentEventResize) {
+            window.removeEventListener("resize", currentEventResize);
+            currentEventResize = null;
+        };
+
+        currentEventResize = (e) => draw(data);
+        window.addEventListener("resize", currentEventResize);
+
+        console.log("Caminos correctos -------------->", correctPath);
+    };
+
     function showGameInfo() {
-        // Info rules.
+        // Info initial rules.
         $rules.innerHTML = initialRules;
-        $audioText.innerHTML = `<b>${CURRENT_LEVEL.audioText}</b>`;
         
         // Info lvl, path, lives.
-        $level.innerHTML = `<strong>Level: ${level}</strong> / ${maxLevel}`;
-        $path.innerHTML = `<strong>Path: ${path}</strong> / ${maxPath}`;
-    
-        if(isAlive()) return;
-        for(let i = 1; i <= lives; i++) {
-            $newHeart();
+        $level.innerHTML = `<strong>Level: ${level}</strong>/${maxLevel}`;
+        $path.innerHTML = `<strong>Path: ${path}</strong>/${maxPath}`;
+
+        if(gameSettings.states.waiting !== true) {
+            // Info each lvl rules
+            $audioText.innerHTML = `<b>${CURRENT_LEVEL.audioText}</b>`;
         };
+
+        // Averiguar cuantos corazones hay dibujados
+        const currentHearts = $lives.querySelectorAll("img").length;
+
+        // Si estamos en modo playing, usar lives, sino usar initialLives
+        const targetHearts = gameSettings.states.playing ? lives : initialLives;
+        
+        if(isAlive()) return;
+        if(currentHearts < targetHearts) {
+            for(let i = currentHearts; i < initialLives; i++) {
+                $newHeart();
+            };
+        } else if(currentHearts > targetHearts) {
+            for(let i = currentHearts; i > targetHearts; i--) {
+                $lives.removeChild($lives.lastChild);
+            };
+        }
+        if (!gameSettings.states.waiting) {
         revive();
+        };
     };
 
     function stateGame(data) {
@@ -171,11 +416,15 @@
         requestAnimationFrame(() => draw(data));
         showGameInfo(data);
         isAnswered = false;
+
         console.log("Caminos correctos -------------->", correctPath);
     };
 
     function handleCorrectPath(e, data, CHARACTER) {
+        if (!gameSettings.states.playing) return;
+
         if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
+        e.preventDefault();
         
         const selectedPath = getPathFromKey(e.key);
         const isCorrect = checkIfPathIsCorrect(selectedPath);
@@ -203,9 +452,9 @@
 
     function moveCharacterToPath(CHARACTER, path, callback) {
         const positionMap = {
-            1: position.left.drawX,
-            2: position.center.drawX,
-            3: position.right.drawX
+            1: characterPlace.left,
+            2: characterPlace.center,
+            3: characterPlace.right
         };
 
         const targetX = (positionMap[path] - CHARACTER.width / 2) * perspective;
@@ -263,13 +512,13 @@
         if(path > maxPath) {
             level++;
             path = 1;
-            if(lives >= maxLives) return;
-            lives++;
-            $newHeart();
+            if(lives < maxLives) {
+                lives++;
+                $newHeart();
+            };
         };
         if(level > maxLevel) {
-            alert("You win")
-            reset(data);
+            youWin(data);
         };
     };
 
@@ -281,7 +530,7 @@
         }; 
         if(lives === 0) {
             kill();
-            reset(data);
+            gameOver(data);
         };
     };
 
@@ -290,6 +539,8 @@
         let result = 0;
         let index;
         let obstacleIsPresent = false;
+        
+        if(gameSettings.states.playing === false) return;
         
         CURRENT_LEVEL.if.forEach( (r, i) => {
             console.log(`Rule Nº${i + 1}:`, r)
@@ -340,7 +591,7 @@
         };
 
         // If no paths are defined, use the centre as the default
-        if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);        
+        if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);   
     };
 
     // Function to dynamically determine the path based on the object's current position
@@ -368,14 +619,48 @@
         }[position];
     };
 
-    let currentKeyHandler;
-    function eventPathing(data, CHARACTER) {
+    let currentKeyHandler = null;
+    function eventKeyDown(data, CHARACTER) {
         if (currentKeyHandler) {
             document.removeEventListener("keydown", currentKeyHandler);
             currentKeyHandler = null;
-        }
+        };
+
+        if(gameSettings.states.playing !== true) return;
+
         currentKeyHandler = (e) => handleCorrectPath(e, data, CHARACTER);
+
         document.addEventListener("keydown", currentKeyHandler);
+    };
+
+    let currentButtonHandler = null;
+    function eventButtonClick(data, CHARACTER) {
+        if(currentButtonHandler) {
+            $btnLeft.removeEventListener("click", currentButtonHandler);
+            $btnUp.removeEventListener("click", currentButtonHandler);
+            $btnRight.removeEventListener("click", currentButtonHandler);
+            currentButtonHandler = null;
+        };
+        
+        if(gameSettings.states.playing !== true) return;
+
+
+        currentButtonHandler = (e) => {
+            if(e.currentTarget === $btnLeft) {
+                e.key = keyDown.arrowLeft;
+                handleCorrectPath(e, data, CHARACTER);
+            } else if (e.currentTarget === $btnUp) {
+                e.key = keyDown.arrowUp;
+                handleCorrectPath(e, data, CHARACTER);
+            } else {
+                e.key = keyDown.arrowRight;
+                handleCorrectPath(e, data, CHARACTER);
+            }   
+        };
+
+        $btnLeft.addEventListener("click", currentButtonHandler);
+        $btnUp.addEventListener("click", currentButtonHandler);
+        $btnRight.addEventListener("click", currentButtonHandler);
     };
     
     function drawCharacter(CHARACTER) {
@@ -456,7 +741,7 @@
         if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX;
         if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX;
 
-        x = perspective * x * 0.45;
+        x = perspective * x  * 0.8;
         y /= perspective * 5.8;
         width = perspective * width * .8;
         height = perspective * height * .8;
@@ -483,8 +768,11 @@
         ROCK = data.obstacles.rock;
         TREE = data.obstacles.tree;
         FENCE = data.obstacles.fence;
-        canvas.width = container.offsetWidth - 5;
+
+        canvas.width = container.clientWidth;
         recWidth = canvas.width;
+
+        if(gameSettings.states.playing !== true) return;
 
         ctx.clearRect(0, 0, recWidth, canvas.height);
 
@@ -493,6 +781,5 @@
         drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
         drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
         drawCharacter(CHARACTER);
-        eventPathing(data, CHARACTER);        
     };
 })();
