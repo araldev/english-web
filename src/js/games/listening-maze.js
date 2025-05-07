@@ -244,6 +244,8 @@
     let handleEventModal = null;
     let handleComeBackWaitingRoom = null;
     function closeAndShowModal(data) {
+        if (!$modalGame) throw new Error("Elemento modal-game no encontrado");
+
         if(eventKeyDownModal) {
             document.removeEventListener("keydown", eventKeyDownModal);
             eventKeyDownModal = null;
