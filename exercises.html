@@ -118,11 +118,15 @@
     </header>
     
     <main>
-        <dialog id="game-over">
-            <h2 id="lost-or-win"></h2>
-            <article id="player-statistics"></article>
-            <button id="close-modal-game-over">RESTART</button>
-            <button id="reset-waiting-room">Select New Difficulty</button>
+        <dialog id="modal-game">
+            <section>
+                <h2 id="lost-or-win"></h2>
+                <article id="player-statistics"></article>
+                <fieldset>
+                    <button id="close-modal-game-over">RESTART</button>
+                    <button id="reset-waiting-room">Select New Difficulty</button>
+                </fieldset>
+            </section>
         </dialog>
 
         <section id="game-container" class="container section canvas-container">

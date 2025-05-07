@@ -3,6 +3,64 @@
     overflow: visible;
 }
 
+#modal-game {
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    width: clamp(700px, 80vw, 900px);
+    height: 40%;
+    border-radius: 20px;
+    z-index: 9999;
+    box-shadow:  inset 0 0 20px rgb(0, 0, 0, 0.8);
+    background: var(--text-gradient);
+    
+    &::backdrop {
+        background-color: rgba(0, 0, 0, .9);
+    }
+    
+    section {
+        color: var(--color-text);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px;
+
+        fieldset {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            gap: 10px;
+            border: none;
+
+            button {
+                width: clamp(200px, 100%, 250px);
+                height: 50px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: bold;
+                box-shadow:  inset 0 0 20px rgb(0, 0, 0, 0.8);
+
+                &:hover {
+                    scale: 1.1;
+                }
+            }
+
+            button:nth-child(1) {
+                background-color: #ff4d4d;
+                color: white;
+            }
+            button:nth-child(2) {
+                background-color: #4d79ff;
+                color: white;
+            }
+        }
+    }
+}
 
 .canvas-container {
     #game-listening-maze {
