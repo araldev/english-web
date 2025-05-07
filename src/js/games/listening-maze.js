@@ -1,5 +1,6 @@
-// 1. Agregar settings.
-// 2. Agregar audios con rules.
+// 1. Agregar audios con rules.
+// 2. Agregar imagen y animaciones character.
+// 3. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -36,7 +37,7 @@
     const $btnRight = document.getElementById("btn-right");
 
     // Game Over Modal
-    const $modalGame = document.getElementById("game-over");
+    const $modalGame = document.getElementById("modal-game");
     // Button to close Modal
     const $closeModalGame = document.getElementById("close-modal-game-over");
     // Button to go Waiting Room
@@ -238,44 +239,59 @@
         settings();
     };
 
+    let eventKeyDownModal = null;
+    let handleBackdropClick = null;
     let handleEventModal = null;
     let handleComeBackWaitingRoom = null;
-    function gameOver(data) {        
-        selectState(gameOverString);
+    function closeAndShowModal(data) {
+        if(eventKeyDownModal) {
+            document.removeEventListener("keydown", eventKeyDownModal);
+            eventKeyDownModal = null;
+        };
+        eventKeyDownModal = (e) => {
+            const isEscape = e.key === "Escape";
+            if (isEscape && $modalGame.open) {
+                $modalGame.close();
+                reset(data)
+            }
+        };
+        document.addEventListener("keydown", eventKeyDownModal);
 
-    // Delete buttons and keyDown events
-    if (currentKeyHandler) {
-        document.removeEventListener("keydown", currentKeyHandler);
-        currentKeyHandler = null;
-    }
-    
-    if (currentButtonHandler) {
-        $btnLeft.removeEventListener("click", currentButtonHandler);
-        $btnUp.removeEventListener("click", currentButtonHandler);
-        $btnRight.removeEventListener("click", currentButtonHandler);
-        currentButtonHandler = null;
-    }
+        if (handleBackdropClick) {
+            $modalGame.removeEventListener("click", handleBackdropClick);
+            handleBackdropClick = null;
+        };
+        handleBackdropClick = (e) => {
+            // Verificar si el clic fue en el backdrop (no en el contenido del modal)
+            const modalRect = $modalGame.getBoundingClientRect();
+            const isClickOutside = (
+            e.clientY < modalRect.top ||
+            e.clientY > modalRect.bottom ||
+            e.clientX < modalRect.left ||
+            e.clientX > modalRect.right
+            );
 
-        $lostOrWinInfo.innerHTML = `
-        <strong>GAME OVER!</strong>
-        `
-        $playerStatistics.innerHTML = `
-        <p>You've reached level <strong>${level}</strong>, next time will be!</p>
-        `;
+            if (isClickOutside && $modalGame.open) {
+                $modalGame.close();
+                reset(data); 
+            };
+        };
+        $modalGame.addEventListener("click", handleBackdropClick);
 
         if(handleEventModal) {
             $closeModalGame.removeEventListener("click", handleEventModal);
             handleEventModal = null;
-            $closeModaAndWaiting.removeEventListener("click", handleComeBackWaitingRoom);
-            handleComeBackWaitingRoom = null;
         };
-
         handleEventModal = (e) => {
             $modalGame.close();
             reset(data);
         };
         $closeModalGame.addEventListener("click", handleEventModal);
 
+        if(handleComeBackWaitingRoom) {
+            $closeModaAndWaiting.removeEventListener("click", handleComeBackWaitingRoom);
+            handleComeBackWaitingRoom = null;
+        }
         handleComeBackWaitingRoom = (e) => {
             $modalGame.close();
             waiting(data);
@@ -283,6 +299,32 @@
         $closeModaAndWaiting.addEventListener("click", handleComeBackWaitingRoom);
 
         $modalGame.showModal();
+    };
+
+    function gameOver(data) {        
+        selectState(gameOverString);
+
+        // Delete buttons and keyDown events
+        if (currentKeyHandler) {
+            document.removeEventListener("keydown", currentKeyHandler);
+            currentKeyHandler = null;
+        }
+        
+        if (currentButtonHandler) {
+            $btnLeft.removeEventListener("click", currentButtonHandler);
+            $btnUp.removeEventListener("click", currentButtonHandler);
+            $btnRight.removeEventListener("click", currentButtonHandler);
+            currentButtonHandler = null;
+        }
+
+        $lostOrWinInfo.innerHTML = `
+        <strong>GAME OVER!</strong>
+        `
+        $playerStatistics.innerHTML = `
+        <p>You've reached level <strong>${level}</strong>, next time will be!</p>
+        `;
+        
+        closeAndShowModal(data);
     };
 
     function youWin(data) {
@@ -295,26 +337,7 @@
         <p>Congratulations, you reached the last level!</p>
         `;
 
-        if(handleEventModal) {
-            $closeModalGame.removeEventListener("click", handleEventModal);
-            handleEventModal = null;
-            $closeModaAndWaiting.removeEventListener("click", handleComeBackWaitingRoom);
-            handleComeBackWaitingRoom = null;
-        };
-
-        handleEventModal = (e) => {
-            $modalGame.close();
-            reset(data);
-        };
-        $closeModalGame.addEventListener("click", handleEventModal);
-
-        handleComeBackWaitingRoom = (e) => {
-            $modalGame.close();
-            waiting(data);
-        };
-        $closeModaAndWaiting.addEventListener("click", handleComeBackWaitingRoom);
-
-        $modalGame.showModal();
+        closeAndShowModal(data);
     };
 
     function start(data) {
