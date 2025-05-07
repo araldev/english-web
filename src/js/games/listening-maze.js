@@ -254,7 +254,7 @@
             const isEscape = e.key === "Escape";
             if (isEscape && $modalGame.open) {
                 $modalGame.close();
-                reset(data)
+                waiting(data)
             }
         };
         document.addEventListener("keydown", eventKeyDownModal);
@@ -275,7 +275,7 @@
 
             if (isClickOutside && $modalGame.open) {
                 $modalGame.close();
-                reset(data); 
+                waiting(data); 
             };
         };
         $modalGame.addEventListener("click", handleBackdropClick);
