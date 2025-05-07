@@ -1,6 +1,4 @@
-@import './variables.css';
-
-.text-gradiant {
+.text-gradient {
     padding: 5px;
     font-size: 2.5rem;
     background: var(--text-gradient);
@@ -8,4 +6,9 @@
     -webkit-text-fill-color: transparent; 
     background-clip: text; 
     color: transparent; 
-};
+}
+
+.hidden {
+    visibility: hidden;
+    pointer-events: none;
+}

@@ -1,5 +1,3 @@
-@import './variables.css';
-
 /* Animación entre diferentes html */
 @view-transition {
     navigation: auto;
@@ -472,7 +470,8 @@ main {
     display: flex;
     align-items: center;
     border-bottom: 1px solid white;
-    position: sticky;
+    position: relative;
+    z-index: 999;
 }
 
 .nav-logo {
@@ -486,7 +485,9 @@ main {
     .logo {
         /* aspect-ratio: 1/1; */
         max-width: 100%;
+        width: 100%;
         max-height: 100%;
+        height: 100%;
         object-fit: contain;
     }
 
@@ -571,6 +572,8 @@ main {
         bottom: 0;
         margin-left: auto;
         cursor: pointer;
+        background: #00000049;
+        border-radius: 50%;
 
         &:hover {
             filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
@@ -580,7 +583,10 @@ main {
 
 .nav-img {
     display: block;
+    max-width: 30px;
     width: 30px;
+    max-height: 30px;
+    height: 30px;
 }
 
 .nav-close {
@@ -1154,8 +1160,11 @@ td:nth-child(3) {
         display: block;
         position: fixed;
         right: 2.5rem;
+        background: #00000049;
+        border-radius: 50%;
+
         img {
-            border: .12rem solid var(--color-text);
+            border: .13rem solid var(--color-text);
             border-radius: 50%;
         }
     }

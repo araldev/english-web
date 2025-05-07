@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn English B1</title>
     <link rel="shortcut icon" href="./public/images/favicon.webp" type="image/x-icon">
+    <link rel="stylesheet" href="./src/CSS/variables.css">
     <link rel="stylesheet" href="./src/CSS/normalize.css">
     <link rel="stylesheet" href="./src/CSS/components.css">
     <link rel="stylesheet" href="./src/CSS/styles.css">
@@ -123,18 +124,33 @@
     </header>
     
     <main>
+        <dialog id="game-over">
+            <h2 id="lost-or-win"></h2>
+            <article id="player-statistics"></article>
+            <button id="close-modal-game-over">RESTART</button>
+        </dialog>
+
         <section id="game-container" class="container section canvas-container">
             <h1 class="subtittle blur large">LISTENING MAZE</h1>
             
             <article id="rules" class="section-paragraph"></article>
 
-            <aside>
+            <aside id="game-listening-maze">
+                <button id="start">START</button>
+
                 <div class="current-info">
                     <p id="level"></p>
                     <p id="path"></p>
                     <span id="lives" data-isalive="dead"></span>
                 </div>
+
                 <canvas height="500" class="canvas" id="listening-maze"></canvas>
+
+                <fieldset id="controls" class="mobile">
+                    <button id="btn-left"><img src="./public/images/left-arrow.svg" alt="go left"></button>
+                    <button id="btn-up"><img src="./public/images/up-arrow.svg" alt="go straight"></button>
+                    <button id="btn-right"><img src="./public/images/right-arrow.svg" alt="go right"></button>
+                </fieldset>
                 <p id="audioText"></p>
             </aside>
         </section>
