@@ -128,6 +128,7 @@
             <h2 id="lost-or-win"></h2>
             <article id="player-statistics"></article>
             <button id="close-modal-game-over">RESTART</button>
+            <button id="reset-waiting-room">Select New Difficulty</button>
         </dialog>
 
         <section id="game-container" class="container section canvas-container">
@@ -136,7 +137,15 @@
             <article id="rules" class="section-paragraph"></article>
 
             <aside id="game-listening-maze">
-                <button id="start">START</button>
+                <fieldset id="game-mode">
+                    <legend class="text-gradient">Select the difficulty:</legend>
+                    <button id="easy">Easy</button>
+                    <button id="medium">Medium</button>
+                    <button id="hard">Hard</button>
+                    <button id="legend">Legend</button>
+                </fieldset>
+
+                <button id="start">START!</button>
 
                 <div class="current-info">
                     <p id="level"></p>
