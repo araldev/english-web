@@ -79,7 +79,7 @@ body {
     height: 100dvh;
     max-height: 100%;
     background-color: white;
-    z-index: 100;
+    z-index: 9999;
     scrollbar-gutter: stable both-edges; /* para que el scroll no modifique mi contenido */
     box-shadow: var(--shadow-sidebar);
     transition: all .3s ease-in-out;
@@ -471,7 +471,7 @@ main {
     align-items: center;
     border-bottom: 1px solid white;
     position: relative;
-    z-index: 999;
+    z-index: 99;
 }
 
 .nav-logo {
