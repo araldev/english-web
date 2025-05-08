@@ -510,7 +510,7 @@
             isAnswered = true;
             moveCharacterToPath(selectedPath, () => updateStateAndDraw(data));
         } else {
-            isAnswered = true;
+            isAnswered = false;
             handleIncorrectMove(data);
         };
     };
@@ -533,7 +533,7 @@
         drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
         drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
         drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
-        drawCharacter(CHARACTER);
+        drawCharacter();
     };
 
     function moveCharacterToPath(path, callback) {
@@ -715,6 +715,7 @@
         if(gameSettings.states.playing !== true) return;
 
         currentKeyHandler = (e) => {
+            if(currentAnimation === animations.lost) return;
             handleCorrectPath(e, data, CHARACTER);
             speaker(CURRENT_LEVEL.audioText);
         };
@@ -735,6 +736,8 @@
 
 
         currentButtonHandler = (e) => {
+            if(currentAnimation === animations.lost) return;
+
             if(e.currentTarget === $btnLeft) {
                 e.key = keyDown.arrowLeft;
                 handleCorrectPath(e, data, CHARACTER);
@@ -772,6 +775,9 @@
         animationCharacter();
     };
     
+    let idTimeOutAnimationLost = null;
+    let isTimeoutFinish = false;
+    let isTimeoutCalled = false;
     let frameCount = 0;
     let frameDelay = 10; // Changes every 10 cycles (~6fps)
     let frame = 0;
@@ -804,6 +810,19 @@
         }else {
             ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);
         }
+
+        if(idTimeOutAnimationLost && isTimeoutFinish) {
+             clearTimeout(idTimeOutAnimationLost);
+             isTimeoutFinish = false;
+        };
+        if(currentAnimation === animations.lost && !isTimeoutCalled) {
+            isTimeoutCalled = true;
+            idTimeOutAnimationLost = setTimeout(() => {
+                isTimeoutFinish = true;
+                isTimeoutCalled = false;
+                currentAnimation = animations.idle
+            }, 1500);
+        };
         
         frameCount++;
         animationId = requestAnimationFrame(animationCharacter);
