@@ -1,6 +1,5 @@
 // 1. Agregar audios con rules.
-// 2. Agregar imagen y animaciones character.
-// 3. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
+// 2. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -21,6 +20,7 @@
     const $rock = document.getElementById("rock");
     const $tree = document.getElementById("tree");
     const $fence = document.getElementById("fence");
+    const $homer = document.getElementById("homer");
 
     // Buttons to select mode
     const $btnEasy = document.getElementById("easy");
@@ -36,7 +36,7 @@
     const $btnUp = document.getElementById("btn-up");
     const $btnRight = document.getElementById("btn-right");
 
-    // Game Over Modal
+    // Game Modal
     const $modalGame = document.getElementById("modal-game");
     // Button to close Modal
     const $closeModalGame = document.getElementById("close-modal-game-over");
@@ -65,15 +65,17 @@
     
     const container = document.getElementById("game-container");
     const canvas = document.getElementById("listening-maze");    
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     
     let recWidth;
-    let calculateScale = 600;
+    const calculateScale = 600;
     let perspective = recWidth / calculateScale;
 
     // Initial Values
-    const initialLevel = 1;
-    const initialPath = 1;
+    const initialLevel = 4;
+    const initialMaxLevel = 10;
+    const initialPath = 3;
+    const initialMaxPath = 10;
     let initialLives = 4;
     const initialRules = `
     <h2 class="text-gradient">Rules:</h2><br>
@@ -88,11 +90,11 @@
 
     // Game State
     let level = initialLevel;
-    const maxLevel = 10;
+    const maxLevel = initialMaxLevel;
     let regexLevel;
     let CURRENT_LEVEL;
     let path = initialPath;
-    const maxPath = 10;
+    const maxPath = initialMaxPath;
     let regexPath;
     let CURRENT_PATH;
     let lives = initialLives;
@@ -130,15 +132,6 @@
     const gameOverString = "gameOver";
     const youWinString = "youWin";
 
-    const characterPlace = {
-        startY: 430,
-        splitY: 350,
-        endY: 100,
-        left: 100,
-        center: 270,
-        right: 450
-    };
-
     const position = {
         left: {drawX: 50, key: "left"},
         center: {drawX: 280, key: "center"},
@@ -151,6 +144,38 @@
         arrowUp: "ArrowUp",
         arrowRight: "ArrowRight"
     };
+
+    const characterPlace = {
+        goX: null,
+        startY: 400,
+        splitY: 330,
+        endY: 100,
+        left: 100,
+        center: 270,
+        right: 450
+    };
+
+    // Homer sprite const
+    const homer = {
+        name: "homer",
+        width: 40,
+        height: 80,
+        idle: { x: 130, y: 1590, w: 50, h: 80, frames: 4},
+        walkingY: { x: 0, y: 76, w: 42, h: 80, frames: 8},
+        walkingX: { x: 180, y: 0, w: 50, h: 80, frames: 4},
+        lost: { x: 10, y: 1940, w: 70, h: 80, frames: 2},
+        // gameOver: { x: 10, y: 1940, w: 70, h: 80, frames: 2} // hacer para modal
+    };
+
+    // Animations variables
+    const animations = {
+        idle: "idle",
+        walkingY: "walkingY",
+        walkingX: "walkingX",
+        lost: "lost",
+        gameOver: "gameOver"
+    };
+    let currentAnimation;
 
     // Varaibles to manage answer and character movement
     let correctPath = [];
@@ -343,13 +368,12 @@
     };
 
     function start(data) {
+        currentAnimation = animations.idle;
         revive();
         selectState(playingString);
         settings();
         $start.classList.add("hidden");
         
-        CHARACTER = data.character[1];
-
         eventKeyDown(data, CHARACTER);
         eventButtonClick(data, CHARACTER); 
 
@@ -441,22 +465,23 @@
         requestAnimationFrame(() => draw(data));
         showGameInfo(data);
         isAnswered = false;
+        currentAnimation = animations.idle;
 
         console.log("Caminos correctos -------------->", correctPath);
     };
 
-    function handleCorrectPath(e, data, CHARACTER) {
+    function handleCorrectPath(e, data) {
         if (!gameSettings.states.playing) return;
 
         if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
         e.preventDefault();
-        
+                
         const selectedPath = getPathFromKey(e.key);
         const isCorrect = checkIfPathIsCorrect(selectedPath);
         
         if(isCorrect) {
             isAnswered = true;
-            moveCharacterToPath(CHARACTER, selectedPath, () => updateStateAndDraw(data));
+            moveCharacterToPath(selectedPath, () => updateStateAndDraw(data));
         } else {
             isAnswered = true;
             handleIncorrectMove(data);
@@ -475,61 +500,69 @@
         return correctPath.includes(selectedPath);
     };
 
-    function moveCharacterToPath(CHARACTER, path, callback) {
+    function drawScene() {
+        ctx.clearRect(0, 0, recWidth, canvas.height);
+        drawPathToObjects(ROCK, TREE, FENCE);
+        drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
+        drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
+        drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
+        drawCharacter(CHARACTER);
+    };
+
+    function moveCharacterToPath(path, callback) {
         const positionMap = {
             1: characterPlace.left,
             2: characterPlace.center,
             3: characterPlace.right
         };
 
-        const targetX = (positionMap[path] - CHARACTER.width / 2) * perspective;
+        const targetX = positionMap[path] * perspective;
         const splitY = characterPlace.splitY - CHARACTER.height / 2;
-        const targetY = characterPlace.endY / (perspective * 1.7);
-        
-        function drawScene() {
-            ctx.clearRect(0, 0, recWidth, canvas.height);
-            drawPathToObjects(ROCK, TREE, FENCE);
-            drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
-            drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
-            drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
-            drawCharacter(CHARACTER);
-        }
+        const targetY = characterPlace.endY / (perspective * 3.7);
     
         function moveToSplitY() {
-            const done = Math.abs(CHARACTER.y - splitY) <= 1;
+            // console.log("moveToSplitY -----------> CHARACTER.y = ", CHARACTER.y, "splitY = ", splitY);
+            characterPlace.goX = null;
+            const done = Math.abs(CHARACTER.y - splitY) <= 15;
             if (!done) {
-                CHARACTER.y -= 2;
+                currentAnimation = animations.walkingY;
+                CHARACTER.y -= 3;
                 drawScene();
                 requestAnimationFrame(moveToSplitY);
             } else {
                 requestAnimationFrame(moveToTargetX);
             }
-        }
+        };
     
         function moveToTargetX() {
-            const done = Math.abs(CHARACTER.x - targetX) <= 1;
+            // console.log("moveToTargetX ------------> CHARACTER.x = ", CHARACTER.x, "targetX = ", targetX);
+            currentAnimation = animations.walkingX;
+            const done = Math.abs(CHARACTER.x - targetX) <= 15;
             if (!done) {
-                CHARACTER.x += CHARACTER.x < targetX ? 2 : -2;
+                CHARACTER.x < targetX ? characterPlace.goX = position.right.key : characterPlace.goX = position.left.key;
+                CHARACTER.x += CHARACTER.x < targetX ? 3 : -3;
                 drawScene();
                 requestAnimationFrame(moveToTargetX);
             } else {
                 requestAnimationFrame(moveToTargetY);
             }
-        }
+        };
     
         function moveToTargetY() {
-            const done = Math.abs(CHARACTER.y - targetY) <= 1;
+            // console.log("moveToTargetY -----------------> CHARACTER.y = ", CHARACTER.y, "targetX = ", targetY);
+            currentAnimation = animations.walkingY;
+            const done = Math.abs(CHARACTER.y - targetY) <= 15;
             if (!done) {
-                CHARACTER.y -= 2;
+                CHARACTER.y -= 3;
                 drawScene();
                 requestAnimationFrame(moveToTargetY);
             } else {
                 drawScene();
                 if (callback) callback();
             }
-        }
+        };
     
-        moveToSplitY(); // Empieza el movimiento
+        moveToSplitY(); // Start the movement
     };
 
     function advanceToNextPathOrLevel(data) {
@@ -550,6 +583,7 @@
     function handleIncorrectMove(data) {
         console.error("Movimiento incorrecto!");
         if(lives > 0) {
+            currentAnimation = animations.lost;
             lives--;
             $lives.removeChild($lives.lastChild);
         }; 
@@ -645,7 +679,7 @@
     };
 
     let currentKeyHandler = null;
-    function eventKeyDown(data, CHARACTER) {
+    function eventKeyDown(data) {
         if (currentKeyHandler) {
             document.removeEventListener("keydown", currentKeyHandler);
             currentKeyHandler = null;
@@ -659,7 +693,7 @@
     };
 
     let currentButtonHandler = null;
-    function eventButtonClick(data, CHARACTER) {
+    function eventButtonClick(data) {
         if(currentButtonHandler) {
             $btnLeft.removeEventListener("click", currentButtonHandler);
             $btnUp.removeEventListener("click", currentButtonHandler);
@@ -688,14 +722,58 @@
         $btnRight.addEventListener("click", currentButtonHandler);
     };
     
-    function drawCharacter(CHARACTER) {
+    let lastPhotoCanvas;
+    let currentCharacterWidth;
+    let currentCharacterHeight;
+    function drawCharacter() {
+        // I retrieve the last image from the canvas before drawing the character
+        lastPhotoCanvas = ctx.getImageData(0, 0, canvas.width, canvas.height); 
+
+        currentCharacterWidth = CHARACTER.width * perspective; 
+        currentCharacterHeight = CHARACTER.height * perspective;
         if(!isAnswered) {
             CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
-            CHARACTER.y = characterPlace.startY;
+            CHARACTER.y = canvas.width > (calculateScale + 120) ? characterPlace.startY - CHARACTER.height : characterPlace.startY ;
         };
 
-        ctx.fillStyle = "Black";
-        ctx.fillRect(CHARACTER.x, CHARACTER.y, CHARACTER.width, CHARACTER.height);
+        animationCharacter();
+    };
+    
+    let frameCount = 0;
+    let frameDelay = 10; // Changes every 10 cycles (~6fps)
+    let frame = 0;
+    let animationId = null;
+    function animationCharacter() {
+        if(!gameSettings.states.playing) {
+            cancelAnimationFrame(animationId);
+            return;
+        }
+        if(animationId) cancelAnimationFrame(animationId);
+
+        homer[currentAnimation].frames < 4 ? frameDelay = 20 : frameDelay = 10;
+        let totalFrames = homer[currentAnimation].frames; // Cambiar homer por template String ${} cuando se pueda elegir el pj dinámicamente.
+
+        // I delete the canvas and put the saved image without the character so as not to overwrite the animation images.
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.putImageData(lastPhotoCanvas, 0, 0);
+
+        if (frameCount % frameDelay === 0) {
+            frame = (frame + 1) % totalFrames;
+        }
+
+        const startX = homer[currentAnimation].x + frame * homer[currentAnimation].w;
+        
+        if(characterPlace.goX === position.left.key) {            
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, -CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);            
+            ctx.restore();
+        }else {
+            ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);
+        }
+        
+        frameCount++;
+        animationId = requestAnimationFrame(animationCharacter);
     };
 
     function drawPathToObjects(...obstacles) {
@@ -789,13 +867,13 @@
     };
 
     function draw(data) {
-        CHARACTER = data.character[1];
+        CHARACTER = data.character[homer.name]; // Hacer dinámico el selector para cuando haya más personajes
         ROCK = data.obstacles.rock;
         TREE = data.obstacles.tree;
         FENCE = data.obstacles.fence;
 
         canvas.width = container.clientWidth;
-        recWidth = canvas.width;
+        recWidth = canvas.width;        
 
         if(gameSettings.states.playing !== true) return;
 
@@ -805,6 +883,6 @@
         drawRock(ROCK.x, ROCK.y, ROCK.width, ROCK.height);
         drawTree(TREE.x, TREE.y, TREE.width, TREE.height);
         drawFence(FENCE.x, FENCE.y, FENCE.width, FENCE.height);
-        drawCharacter(CHARACTER);
+        drawCharacter();
     };
 })();
