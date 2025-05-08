@@ -1,5 +1,6 @@
 // 1. Agregar audios con rules.
 // 2. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
+// 3. Añadir una animación de homer al gameOver y mas personajes y cambiarlos dinámicamente.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -72,9 +73,9 @@
     let perspective = recWidth / calculateScale;
 
     // Initial Values
-    const initialLevel = 4;
+    const initialLevel = 1;
     const initialMaxLevel = 10;
-    const initialPath = 3;
+    const initialPath = 1;
     const initialMaxPath = 10;
     let initialLives = 4;
     const initialRules = `
