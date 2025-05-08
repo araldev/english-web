@@ -424,9 +424,11 @@
         $level.innerHTML = `<strong>Level: ${level}</strong>/${maxLevel}`;
         $path.innerHTML = `<strong>Path: ${path}</strong>/${maxPath}`;
 
-        if(gameSettings.states.waiting !== true) {
+        if(gameSettings.states.playing) {
             // Info each lvl rules
             $audioText.innerHTML = `<b>${CURRENT_LEVEL.audioText}</b>`;
+        } else {
+            $audioText.innerHTML = "";
         };
 
         // Averiguar cuantos corazones hay dibujados
