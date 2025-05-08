@@ -1,6 +1,5 @@
-// 1. Agregar audios con rules.
-// 2. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
-// 3. Añadir una animación de homer al gameOver y mas personajes y cambiarlos dinámicamente.
+// 1. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
+// 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -178,9 +177,30 @@
     };
     let currentAnimation;
 
+    // Object SpeechSynthesis, it's to make browser speech a text
+    const speakerSettings = {
+        // text,
+        lang: "en-US",
+        // rate,
+        // pitch,
+        volume: 0.4
+    };
+
     // Varaibles to manage answer and character movement
     let correctPath = [];
     let isAnswered = false;
+
+    let previousLvl = 0;
+    function speaker(text) {
+        if(previousLvl >= level) return;
+        previousLvl++;
+
+        text = text.toLowerCase();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = speakerSettings.lang;
+        utterance.volume = speakerSettings.volume;
+        speechSynthesis.speak(utterance);
+    };
 
     let eventModeClick = null;
     function settings() {
@@ -258,6 +278,7 @@
 
         currentStartHandler = (e) => {
             start(data);
+            speaker(CURRENT_LEVEL.audioText);
         };
 
         $start.addEventListener("click", currentStartHandler);
@@ -416,7 +437,7 @@
         console.log("Caminos correctos -------------->", correctPath);
     };
 
-    function showGameInfo() {
+    function showGameInfo() {        
         // Info initial rules.
         $rules.innerHTML = initialRules;
         
@@ -468,8 +489,10 @@
         putCorrectPath();
         requestAnimationFrame(() => draw(data));
         showGameInfo(data);
+        speaker(CURRENT_LEVEL.audioText);
         isAnswered = false;
         currentAnimation = animations.idle;
+        characterPlace.goX = null;
 
         console.log("Caminos correctos -------------->", correctPath);
     };
@@ -691,7 +714,10 @@
 
         if(gameSettings.states.playing !== true) return;
 
-        currentKeyHandler = (e) => handleCorrectPath(e, data, CHARACTER);
+        currentKeyHandler = (e) => {
+            handleCorrectPath(e, data, CHARACTER);
+            speaker(CURRENT_LEVEL.audioText);
+        };
 
         document.addEventListener("keydown", currentKeyHandler);
     };
@@ -712,12 +738,15 @@
             if(e.currentTarget === $btnLeft) {
                 e.key = keyDown.arrowLeft;
                 handleCorrectPath(e, data, CHARACTER);
+                speaker(CURRENT_LEVEL.audioText);
             } else if (e.currentTarget === $btnUp) {
                 e.key = keyDown.arrowUp;
                 handleCorrectPath(e, data, CHARACTER);
+                speaker(CURRENT_LEVEL.audioText);
             } else {
                 e.key = keyDown.arrowRight;
                 handleCorrectPath(e, data, CHARACTER);
+                speaker(CURRENT_LEVEL.audioText);
             }   
         };
 
