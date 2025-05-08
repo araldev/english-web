@@ -1,10 +1,10 @@
 {
   "character": {
-    "1": {
+    "homer": {
       "x": 1,
       "y": 430,
-      "width": 30,
-      "height": 50
+      "width": 50,
+      "height": 100
     }
   },
   "obstacles": {
@@ -61,9 +61,9 @@
   },
   "level-3": {
     "level": 3,
-    "audioText": "If there's a rock in the center, go toward the rock. Otherwise, go to the left.",
+    "audioText": "If there's a fence on the right, go toward the fence. Otherwise, go to the left.",
     "if": [
-      { "rock": "center", "go": "center" },
+      { "fence": "right", "go": "center" },
       { "else": "left" }
     ]
   },
@@ -115,7 +115,7 @@
     "level": 9,
     "audioText": "If there is a rock on the left, go toward the rock. If there is a tree, go to the tree's right side. Otherwise, go to the center.",
     "if": [
-      { "rock": "left", "go": "left" },
+      { "rock": "left", "go": "center" },
       { "tree": "any", "go": "right" },
       { "else": "center" }
     ]
@@ -126,7 +126,7 @@
     "if": [
       { "all": ["rock", "tree", "fence"],"choose": "fence", "go": "center" },
       { "tree": "any", "go": "left" },
-      { "else": "left" }
+      { "else": "center" }
     ]
   }
 }
