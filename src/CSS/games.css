@@ -120,7 +120,7 @@
         color: var(--color-text);
         background: var(--text-gradient);
         position: absolute;
-        top: 50%;
+        top: 55%;
         left: 50%;
         z-index: 99;
         transform: translate(-50%, -50%);
@@ -231,7 +231,11 @@
 }
 
 @media (max-width: 1300px) {
+    .canvas-container #start {
+        top: 50.5%;
+    }
+
     .canvas-container #controls.mobile {
-        display: flex !important;
+        display: flex;
     }
 }
