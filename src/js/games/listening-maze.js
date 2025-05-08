@@ -384,6 +384,7 @@
     };
 
     function reset(data) {
+        currentAnimation = animations.idle;
         selectState(playingString);
         settings();
         $start.classList.add("hidden");
