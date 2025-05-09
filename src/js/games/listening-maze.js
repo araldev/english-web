@@ -10,6 +10,8 @@
             return res.json();
         })
         .then(data => {
+            maxLevel = getInitialMaxLevel(data);            
+            maxPath = getInitialMaxPath(data);            
             waiting(data);
         })
         .catch(error => {
@@ -79,9 +81,13 @@
 
     // Initial Values
     const initialLevel = 1;
-    const initialMaxLevel = 10;
+    function getInitialMaxLevel(data) {
+        return Object.entries(data).filter( ([key]) => key.startsWith(`level-`)).length || 10;        
+    };
     const initialPath = 1;
-    const initialMaxPath = 10;
+    function getInitialMaxPath(data) {
+        return Object.keys(data.paths).length || 10;                
+    };
     let initialLives = 4;
     const initialRules = `
     <h2 class="text-gradient">Rules:</h2><br>
@@ -96,11 +102,11 @@
 
     // Game State
     let level = initialLevel;
-    const maxLevel = initialMaxLevel;
+    let maxLevel;
     let regexLevel;
     let CURRENT_LEVEL;
     let path = initialPath;
-    const maxPath = initialMaxPath;
+    let maxPath;
     let regexPath;
     let CURRENT_PATH;
     let lives = initialLives;
@@ -118,7 +124,7 @@
             hard: 3,
             legend: 1
         }
-    };
+    };    
 
     // Pjs
     let CHARACTER;
