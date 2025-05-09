@@ -92,11 +92,9 @@
     const initialRules = `
     <h2 class="text-gradient">Rules:</h2><br>
     <p>
-    <b>1.</b> If no rule/path is possible, you must take the central path.<br><br>
-    <b>2.</b> The first rule that is met disables the others.<br><br>
-    <b>3.</b> Every 10 paths, you advance a level, and each time you level up, you gain a life.<br><br>
-    <b>4.</b> If you run out of lives, you’ll start over from the beginning.<br><br>
-    <b>5.</b> <b>Choose the correct path using the arrow keys on your keyboard: ⬅️ ⬆️ ➡️
+    <b>1.</b> The first rule that is met disables the others.<br><br>
+    <b>2.</b> Every 10 paths, you advance a level, and each time you level up, you gain a life.<br><br>
+    <b>3.</b> <b>Choose the correct path using the arrow keys on your keyboard: ⬅️ ⬆️ ➡️
     </p>
     `;
 
