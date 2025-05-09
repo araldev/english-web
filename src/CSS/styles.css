@@ -778,32 +778,6 @@ main {
 }
 
 /* Titles bg blur */
-.blur.large{
-    animation: fadeIn 1s forwards;
-    &::after{
-        width: clamp(240px, 110%, 925px);
-        height: clamp(60px, 200%, 100px);
-    }
-}
-@media (max-width: 1305px) {
-    .blur.large::after {
-        width: clamp(240px, 110%, 925px);
-        height: clamp(60px, 200%, 145px);
-    }
-}
-@media (max-width: 935px) {
-    .blur.large::after {
-        width: clamp(240px, 110%, 925px);
-        height: clamp(60px, 140%, 145px);
-    }
-}    
-@media (max-width: 601px) {
-    .blur.large::after {
-        width: clamp(240px, 115%, 480px);
-        height: clamp(60px, 140%, 145px);
-    }
-}
-
 .blur {
     position: relative;
     width: max-content;
@@ -811,37 +785,14 @@ main {
     padding: 10px;
     font-size: var(--size-tittle);
     font-weight: 500;
-    margin: 13px auto;
-    margin-bottom: 40px;
+    margin: 13px auto 40px;
     background: var(--bg-gradient);
     text-align: center;
     border-radius: 10px;
     color: var(--color-text);
     opacity: 0;
     animation: fadeIn 1s forwards;
-
-    &::after {
-        content: "";
-        position:absolute;
-        background: var(--bg-gradient);
-        filter: blur(10px);
-        width: clamp(240px, 120%, 350px);
-        height: clamp(60px, 200%, 100px);
-        inset: -15px -25px;
-        border-radius: 50px;
-        z-index: -1;
-        opacity: .7;
-    }
-}
-@media (max-width: 950px) {
-    .blur::after {
-      height: 90px;
-    }
-}
-@media (max-width: 750px) {
-    .blur::after {
-      height: 80px;
-    }
+    box-shadow: 0 0 20px 10px rgba(33, 88, 151, 0.6);
 }
 @keyframes fadeIn {
     0% {
@@ -934,8 +885,11 @@ td:nth-child(3) {
 #conditionals-passive-voice {
     margin-top: 100px;
 
-    h3 {
-        margin: 90px auto 70px;
+    h3:not(:first-of-type) {
+        margin: 90px auto 30px;
+    }
+    h3:first-of-type {
+        margin: 0 auto 30px;
     }
 }
 @media(max-width:1200px) {
