@@ -1,5 +1,4 @@
-// 1. Añadir efectos de sonido e imagen al iniciar, pasar de nivel, camino o perder.
-// 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
+// 1. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -15,6 +14,12 @@
         .catch(error => {
             console.error("Error al cargar los datos del juego", error)
         });
+
+    //  Get Audio Effects to canvas
+    const $startAudio = new Audio("./public/sounds/game-start.ogg");
+    const $missAudio = new Audio("./public/sounds/electrical-shock.ogg");
+    const $gameOverAudio = new Audio("./public/sounds/game-over-arcade.ogg");
+    let currentAudio = null;
 
     // Get Images to canvas
     const $rock = document.getElementById("rock");
@@ -190,16 +195,52 @@
     let correctPath = [];
     let isAnswered = false;
 
+    let previousPath = 0;
+    async function triggerAudio() {
+        if(previousPath > maxPath && currentAnimation !== animations.lost) previousPath = 0;
+
+        if(previousPath < path) {
+            if(gameSettings.states.playing) currentAudio = $startAudio;
+            console.log(currentAudio);
+            previousPath++;
+        } else if(previousPath >= path) {
+            if(gameSettings.states.playing && currentAnimation === animations.lost) currentAudio = $missAudio;
+            console.log(currentAudio);
+        }
+        if(gameSettings.states.gameOver) {
+            currentAudio = $gameOverAudio;
+            previousPath = 0;
+            console.log(currentAudio)
+        };
+
+        if(currentAudio) {
+            try {
+                currentAudio.pause();        // Make sure to stop any previous sound
+                currentAudio.currentTime = 0; // Reset the starting point of the audio
+                await currentAudio.play();  // Wait for it to start properly
+            } catch (err) {
+                console.error("Audio error:", err);
+            };
+            currentAudio = null;
+        };
+    };
+
+    let idsetTimeoutSpeaker = null;
     let previousLvl = 0;
     function speaker(text) {
-        if(previousLvl >= level) return;
+        if(gameSettings.states.gameOver) previousLvl = 0;
+        
+        if(previousLvl >= level || !gameSettings.states.playing) return;
         previousLvl++;
 
         text = text.toLowerCase();
+        speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = speakerSettings.lang;
         utterance.volume = speakerSettings.volume;
-        speechSynthesis.speak(utterance);
+
+        clearTimeout(idsetTimeoutSpeaker);
+        idsetTimeoutSpeaker = setTimeout(() => speechSynthesis.speak(utterance), 1000);
     };
 
     let eventModeClick = null;
@@ -279,6 +320,7 @@
         currentStartHandler = (e) => {
             start(data);
             speaker(CURRENT_LEVEL.audioText);
+            triggerAudio();
         };
 
         $start.addEventListener("click", currentStartHandler);
@@ -422,6 +464,8 @@
         putCorrectPath();
         draw(data);
         showGameInfo();
+        speaker(CURRENT_LEVEL.audioText);
+        triggerAudio();
     };
 
     let currentEventResize;
@@ -490,6 +534,7 @@
         requestAnimationFrame(() => draw(data));
         showGameInfo(data);
         speaker(CURRENT_LEVEL.audioText);
+        triggerAudio();
         isAnswered = false;
         currentAnimation = animations.idle;
         characterPlace.goX = null;
@@ -618,6 +663,7 @@
             kill();
             gameOver(data);
         };
+        triggerAudio();
     };
 
     function putCorrectPath() {
