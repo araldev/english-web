@@ -1,4 +1,5 @@
-// 1. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
+// 1. Hay un bug que si clico muchas veces antes de llegar al target cuando el pj se mueve no llega nunca.
+// 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -217,6 +218,7 @@
             try {
                 currentAudio.pause();        // Make sure to stop any previous sound
                 currentAudio.currentTime = 0; // Reset the starting point of the audio
+                
                 await currentAudio.play();  // Wait for it to start properly
             } catch (err) {
                 console.error("Audio error:", err);
@@ -239,7 +241,7 @@
         utterance.lang = speakerSettings.lang;
         utterance.volume = speakerSettings.volume;
 
-        clearTimeout(idsetTimeoutSpeaker);
+        if (idsetTimeoutSpeaker) clearTimeout(idsetTimeoutSpeaker);
         idsetTimeoutSpeaker = setTimeout(() => speechSynthesis.speak(utterance), 1000);
     };
 
@@ -672,7 +674,7 @@
         let index;
         let obstacleIsPresent = false;
         
-        if(gameSettings.states.playing === false) return;
+        if(!gameSettings.states.playing) return;
         
         CURRENT_LEVEL.if.forEach( (r, i) => {
             console.log(`Rule Nº${i + 1}:`, r)
@@ -761,7 +763,7 @@
         if(gameSettings.states.playing !== true) return;
 
         currentKeyHandler = (e) => {
-            if(currentAnimation === animations.lost) return;
+            if(currentAnimation === animations.lost|| isAnswered) return;
             handleCorrectPath(e, data, CHARACTER);
             speaker(CURRENT_LEVEL.audioText);
         };
@@ -782,7 +784,7 @@
 
 
         currentButtonHandler = (e) => {
-            if(currentAnimation === animations.lost) return;
+            if(currentAnimation === animations.lost || isAnswered) return;
 
             if(e.currentTarget === $btnLeft) {
                 e.key = keyDown.arrowLeft;
