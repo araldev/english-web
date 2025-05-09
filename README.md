@@ -35,3 +35,18 @@ By understanding and applying HTML, CSS, and JavaScript, users can gain valuable
 ```bash
 git clone https://github.com/araldev/english-web.git
 ```
+
+
+## 📸 **Screenshot**
+
+### 🎮 Game
+![screenshot-web-game](https://github.com/user-attachments/assets/19e69bab-6edc-4841-8463-45be9d84fc7d)
+
+###  📚 Lessons Sections
+![screenshot-web-home](https://github.com/user-attachments/assets/25186e2f-6660-4788-a1db-35d0c397af4f)
+
+### 📚 Lessons Sections
+![screenshot-web-lessons](https://github.com/user-attachments/assets/b29bfbfc-89e5-4173-b1d4-3be04143f9bf)
+
+### 🏠 Home
+![screenshot-web-lessons2](https://github.com/user-attachments/assets/267ce255-5df6-4597-a86f-42289917dbb9)
