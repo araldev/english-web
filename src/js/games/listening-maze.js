@@ -1,5 +1,8 @@
 // 1. Hay un bug que si clico muchas veces antes de llegar al target cuando el pj se mueve no llega nunca.
 // 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
+// 3. Poner cronómetro y puntaje: 
+//      - Mientras más rápido contestes te da mas puntos.
+//      - Perder una vida resta puntos.
 // ----------------------------------------------------------------->
 (function() {  
     fetch("./src/assets/games/listening-maze.json")
@@ -200,22 +203,19 @@
     let correctPath = [];
     let isAnswered = false;
 
-    let previousPath = 0;
-    async function triggerAudio() {
-        if(previousPath > maxPath && currentAnimation !== animations.lost) previousPath = 0;
+    let previousPath = initialPath - 1;
+    async function triggerAudio() {        
+        if(previousPath >= maxPath && currentAnimation !== animations.lost) previousPath = 0;
 
         if(previousPath < path) {
             if(gameSettings.states.playing) currentAudio = $startAudio;
-            console.log(currentAudio);
             previousPath++;
         } else if(previousPath >= path) {
             if(gameSettings.states.playing && currentAnimation === animations.lost) currentAudio = $missAudio;
-            console.log(currentAudio);
         }
         if(gameSettings.states.gameOver) {
             currentAudio = $gameOverAudio;
             previousPath = 0;
-            console.log(currentAudio)
         };
 
         if(currentAudio) {
