@@ -1,6 +1,7 @@
 // 1. Hay un bug que si clico muchas veces antes de llegar al target cuando el pj se mueve no llega nunca.
 // 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
-// 3. Poner cronómetro y puntaje: 
+// 3. Añadir sonido y animación de win.
+// 4. Poner cronómetro y puntaje: 
 //      - Mientras más rápido contestes te da mas puntos.
 //      - Perder una vida resta puntos.
 // ----------------------------------------------------------------->
@@ -124,7 +125,7 @@
             medium: 4,
             hard: 3,
             legend: 1
-        }
+        },
     };    
 
     // Pjs

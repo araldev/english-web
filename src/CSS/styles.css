@@ -543,7 +543,20 @@ main {
         justify-content: space-evenly;
         align-items: center;
         --padding-container: 20px 30px;
-        background-color: var(--color-subtittle);
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: var(--color-subtittle);
+          z-index: -1;
+          pointer-events: none;
+          opacity: .8;
+          backdrop-filter: blur(40px);
+        }
     }
 
     .nav-links {
@@ -573,13 +586,60 @@ main {
         bottom: 0;
         margin-left: auto;
         cursor: pointer;
-        background: #00000049;
-        border-radius: 50%;
+        opacity: 0;
+        transform: translateY(80px);
+        transition: opacity .5s ease-in-out, transform .5s ease-in-out;
 
         &:hover {
             filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
         }
+
+      &.visible {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+      .arrow-up-circle-animated {
+        width: 40px; 
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        /* background: #00000049; */
+      }   
+      .circle-border {
+        /* La circunferencia del círculo con r=49 es 2 * pi * 49 = ~307.87608 */
+        --circumference: 307.87608;
+        stroke-dasharray: var(--circumference);
+        stroke-dashoffset: var(--circumference); /* Empieza completamente oculto */
+        stroke: var(--btn-bg-color); /* Color del borde que se rellenará */
+        stroke-width: 12; /* Grosor del borde */
+
+        /* Animación basada en scroll */
+        animation: draw-circle linear both; 
+        animation-timeline: scroll(root); /* Anima con el scroll del documento raíz */
+        animation-range: entry 200px cover 100%;
+      }
+      .arrow-icon {
+        stroke: var(--btn-bg-color);
+      }
     }
+}
+@keyframes draw-circle {
+    from {
+        stroke-dashoffset: var(--circumference); /* Empieza oculto */
+    }
+    to {
+        stroke-dashoffset: 0; /* Termina completamente dibujado */
+    }
+}
+
+@keyframes footer-animation {
+  from{
+    transform: scale(1) translateY(0);
+    color: var(--color-text);
+  } to {
+    transform: scale(1.3) translateY(-30px);
+    color: var(--btn-bg-color);
+  }
 }
 
 .nav-img {

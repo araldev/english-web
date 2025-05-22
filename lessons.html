@@ -13,6 +13,7 @@
     <script defer type="module" src="./src/js/components/menu.js"></script>
     <script defer type="module" src="./src/js/components/section-grid.js"></script>
     <script defer type="module" src="./src/js/components/sidebar.js"></script>
+    <script defer type="module" src="./src/js/components/nav-subir.js"></script>
 </head>
 <body id="lessons">
     <aside id="sidebar" class="sidebar minimize">
@@ -492,20 +493,23 @@
         <nav class="nav-footer container">
             <ul id="n" class="nav-links nav-links-menu">
                 <li class="nav-item">
-                    <a class="nav-link" href="#verb-tenses">Verb Tenses</a>
+                    <a id="lessons-1-footer" class="nav-link" href="#verb-tenses">Verb Tenses</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#modals-auxiliary-verbs">Modal & Auxiliary Verbs</a>
+                    <a id="lessons-2-footer" class="nav-link" href="#modals-auxiliary-verbs">Modal & Auxiliary Verbs</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#conditionals-passive-voice">Conditional & Passive Voice</a>
+                    <a id="lessons-3-footer" class="nav-link" href="#conditionals-passive-voice">Conditional & Passive Voice</a>
                 </li>
             </ul>
 
             <div onclick="window.scrollTo({top: 0})" class="nav-subir">
-                <img class="nav-img" src="./public/images/up-arrow.svg" alt="Back to top">
+              <svg class="arrow-up-circle-animated" width="40" height="40" viewBox="0 0 100 100">
+                <circle class="circle-border" cx="50" cy="50" r="49" fill="none" stroke="white" stroke-width="1" />
+                <path class="arrow-icon" d="M25 60 L50 30 L75 60" fill="none" stroke="#2ED9FF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
         </nav>
     </footer>
