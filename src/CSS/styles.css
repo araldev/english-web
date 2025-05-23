@@ -79,7 +79,7 @@ body {
     height: 100dvh;
     max-height: 100%;
     background-color: white;
-    z-index: 9999;
+    z-index: 9998;
     scrollbar-gutter: stable both-edges; /* para que el scroll no modifique mi contenido */
     box-shadow: var(--shadow-sidebar);
     transition: all .3s ease-in-out;
@@ -333,7 +333,7 @@ body {
 .minimize .sidebar-size-btn{
     right: -1.5rem;
     transform: rotate(180deg);
-    transition: transform .3s ease;      
+    transition: transform .3s ease;     
 }
 
 .minimize .sidebar-logo {
@@ -471,7 +471,7 @@ main {
     align-items: center;
     border-bottom: 1px solid white;
     position: relative;
-    z-index: 99;
+    z-index: 999;
 }
 
 .nav-logo {
@@ -524,6 +524,7 @@ main {
     margin-left: auto;
     cursor: pointer;
     display: none; /* oculto excepto para dispositivos móviles */
+    z-index: 999;
      &:hover {
         filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
      }
@@ -1196,7 +1197,7 @@ td:nth-child(3) {
         justify-content: space-evenly;
         align-items: center;
         padding: 3rem;
-        z-index: 200;
+        z-index: 9999;
         visibility: hidden;
         transform: translateY(-100%);
         opacity: 0;
