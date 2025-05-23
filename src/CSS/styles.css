@@ -1073,7 +1073,7 @@ td:nth-child(3) {
     border-radius: 12px;
     color: var(--color-text);
     background: #b0b0b0;
-    isolation: isolate; /* aisla el elemento (stacking context) */
+    isolation: isolate; /* aisla el elemento (stacking context), es la clave para que el background quede al fondo de todos los demas elementos */
     overflow: hidden;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     transition: transform .2s ease;
