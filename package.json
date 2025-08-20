@@ -1,0 +1,16 @@
+{
+  "name": "english-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "araldev",
+  "license": "ISC",
+  "devDependencies": {
+    "standard": "17.1.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard"
+    ]
+  }
+}
