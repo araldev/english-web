@@ -54,8 +54,6 @@ interface BaseUserModel {
   password: PasswordDto;
 }
 
-export type RoleDto = "admin" | "user" | "guest"
-
 export interface ClassBaseUserDto {
   id: UserIdDto;
   username: UsernameDto;
@@ -67,9 +65,7 @@ export interface ClassBaseUserDto {
   invitedBy?: UsernameDto
 }
 
-export interface ClassUpdateBaseUserDto<I extends UserModelUpdate, D> extends Partial<ClassBaseUserDto> {
-  execute({user, UserDB}:{ user: I, UserDB: D}): Promise<I> | I
-}
+export type RoleDto = "admin" | "user" | "guest"
 
 // Interfaz para usuario admin
 export interface AdminUserModel extends BaseUserModel {

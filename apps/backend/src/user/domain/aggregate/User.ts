@@ -9,7 +9,7 @@ export class User implements ClassBaseUserDto {
   role: RoleDto
   permission?: string[]
   subscription?: SubscriptionDto
-  invitedBy?: string 
+  invitedBy?: string
 
   constructor(user: UserModel) {
     this.id = user.id
@@ -26,6 +26,4 @@ export class User implements ClassBaseUserDto {
       this.invitedBy = user.invitedBy
     }
   }
-
-  
 }

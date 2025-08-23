@@ -1,6 +1,8 @@
-import type {UserModelUpdate, ClassUpdateBaseUserDto, RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, UserModel} from '@src/user/domain/repositories/UserModel'
+import type {UserModelUpdate, RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, UserModel} from '@src/user/domain/repositories/UserModel'
+import type {UserRepositoryDto} from '@src/user/application/port/UserRepositoryDto'
+import type {ClassUpdateUserDto} from '@src/user/application/port/ClassUpdateUserDto'
 
-export class UpdateUser<I extends UserModelUpdate, D> implements ClassUpdateBaseUserDto<I, D > {
+export class UpdateUser implements ClassUpdateUserDto {
   id?: UserIdDto
   username?: UsernameDto
   password?: PasswordDto
@@ -9,24 +11,14 @@ export class UpdateUser<I extends UserModelUpdate, D> implements ClassUpdateBase
   permission?: string[] 
   subscription?: SubscriptionDto 
   invitedBy?: string 
-  
-  private constructor(user: UserModelUpdate) {
-    if (user.id) this.id = user.id
-    if (user.username) this.username = user.username
-    if(user.email) this.email = user.email
-    if(user.password) this.password = user.password
-    if(user.role) this.role = user.role
 
-    if (user.role === "admin" && user.permission) {
-      this.permission = user.permission
-    } else if (user.role === "user" && user.subscription) {
-      this.subscription = user.subscription
-    } else if (user.role === "guest" && user.invitedBy !== undefined) {
-      this.invitedBy = user.invitedBy
-    }
-  }
+  async execute({user, UserDB}:{user: UserModelUpdate, UserDB: UserRepositoryDto}): Promise<UserModel | null> {
+    if(!user || !user.id) return null
 
-  async execute({user, UserDB}:{user: I, UserDB: D}) {
-    return await UserDB.findById({user.id})
+    const userDb = await UserDB.findById({id: user.id})
+
+    if(!userDb) return null
+
+    return await UserDB.update({userId: userDb.id, userUpdates: user})
   }
 }
