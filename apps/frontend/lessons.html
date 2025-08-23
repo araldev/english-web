@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn English B1</title>
+    <link rel="shortcut icon" href="./public/images/favicon.webp" type="image/x-icon">
+    <link rel="stylesheet" href="./src/CSS/variables.css">
+    <link rel="stylesheet" href="./src/CSS/normalize.css">
+    <link rel="stylesheet" href="./src/CSS/components.css">
+    <link rel="stylesheet" href="./src/CSS/styles.css">
+    <link rel="preload" as="image" href="./public/images/hero-img.webp">
+    <script defer type="module" src="./src/js/components/menu.js"></script>
+    <script defer type="module" src="./src/js/components/section-grid.js"></script>
+    <script defer type="module" src="./src/js/components/sidebar.js"></script>
+    <script defer type="module" src="./src/js/components/nav-subir.js"></script>
+</head>
+<body id="lessons">
+    <aside id="sidebar" class="sidebar minimize">
+        <img id="sidebar-size-btn" class="sidebar-size-btn" src="./public/images/arrow-minimize.svg"></img>
+        <div class="sidebar-logo">
+            <img class="logo" src="./public/images/icon-sin-fondo.webp" alt="Logo">
+            <h2 class="logo-tittle">English B1</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-links menu-item-static">
+                <a href="index.html" class="sidebar-link">
+                    <img src="./public/images/home.svg" alt="Home" class="sidebar-link-icon">
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li class="sidebar-links menu-item-dropdown">
+                <a href="lessons.html" class="sidebar-link">
+                    <img src="./public/images/lessons.svg" alt="Lessons" class="sidebar-link-icon">
+                    <span>Lessons</span>
+                    <img src="./public/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+                </a>
+                <ul class="sidebar-submenu">
+                    <li class="submenu-links">
+                        <a href="lessons.html#verb-tenses" class="submenu-link">Verb Tenses</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="lessons.html#modals-auxiliary-verbs" class="submenu-link">Modal & Auxiliary Verbs</a>
+                    </li>
+                    <li class="submenu-links">
+                        <a href="lessons.html#conditionals-passive-voice" class="submenu-link">Conditional & Passive Voice</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-links menu-item-dropdown">
+                <a href="" class="sidebar-link">
+                    <img src="./public/images/interactive-exercises.svg" alt="Interactive Exercises" class="sidebar-link-icon">
+                    <span>Interactive Exercises</span>
+                    <img src="./public/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+                </a>
+                <ul class="sidebar-submenu">
+                    <li class="submenu-links">
+                        <a href="exercises.html#game-container" class="submenu-link">Listening Maze</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <section class="sidebar-user">
+            <div class="user-data">
+                <h4 class="user-tittle">Arturo Alba</h4>
+                <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
+            </div>
+
+            <div class="user-sections">
+                <h4 class="user-tittle">Notifications</h4>
+                <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
+            </div>
+
+            <div class="user-sections">
+                <h4 class="user-tittle">Settings</h4>
+                <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
+            </div>
+        </section>
+    </aside>
+
+    <header class="hero">
+        <nav class="nav container">
+            <div class="nav-logo">
+                <img class="logo" src="./public/images/icon-sin-fondo.webp" alt="Logo">
+                <h2 class="nav-tittle">English B1</h2>
+            </div>
+
+            <ul class="nav-links nav-links-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="lessons.html" class="nav-link">Lessons</a>
+                </li>
+                <li class="nav-item">
+                    <a href="exercises.html" class="nav-link">Interactive Exercises</a>
+                </li>
+                <li class="nav-item">
+                    <a href="signin.html" class="nav-link">Sign In</a>
+                </li>
+
+                <img src="./public/images/close.svg" alt="Close menu" class="nav-close">
+            </ul>
+
+            <div class="nav-menu">
+                <img src="./public/images/menu-button.svg" alt="Menu button" class="nav-img">
+            </div>
+        </nav>
+    </header>
+    
+    <main style="content-visibility: auto;">
+        <section class="container section">
+            <h2 class="subtittle blur">Grammar Rules</h2>
+            <p class="section-paragraph">Master the essential rules of English grammar with clear explanations and practical examples.<br><br> Improve your understanding of sentence structure, verb tenses, and more to communicate effectively and confidently.</p>
+
+            <div class="section-main">
+                <a class="example-row" style="text-decoration: none;" href="#verb-tenses">
+                    <article class="section-icons">
+                        <img class="section-icon" src="./public/images/verb-tenses.svg" alt="Verb tenses">
+                        <h3 class="section-tittle">Verb Tenses</h3>
+                        <p class="section-paragraph">Learn to use past, present, and future tenses correctly with clear explanations and examples.</p>
+                    </article>
+                </a>
+
+                <a style="text-decoration: none;" href="#modals-auxiliary-verbs">
+                    <article class="section-icons">
+                        <img class="section-icon" src="./public/images/modal-verbs.svg" alt="Modals & Auxiliary Verbs">
+                        <h3 class="section-tittle">Modals & Auxiliary Verbs</h3>
+                        <p class="section-paragraph">Understand how modals and auxiliary verbs shape meaning and help form questions, negatives.
+                    </article>
+                </a>
+
+                <a class="last-row" style="text-decoration: none;" href="#conditionals-passive-voice">
+                    <article class="section-icons">
+                        <img class="section-icon" src="./public/images/passive-voice.svg" alt="Conditionals & Passive Voice">
+                        <h3 class="section-tittle">Conditionals & Passive Voice</h3>
+                        <p class="section-paragraph">Master how conditionals and passive voice transform sentences to express possibilities, hypothetical situations, and focus on actions rather than subjects.</p>
+                    </article>
+                </a>
+            </div>
+        </section>
+
+        <section id="verb-tenses" class="container section">
+            <h2 class="blur">Verb Tenses - B1</h2>
+            <table>
+                <colgroup>
+                    <col class="verb-col">
+                    <col class="structure-col">
+                    <col class="example-col">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">Verb Tenses</th>
+                        <th scope="col">Structure</th>
+                        <th scope="col">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-front">Present Simple</td>
+                        <td class="td-front">Subject + Verb (base form)</td>
+                        <td class="td-front">I work every day.</td>
+                    </tr>
+                    <tr>
+                        <td>Present Continuous</td>
+                        <td>Subject + am / is / are + Verb-ing</td>
+                        <td>I am working right now.</td>
+                    </tr>
+                    <tr>
+                        <td>Present Perfect</td>
+                        <td>Subject + have / has + Past Participle</td>
+                        <td>I have worked here for five years.</td>
+                    </tr>
+                    <tr>
+                        <td>Present Perfect Continuous</td>
+                        <td>Subject + have / has been + Verb-ing</td>
+                        <td>I have been working for two hours.</td>
+                    </tr>
+                    <tr>
+                        <td>Past Simple</td>
+                        <td>Subject + Verb (past form)</td>
+                        <td>I worked yesterday.</td>
+                    </tr>
+                    <tr>
+                        <td>Past Continuous</td>
+                        <td>Subject + was / were + Verb-ing</td>
+                        <td>I was working when you called.</td>
+                    </tr>
+                    <tr>
+                        <td>Past Perfect</td>
+                        <td>Subject + had + Past Participle</td>
+                        <td>I had worked before you arrived.</td>
+                    </tr>
+                    <tr>
+                        <td>Past Perfect Continuous</td>
+                        <td>Subject + had been + Verb-ing</td>
+                        <td>I had been working for two hours when she called.</td>
+                    </tr>
+                    <tr>
+                        <td>Future Simple</td>
+                        <td>Subject + will + Verb (base form)</td>
+                        <td>I will work tomorrow.</td>
+                    </tr>
+                    <tr>
+                        <td>Future Continuous</td>
+                        <td>Subject + will be + Verb-ing</td>
+                        <td>I will be working at 8 PM.</td>
+                    </tr>
+                    <tr>
+                        <td>Future Perfect</td>
+                        <td>Subject + will have + Past Participle</td>
+                        <td>I will have finished by the time you arrive.</td>
+                    </tr>
+                    <tr>
+                        <td>Future Perfect Continuous</td>
+                        <td>Subject + will have been + Verb-ing</td>
+                        <td>By next month, I will have been working here for 5 years.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="modals-auxiliary-verbs" class="container section">
+            <h2 class="blur">Modals & Auxiliary Verbs</h2>
+
+            <h3 class="blur">Modals Verbs</h3>
+
+            <p class="section-paragraph">Modals verbs are special verbs that work with a main verb to express ability, possibility, permission, advice, obligation, or necessity.<br>
+            They don’t change with subjects and are followed by the base form of the verb.<br><br> 
+            <strong>Structure:</strong>
+            Subject + Modal Verb + Base Verb
+            </p>
+
+            <section class="card-sections">
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Can / Could</h4>
+                            <p><strong>Use:</strong> Ability, permission, requests.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Can / Could</h4>
+                            <p><strong>Examples:</strong><br>
+                                -I <strong>can</strong> speak French.<br>
+                                -<strong>Could</strong> you help me, please?    
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>May / Might</h4>
+                            <p><strong>Use:</strong> Possibility.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>May / Might</h4>
+                            <p><strong>Examples:</strong><br>
+                                -It <strong>may</strong> snow tomorrow.<br>
+                                -She <strong>might</strong> be late. 
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Must</h4>
+                            <p><strong>Use:</strong> Strong obligation, logical conclusion.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Must</h4>
+                            <p><strong>Examples:</strong><br>
+                                -You <strong>must</strong> wear a helmet.<br>
+                                -He <strong>must</strong> be tired after the trip. 
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Should</h4>
+                            <p><strong>Use:</strong> Advice, recommendation.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Should</h4>
+                            <p><strong>Examples:</strong><br>
+                                -You <strong>should</strong> eat more vegetables.<br>
+                                -They <strong>should</strong> call their parents.  
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Would</h4>
+                            <p><strong>Use:</strong> Politeness, imaginary or future situations.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Would</h4>
+                            <p><strong>Examples:</strong><br>
+                                -I <strong>would</strong> love a cup of tea.<br>
+                                -What <strong>would</strong> you do in my place?
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <h3 class="blur">Auxiliary Verbs</h3>
+
+            <p class="section-paragraph">Auxiliary verbs help to form tenses, questions, negatives, and emphasize statements.
+            </p>
+
+            <section class="card-sections">
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Be</h4>
+                            <p><strong>Use:</strong> Continuous tenses, passive voice.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Be</h4>
+                            <p><strong>Examples:</strong><br>
+                                -She <strong>is</strong> reading a book.<br>
+                                -The cake <strong>was</strong> made yesterday. 
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Do</h4>
+                            <p><strong>Use:</strong> Questions, negatives, emphasis.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Do</h4>
+                            <p><strong>Examples:</strong><br>
+                                -<strong>Do</strong> you like music?<br>
+                                -I <strong>don’t</strong> understand.<br>
+                                -I <strong>do</strong> want to go!
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card-container">
+                    <div class="card">
+                        <div class="front-card">
+                            <h4>Have</h4>
+                            <p><strong>Use:</strong> Perfect tenses.</p>
+                        </div>
+                        <div class="back-card">
+                            <h4>Have</h4>
+                            <p><strong>Examples:</strong><br>
+                                -They <strong>have</strong> finished the project.<br>
+                                -He <strong>has</strong> never been to London.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </section>
+
+        <section id="conditionals-passive-voice" class="container section">
+            <h2 class="blur">Conditionals & Passive Voice</h2>
+
+            <h3 class="blur">Conditionals</h3>
+            
+            <section class="card-sections">
+                <article class="conditionals-container">
+                    <h4>Zero Conditional</h4>
+                    <p>Used for general facts or universal truths.</p>
+                    <p><strong>Structure:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + present simple, present simple</code></p>
+                    <p><strong>Example: </strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;-If you heat water to 100ºC, it boils.</p>
+                </article>
+
+                <article class="conditionals-container">
+                    <h4>First Conditional</h4>
+                    <p>Used for real or possible situations in the future.</p>
+                    <p><strong>Structure:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + present simple, will + verb</code></p>
+                    <p><strong>Example: </strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;-If it rains tomorrow, we will stay at home.</p>
+                </article>
+
+                <article class="conditionals-container">
+                    <h4>Second Conditional</h4>
+                    <p>Used for hypothetical or unlikely situations in the present or future.</p>
+                    <p><strong>Structure:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + past simple, would + verb</code></p>
+                    <p><strong>Example: </strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;-If I had more time, I would learn French.</p>
+                </article>
+
+                <article class="conditionals-container">
+                    <h4>Third Conditional</h4>
+                    <p>Used for imaginary situations in the past (things that didn’t happen).</p>
+                    <p><strong>Structure:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + past perfect, would have + past participle</code></p>
+                    <p><strong>Example: </strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;-If she had studied, she would have passed the exam.</p>
+                </article>
+            </section>
+
+            <h3 class="blur">Passive Voice</h3>
+
+            <p class="section-paragraph">The passive voice is used when the doer of the action is unknown or not important.<br><br>
+            <strong>Structure: </strong><code>Subject + to be + past participle (+ by agent)</code><br>
+            <small>(verb to be in the same tense as the active voice)</small></p>
+
+            <section class="card-sections">
+                <article class="passive-voice-container">
+                    <h4>Present Simple – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;am / is / are + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> The chef cooks the meal.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> The meal <strong>is cooked</strong> by the chef.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>Present Continuous – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;am / is / are being + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> She is painting the house.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> The house <strong>is being painted</strong> by her.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>Past Simple – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;was / were + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> They cleaned the room.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> The room <strong>was cleaned</strong> by them.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>Past Continuous – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;was / were being + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> They were fixing the road.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> The road <strong>was being fixed</strong> by them.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>Future Simple – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;will be + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> The company will launch a new product.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> A new product <strong>will be launched</strong> by the company.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>Future Continuous – Passive</h4>
+                    <p><strong>Structure:</strong><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;will be being + past participle</code></p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Active:</strong> The team will be completing the project.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive:</strong> The project <strong>will be being completed</strong> by the team.</p>
+                </article>
+
+                <article class="passive-voice-container">
+                    <h4>By + Agent</h4>
+                    <p>In passive sentences, the person who performs the action is often omitted unless it's important.</p>
+                    <p><strong>Examples:</strong><br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive with agent:</strong> The letter was written <strong>by John</strong>.<br>
+                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;-Passive without agent: </strong> The letter was written.</p>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    <footer id="footer-home">
+        <nav class="nav-footer container">
+            <ul id="n" class="nav-links nav-links-menu">
+                <li class="nav-item">
+                    <a id="lessons-1-footer" class="nav-link" href="#verb-tenses">Verb Tenses</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="lessons-2-footer" class="nav-link" href="#modals-auxiliary-verbs">Modal & Auxiliary Verbs</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="lessons-3-footer" class="nav-link" href="#conditionals-passive-voice">Conditional & Passive Voice</a>
+                </li>
+            </ul>
+
+            <div onclick="window.scrollTo({top: 0})" class="nav-subir">
+              <svg class="arrow-up-circle-animated" width="40" height="40" viewBox="0 0 100 100">
+                <circle class="circle-border" cx="50" cy="50" r="49" fill="none" stroke="white" stroke-width="1" />
+                <path class="arrow-icon" d="M25 60 L50 30 L75 60" fill="none" stroke="#2ED9FF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+        </nav>
+    </footer>
+</body>
+</html>

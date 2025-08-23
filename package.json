@@ -1,0 +1,30 @@
+{
+  "name": "english-web",
+  "version": "1.0.0",
+  "description": "A web application designed to help users learn English through visual and interactive content.",
+  "workspaces": [
+    "./apps/frontend",
+    "./apps/backend"
+  ],
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/araldev/english-web.git"
+  },
+  "author": "araldev",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/araldev/english-web/issues"
+  },
+  "homepage": "https://github.com/araldev/english-web#readme",
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "@types/node": "24.3.0",
+    "eslint": "9.33.0",
+    "globals": "16.3.0",
+    "jiti": "2.5.1",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.40.0"
+  }
+}
