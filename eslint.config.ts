@@ -10,7 +10,6 @@ export default defineConfig([
   tseslint.configs.recommended,
   {
     rules: {
-    "no-unused-vars": "warn",
     "no-undef": "warn",
     semi: ["error", "never"],
     "prefer-const": "error",
