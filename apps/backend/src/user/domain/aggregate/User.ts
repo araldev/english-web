@@ -1,4 +1,5 @@
-import type { UserModel, ClassBaseUserDto} from '@src/user/domain/repositories/UserModel'
+import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
+import { type UserModel, type ClassBaseUserDto, userSchema, Role} from '@src/user/domain/repositories/UserModel'
 import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto} from '@src/user/domain/repositories/UserModel'
 
 export class User implements ClassBaseUserDto {
@@ -11,19 +12,29 @@ export class User implements ClassBaseUserDto {
   subscription?: SubscriptionDto
   invitedBy?: string
 
-  constructor(user: UserModel) {
+  private constructor(user: UserModel) {
     this.id = user.id
     this.username = user.username
     this.email = user.email
     this.password = user.password
     this.role = user.role
 
-    if (user.role === "admin" && user.permission) {
+    if (user.role === Role.admin && user.permission) {
       this.permission = user.permission
-    } else if (user.role === "user" && user.subscription) {
+    } else if (user.role === Role.user && user.subscription) {
       this.subscription = user.subscription
-    } else if (user.role === "guest" && user.invitedBy !== undefined) {
+    } else if (user.role === Role.guest && user.invitedBy != null) {
       this.invitedBy = user.invitedBy
     }
+  }
+
+  static async create({user}: {user: UserModel}): Promise<ClassBaseUserDto> {
+    if(!user) CreateCustomError.USER_NOT_FOUND()
+
+    const userParse = await userSchema.parseAsync(user)
+
+    if(!userParse) CreateCustomError.USER_NOT_FOUND()
+
+    return new User(userParse)
   }
 }

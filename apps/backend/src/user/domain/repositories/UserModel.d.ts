@@ -2,7 +2,7 @@ import {z} from 'zod'
 
 /* -------- Esquemas -------- */
 
-// 1. id (UUID v4); opcional → se genera automáticamente
+// 1. id (UUID v4) → se genera automáticamente
 export const idSchema = z
   .string()
   .uuid()
@@ -27,6 +27,35 @@ export const subscriptionSchema = z.union([
   z.literal("basic")
 ])
 
+// 6. Role
+export const roleSchema = z.union([z.literal(Role.admin), z.literal(Role.user), z.literal(Role.guest)])
+
+
+/* ------------ Enums ------------ */
+export enum Role {
+  admin = "admin",
+  user = "user",
+  guest = "guest"
+}
+
+// Interfaz para usuario admin
+export interface AdminUserModel extends BaseUserModel {
+  role: "admin";
+  permission: string[];
+}
+
+// Interfaz para usuario normal
+export interface NormalUserModel extends BaseUserModel {
+  role: "user";
+  subscription: SubscriptionDto;
+}
+
+// Interfaz para usuario invitado
+export interface GuestUserModel extends BaseUserModel {
+  role: "guest";
+  invitedBy?: UsernameDto;
+}
+
 /* -------- Esquemas usuario base -------- */
 
 export const baseUserSchema = z.object({
@@ -36,8 +65,29 @@ export const baseUserSchema = z.object({
   password: passwordSchema
 })
 
+/* -------- Esquemas usuario final -------- */
+
+export const userSchema = z.discriminatedUnion("role", [
+  baseUserSchema.extend({ role: z.literal(Role.admin), permission: z.array(z.string()) }),
+  baseUserSchema.extend({ role: z.literal(Role.user), subscription: subscriptionSchema }),
+  baseUserSchema.extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+])
+
+export const userUpdateSchema = z.discriminatedUnion("role", [
+  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.admin), permission: z.array(z.string()).optional() }),
+  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
+  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+])
+
+/* -------- Tipos inferidos Aggregates -------- */
+
+export type UserModel = z.infer<typeof userSchema>
+export type UserModelUpdate = z.infer<typeof userUpdateSchema>
+
+
 /* -------- Tipos inferidos Value_Objects -------- */
 
+export type RoleDto = z.infer<typeof roleSchema>
 export type SubscriptionDto = z.infer<typeof subscriptionSchema>
 export type UserIdDto = z.infer<typeof idSchema>;
 export type UsernameDto = z.infer<typeof usernameSchema>;
@@ -64,29 +114,3 @@ export interface ClassBaseUserDto {
   subscription?: SubscriptionDto
   invitedBy?: UsernameDto
 }
-
-export type RoleDto = "admin" | "user" | "guest"
-
-// Interfaz para usuario admin
-export interface AdminUserModel extends BaseUserModel {
-  role: "admin";
-  permission: string[];
-}
-
-// Interfaz para usuario normal
-export interface NormalUserModel extends BaseUserModel {
-  role: "user";
-  subscription: SubscriptionDto;
-}
-
-// Interfaz para usuario invitado
-export interface GuestUserModel extends BaseUserModel {
-  role: "guest";
-  invitedBy?: UsernameDto;
-}
-
-// Unión de interfaces para representar cualquier tipo de usuario
-export type UserModel = AdminUserModel | NormalUserModel | GuestUserModel;
-
-// Versión para update (campos opcionales)
-export type UserModelUpdate = Partial<UserModel>;
