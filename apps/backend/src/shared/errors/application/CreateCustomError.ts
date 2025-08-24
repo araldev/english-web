@@ -1,5 +1,5 @@
-import {CustomError} from '@src/shared/errors/aggregate/CustomErrors'
-import {CodeError} from '@/src/shared/errors/aggregate/repositories/CustomErrorsInterface'
+import {CustomError} from '@src/shared/errors/domain/aggregate/CustomErrors'
+import {CodeError} from '@src/shared/errors/domain/repositories/CustomErrorsInterface'
 
 export class CreateCustomError {
    static INTERNAL_ERROR() {
@@ -10,6 +10,14 @@ export class CreateCustomError {
       })
     }
 
+    static USER_NOT_FOUND() {
+      return new CustomError({
+        code: CodeError.USER_NOT_FOUND,
+        message: "User not found",
+        statusCode: 404
+      })
+    }
+
     static INVALID_CREDENTIALS() {
       return new CustomError({
         code: CodeError.INVALID_CREDENTIALS,
@@ -17,6 +25,7 @@ export class CreateCustomError {
         statusCode: 401
       })
     }
+
     static INVALID_EMAIL() {
       return new CustomError({
         code: CodeError.INVALID_EMAIL,
@@ -24,6 +33,7 @@ export class CreateCustomError {
         statusCode: 404
       })
     }
+
     static USERNAME_TAKEN() {
       return new CustomError({
         code: CodeError.USERNAME_TAKEN,
@@ -31,6 +41,7 @@ export class CreateCustomError {
         statusCode: 400
       })
     }
+
     static UNSECURE_PASSWORD() {
       return new CustomError({
         code: CodeError.UNSECURE_PASSWORD,
