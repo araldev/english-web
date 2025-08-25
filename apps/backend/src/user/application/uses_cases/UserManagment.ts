@@ -20,9 +20,9 @@ export class UserManagment implements UserManagmentDto {
 
     const user = await this.UserRepository.findById({userId})
 
-    if (!user) CreateCustomError.USER_NOT_FOUND()
-
-    return user
+    if(user != null) return user
+    
+    CreateCustomError.USER_NOT_FOUND()
   }
 
   async create({user}: {user: UserModel}): Promise<UserModel> {
@@ -34,7 +34,7 @@ export class UserManagment implements UserManagmentDto {
 
     if(!userParse) CreateCustomError.USER_NOT_FOUND()
 
-    return await this.UserRepository.insert({user: userParse})
+    return await this.UserRepository.create({user: userParse})
   }
 
   async update({user}:{user: UserModelUpdate}): Promise<UserModel> {
