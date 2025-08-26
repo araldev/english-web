@@ -1,6 +1,7 @@
 import type { authUserCredentialRegister } from '@/src/auth/domain/repositories/AuthSessionDto'
 import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
-import { type UserModel, type ClassBaseUserDto, userSchema, Role, Subscription} from '@src/user/domain/repositories/UserModel'
+import { type UserModel, type ClassBaseUserDto, Role, Subscription} from '@src/user/domain/repositories/UserModel'
+import { userSchema } from '@src/user/domain/services/userSchema'
 import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto} from '@src/user/domain/repositories/UserModel'
 
 export class User implements ClassBaseUserDto {
