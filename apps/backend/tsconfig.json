@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@config/*": ["./config/*"],
       "@api/*": ["./entry_point/api/*"],
       "@src/*": ["./src/*"]
     },
@@ -15,8 +16,8 @@
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
     "target": "ES2022",
-    "lib": ["ES2022"],
     "types": ["node"],
+    "lib": ["ES2022"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true, //  <---- !!! Clave para que me detecte las dependencia de los worksapces
