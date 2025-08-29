@@ -7,9 +7,11 @@
   "author": "araldev",
   "license": "ISC",
   "scripts": {
-    "dev": "npx tsx watch ./entry_point/api/server.ts"
+    "dev": "npx tsx watch ./entry_point/api/createServer.js",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "dependencies": {
+    "@types/cookie-parser": "1.4.9",
     "@types/jsonwebtoken": "9.0.10",
     "bcrypt": "6.0.0",
     "cookie-parser": "1.4.7",
@@ -20,11 +22,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
+    "tsc-alias": "1.8.16",
     "tsx": "4.20.4"
-  },
-  "_moduleAliases": {
-    "@": "dist",
-    "@api": "dist/entry_point/api",
-    "@src": "dist/src"
   }
 }
