@@ -1,5 +1,5 @@
-import {CustomError} from '@src/shared/errors/domain/aggregate/CustomErrors'
-import {CodeError} from '@src/shared/errors/domain/repositories/CustomErrorsInterface'
+import {CustomError} from '@src/shared/errors/domain/aggregate/CustomErrors.js'
+import {CodeError} from '@/src/shared/errors/domain/services/CustomErrorsEnums.js'
 
 export class CreateCustomError {
    static INTERNAL_ERROR(): never {

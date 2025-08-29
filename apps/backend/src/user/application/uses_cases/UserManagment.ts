@@ -1,10 +1,10 @@
-import type { UserModel, UserModelUpdate, UserIdDto, UsernameDto } from '@src/user/domain/repositories/UserModel'
-import { idSchema, usernameSchema, userSchema, userUpdateSchema } from '@src/user/domain/services/userSchema'
-import type {UserRepositoryDto} from '@src/user/application/port/UserRepositoryDto'
-import type {UserManagmentDto} from '@src/user/application/port/UserManagmentDto'
-import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
-import {User} from '@src/user/domain/aggregate/User'
-import type { authUserCredentialRegister } from '@/src/auth/domain/repositories/AuthSessionDto'
+import type { UserModel, UserModelUpdate, UserIdDto, UsernameDto } from '@src/user/domain/repositories/UserModel.js'
+import { idSchema, usernameSchema, userSchema, userUpdateSchema } from '@src/user/domain/services/userSchema.js'
+import type {UserRepositoryDto} from '@src/user/application/port/UserRepositoryDto.js'
+import type {UserManagmentDto} from '@src/user/application/port/UserManagmentDto.js'
+import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
+import {User} from '@src/user/domain/aggregate/User.js'
+import type { authUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
 
 export class UserManagment implements UserManagmentDto {
   UserRepository: UserRepositoryDto

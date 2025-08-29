@@ -1,5 +1,22 @@
 import {z} from 'zod'
-import {Subscription, Role, Permission} from '@src/user/domain/repositories/UserModel'
+
+/* ------------ Enums ------------ */
+export enum Role {
+  admin = "admin",
+  user = "user",
+  guest = "guest"
+}
+
+export enum Subscription {
+  premium = "premium",
+  basic = "basic"
+}
+
+export enum Permission {
+  all = "all",
+  write = "write",
+  read = "read"
+}
 
 /* -------- Esquemas -------- */
 

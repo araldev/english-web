@@ -1,54 +1,49 @@
-import type {AuthUserSession, AuthUserCredential, authUserCredentialRegister} from '@src/auth/domain/repositories/AuthSessionDto'
-import {authUserCredentialSchema, authUserCredentialRegisterSchema} from '@src/auth/domain/repositories/AuthSessionDto'
-import type {AuthRepositoryDto} from '@/src/auth/application/port/AuthRepositoryDto'
-import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
-import type { UserManagmentDto } from '@/src/user/application/port/UserManagmentDto'
-import { JwtFactory } from '../../infrastructure/integrations/JwtFactory'
+import type { AuthUserCredential, authUserCredentialRegister} from '@src/auth/domain/repositories/AuthSessionDto.js'
+import {authUserCredentialSchema, authUserCredentialRegisterSchema} from '@src/auth/domain/repositories/AuthSessionDto.js'
+import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
+import type { UserManagmentDto } from '@src/user/application/port/UserManagmentDto.js'
+import { userSchema } from '@src/user/domain/services/userSchema.js'
+import type { JwtPayloadDto } from '@src/auth/domain/repositories/JwtDto.js'
 
 export class AuthUserService {
-   private readonly authRepository: AuthRepositoryDto
    private readonly userManagment: UserManagmentDto
-   private readonly jwtFactory: JwtFactory
 
   constructor(
     {
-      authRepository,
       userManagment,
-      jwtFactory
     }
     : {
-      authRepository: AuthRepositoryDto,
       userManagment: UserManagmentDto,
-      jwtFactory: JwtFactory
     }
   ) {
-    this.authRepository = authRepository
     this.userManagment = userManagment
-    this.jwtFactory = jwtFactory
   }
 
-  async register({username, password, email}: authUserCredentialRegister): Promise<AuthUserSession> {
+  async register({username, password, email}: authUserCredentialRegister): Promise<JwtPayloadDto> {
     const credentials = await authUserCredentialRegisterSchema.parseAsync({username, password, email})
     if(!credentials) CreateCustomError.INVALID_CREDENTIALS()
 
     const user = await this.userManagment.create({user: credentials})
-    const {id} = user
 
-    const refreshToken = this.jwtFactory.createAccess({id, email, username})
+    const userParse = await userSchema.parseAsync(user)
+    if(!userParse) CreateCustomError.INVALID_CREDENTIALS()
 
-    await this.authRepository.create({refreshToken})
+    const {id: idParse, username: usernameParse, email: emailParse} = userParse
 
-    return {id, username}
+    return {id: idParse, username: usernameParse, email: emailParse}
   }
 
-  async login({username, password}: AuthUserCredential) {
+  async login({username, password}: AuthUserCredential): Promise<JwtPayloadDto> {
     const credential = await authUserCredentialSchema.parseAsync({username, password})
     if(!credential) CreateCustomError.INVALID_CREDENTIALS()
     
     const user = await this.userManagment.findByUsername({username})
     if(!user) CreateCustomError.INVALID_CREDENTIALS()
 
-    return user
+    const userParse = await userSchema.parseAsync(user)
+    const {id: idParse, username: usernameParse, email: emailParse} = userParse
+
+    return {id: idParse, username: usernameParse, email: emailParse}
   }
 
   async logout(): Promise<boolean> {

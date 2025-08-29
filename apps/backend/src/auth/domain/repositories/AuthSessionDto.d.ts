@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {passwordSchema, usernameSchema, idSchema, emailSchema} from '@src/user/domain/services/userSchema'
+import {passwordSchema, usernameSchema, idSchema, emailSchema} from '@src/user/domain/services/userSchema.js'
 
 export const authUserCredentialRegisterSchema = z.object({
   username: passwordSchema,
@@ -15,6 +15,7 @@ export const authUserCredentialSchema = z.object({
 export const authUserSessionSchema = z.object({
   id: idSchema,
   username: passwordSchema,
+  email: emailSchema
 })
 
 export type authUserCredentialRegister = z.infer<typeof authUserCredentialRegisterSchema>

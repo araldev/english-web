@@ -1,23 +1,5 @@
 import {z} from 'zod'
-import {userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, idSchema, usernameSchema, passwordSchema} from '@src/user/domain/services/userSchema'
-
-/* ------------ Enums ------------ */
-export enum Role {
-  admin = "admin",
-  user = "user",
-  guest = "guest"
-}
-
-export enum Subscription {
-  premium = "premium",
-  basic = "basic"
-}
-
-export enum Permission {
-  all = "all",
-  write = "write",
-  read = "read"
-}
+import {userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, idSchema, usernameSchema, passwordSchema} from '@src/user/domain/services/userSchema.js'
 
 // Interfaz para usuario admin
 export interface AdminUserModel extends BaseUserModel {

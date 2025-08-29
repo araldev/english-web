@@ -1,8 +1,9 @@
-import type { authUserCredentialRegister } from '@/src/auth/domain/repositories/AuthSessionDto'
-import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
-import { type UserModel, type ClassBaseUserDto, Role, Subscription} from '@src/user/domain/repositories/UserModel'
-import { userSchema } from '@src/user/domain/services/userSchema'
-import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto} from '@src/user/domain/repositories/UserModel'
+import type { authUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
+import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
+import { type UserModel, type ClassBaseUserDto } from '@src/user/domain/repositories/UserModel.js'
+import { Role, Subscription } from '@src/user/domain/services/userSchema.js'
+import { userSchema } from '@src/user/domain/services/userSchema.js'
+import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto} from '@src/user/domain/repositories/UserModel.js'
 
 export class User implements ClassBaseUserDto {
   id: UserIdDto

@@ -1,6 +1,6 @@
-import type { authUserCredentialRegister } from "@/src/auth/domain/repositories/AuthSessionDto"
-import type { UserIdDto, UserModel, UserModelUpdate, UsernameDto } from "../../domain/repositories/UserModel"
-import type { UserRepositoryDto } from "./UserRepositoryDto"
+import type { authUserCredentialRegister } from "@src/auth/domain/repositories/AuthSessionDto.js"
+import type { UserIdDto, UserModel, UserModelUpdate, UsernameDto } from "@src/user/domain/repositories/UserModel.js"
+import type { UserRepositoryDto } from "@src/user/application/port/UserRepositoryDto.js"
 
 export interface UserManagmentDto {
   UserRepository: UserRepositoryDto

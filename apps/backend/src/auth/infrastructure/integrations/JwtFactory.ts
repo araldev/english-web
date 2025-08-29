@@ -1,27 +1,30 @@
-import { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } from '@/config/jwtConfig'
-import type {JwtModelDto, JwtDto, JwtPayloadDto} from '@/src/auth/domain/repositories/JwtDto'
-import {jwtModelSchema, jwtPayloadSchema} from '@/src/auth/domain/services/jwtSchemas'
-import { CreateCustomError } from '@/src/shared/errors/application/CreateCustomError'
+import { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } from '@config/jwtConfig.js'
+import type {JwtDto, JwtPayloadDto} from '@src/auth/domain/repositories/JwtDto.js'
+import {jwtModelSchema, jwtPayloadSchema} from '@src/auth/domain/services/jwtSchemas.js'
+import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import jwt from 'jsonwebtoken'
 
 export class JwtFactory  {
-  async createRefresh(payload: JwtPayloadDto): Promise<JwtModelDto> {
+  static async createRefresh(payload: JwtPayloadDto): Promise<JwtDto> {
     const payloadParse = await jwtPayloadSchema.parseAsync(payload)
     if(!payloadParse) CreateCustomError.INVALID_CREDENTIALS()
     if(!REFRESH_TOKEN_SECRET) CreateCustomError.INTERNAL_ERROR()
 
     const token = jwt.sign(
-      payloadParse,
+      {
+        jwtId: crypto.randomUUID(),
+        ...payloadParse
+      },
       REFRESH_TOKEN_SECRET,
       {
         expiresIn: "30d"
       }
     )
 
-    return await jwtModelSchema.parseAsync(token)
+    return token
   }
 
-  async validateRefresh({token}: {token: JwtDto}) {
+  static async validateRefresh({token}: {token: JwtDto}) {
     if(!token) CreateCustomError.INVALID_CREDENTIALS()
     if(!REFRESH_TOKEN_SECRET) CreateCustomError.INTERNAL_ERROR()
     
@@ -33,23 +36,26 @@ export class JwtFactory  {
     return await jwtModelSchema.parseAsync(tokenVerified)
   }
 
-  async createAccess(payload: JwtPayloadDto): Promise<JwtModelDto> {
+  static async createAccess(payload: JwtPayloadDto): Promise<JwtDto> {
     const payloadParse = await jwtPayloadSchema.parseAsync(payload)
     if(!payloadParse) CreateCustomError.INVALID_CREDENTIALS()
     if(!ACCESS_TOKEN_SECRET) CreateCustomError.INTERNAL_ERROR()
 
     const token = jwt.sign(
-      payloadParse,
+      {
+        jwtId: crypto.randomUUID(),
+        ...payloadParse
+      },
       ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "30d"
+        expiresIn: "10m"
       }
     )
 
-    return await jwtModelSchema.parseAsync(token)
+    return token
   }
 
-  async validateAccess({token}: {token: JwtDto}) {
+  static async validateAccess({token}: {token: JwtDto}) {
     if(!token) CreateCustomError.INVALID_CREDENTIALS()
     if(!ACCESS_TOKEN_SECRET) CreateCustomError.INTERNAL_ERROR()
     
