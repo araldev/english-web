@@ -7,7 +7,7 @@
   "author": "araldev",
   "license": "ISC",
   "scripts": {
-    "dev": "npx tsx watch ./entry_point/api/createServer.js",
+    "dev": "npx tsx watch ./entry_point/api/servers/redisServer",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "@types/jsonwebtoken": "9.0.10",
     "bcrypt": "6.0.0",
     "cookie-parser": "1.4.7",
+    "dotenv": "17.2.1",
     "express": "5.1.0",
     "jsonwebtoken": "9.0.2",
     "morgan": "1.10.1",
@@ -22,6 +23,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
+    "prisma": "6.15.0",
     "tsc-alias": "1.8.16",
     "tsx": "4.20.4"
   }
