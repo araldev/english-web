@@ -21,7 +21,7 @@ export enum Permission {
 /* -------- Esquemas -------- */
 
 // 1. id (UUID v4) → se genera automáticamente
-export const idSchema = z
+export const userIdSchema = z
   .string()
   .uuid()
   .default(() => crypto.randomUUID())
@@ -62,7 +62,7 @@ export const permissionSchema = z.union([
 /* -------- Esquemas usuario base -------- */
 
 export const baseUserSchema = z.object({
-  id: idSchema,
+  id: userIdSchema,
   username: usernameSchema,
   email: emailSchema,
   password: passwordSchema
@@ -77,7 +77,7 @@ export const userSchema = z.discriminatedUnion("role", [
 ])
 
 export const userUpdateSchema = z.discriminatedUnion("role", [
-  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.admin), permission: permissionSchema.optional() }),
-  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
-  baseUserSchema.partial().extend({ id: idSchema, role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.admin), permission: permissionSchema.optional() }),
+  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
+  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
 ])

@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, idSchema, usernameSchema, passwordSchema} from '@src/user/domain/services/userSchema.js'
+import {userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, userIdSchema, usernameSchema, passwordSchema} from '@src/user/domain/services/userSchema.js'
 
 // Interfaz para usuario admin
 export interface AdminUserModel extends BaseUserModel {
@@ -30,7 +30,7 @@ export type UserModelUpdate = z.infer<typeof userUpdateSchema>
 export type PermissionDto = z.infer<typeof permissionSchema>
 export type RoleDto = z.infer<typeof roleSchema>
 export type SubscriptionDto = z.infer<typeof subscriptionSchema>
-export type UserIdDto = z.infer<typeof idSchema>;
+export type UserIdDto = z.infer<typeof userIdSchema>;
 export type UsernameDto = z.infer<typeof usernameSchema>;
 export type EmailDto = z.infer<typeof emailSchema>;
 export type PasswordDto = z.infer<typeof passwordSchema>;

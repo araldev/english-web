@@ -1,6 +1,6 @@
-import type { authUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
+import type { AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
-import { type UserModel, type ClassBaseUserDto } from '@src/user/domain/repositories/UserModel.js'
+import type { UserModel, ClassBaseUserDto } from '@src/user/domain/repositories/UserModel.d.ts'
 import { Role, Subscription } from '@src/user/domain/services/userSchema.js'
 import { userSchema } from '@src/user/domain/services/userSchema.js'
 import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto} from '@src/user/domain/repositories/UserModel.js'
@@ -31,7 +31,7 @@ export class User implements ClassBaseUserDto {
     }
   }
 
-  static async create({user}: {user: authUserCredentialRegister}): Promise<User> {
+  static async create({user}: {user: AuthUserCredentialRegister}): Promise<User> {
     if(!user) CreateCustomError.USER_NOT_FOUND()
 
     const newUser = {
