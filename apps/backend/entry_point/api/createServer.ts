@@ -1,10 +1,20 @@
 import {PORT} from "@config/serverConfig.js"
 import createApp from '@api/createApp.js'
 import type { JwtRepositoryDto } from "@src/auth/application/port/JwtRepositoryDto.js"
+import type { UserRepositoryDto } from "@/src/user/application/port/UserRepositoryDto.d.ts"
 
-export function createServer({tokenClientRepository}: {tokenClientRepository: JwtRepositoryDto}) {
+export function createServer(
+  {
+    tokenClientRepository,
+    userClientRepository
+  }
+  : {
+    tokenClientRepository: JwtRepositoryDto,
+    userClientRepository: UserRepositoryDto
+  }
+ ) {
   // arrancar servidor
-  const app = createApp({tokenClientRepository})
+  const app = createApp({tokenClientRepository, userClientRepository})
   
   const server = app.listen(PORT, () => {
     console.log(`✅ Servidor Express iniciado en http://localhost:${PORT}`)

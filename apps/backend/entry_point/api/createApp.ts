@@ -1,15 +1,18 @@
 import express from 'express'
-import {AuthRouter} from '@api/auth/routes/authRouter.js'
+import {authRouter} from '@api/auth/routes/authRouter.js'
 import cookieParser from 'cookie-parser'
 import { CreateAuthMiddleware } from '@api/auth/middlewares/CreateAuthMiddleware.js'
 import type { JwtRepositoryDto } from '@src/auth/application/port/JwtRepositoryDto.js'
+import type { UserRepositoryDto } from '@/src/user/application/port/UserRepositoryDto.d.ts'
 
 export function createApp(
   {
-    tokenClientRepository
+    tokenClientRepository,
+    userClientRepository
   }
   : {
-    tokenClientRepository: JwtRepositoryDto
+    tokenClientRepository: JwtRepositoryDto,
+    userClientRepository: UserRepositoryDto
   }
 ) {
   const app = express()
@@ -19,7 +22,7 @@ export function createApp(
   app.use(cookieParser())
   app.use(authMiddleware.authMiddleware)
   
-  app.post('/auth', AuthRouter)
+  app.post('/auth', authRouter({userClientRepository, tokenClientRepository}))
 
   return app
 }
