@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 /* ---------------  REDIS SETUP --------------- */
 
 export const {
@@ -8,7 +10,7 @@ export const {
   REDIS_HOST = 'localhost',
 } = process.env
 
-export const REDIS_PORT = Number(process.env.REDIS_PORT ) ?? 3306
+export const REDIS_PORT = Number(process.env.REDIS_PORT) ?? 3306
 
 export const REDIS_CONFIG = {
   username: REDIS_USERNAME,
