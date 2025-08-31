@@ -13,6 +13,7 @@ export class JwtFactory  {
     const token = jwt.sign(
       {
         jwtId: crypto.randomUUID(),
+        revoke: false,
         ...payloadParse
       },
       REFRESH_TOKEN_SECRET,

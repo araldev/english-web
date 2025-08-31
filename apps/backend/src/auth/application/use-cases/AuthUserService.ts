@@ -1,34 +1,36 @@
-import type { AuthUserCredential, authUserCredentialRegister} from '@src/auth/domain/repositories/AuthSessionDto.js'
-import {authUserCredentialSchema, authUserCredentialRegisterSchema} from '@src/auth/domain/repositories/AuthSessionDto.js'
+import type { AuthUserCredential, AuthUserCredentialRegister} from '@src/auth/domain/repositories/AuthSessionDto.d.ts'
+import {authUserCredentialSchema, authUserCredentialRegisterSchema} from '@src/auth/domain/services/authSessionSchemas.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
-import type { UserManagmentDto } from '@src/user/application/port/UserManagmentDto.js'
-import { userSchema } from '@src/user/domain/services/userSchema.js'
-import type { JwtPayloadDto } from '@src/auth/domain/repositories/JwtDto.js'
+import type { UserManagmentDto } from '@src/user/application/port/UserManagmentDto.d.ts'
+import type { JwtPayloadDto } from '@src/auth/domain/repositories/JwtDto.d.ts'
+import { UserManagment } from '@src/user/application/uses_cases/UserManagment.js'
+import type { UserRepositoryDto } from '@src/user/application/port/UserRepositoryDto.d.ts'
 
 export class AuthUserService {
    private readonly userManagment: UserManagmentDto
 
   constructor(
     {
-      userManagment,
-    }
-    : {
-      userManagment: UserManagmentDto,
+      userClientRepository,
+    }: {
+      userClientRepository: UserRepositoryDto,
     }
   ) {
-    this.userManagment = userManagment
+    this.userManagment = new UserManagment({userClientRepository})
   }
 
-  async register({username, password, email}: authUserCredentialRegister): Promise<JwtPayloadDto> {
+  async register({username, password, email}: AuthUserCredentialRegister): Promise<JwtPayloadDto> {
     const credentials = await authUserCredentialRegisterSchema.parseAsync({username, password, email})
     if(!credentials) CreateCustomError.INVALID_CREDENTIALS()
 
+    const userExists = await this.userManagment.findByUsername({username: credentials.username})
+
+    if (userExists) CreateCustomError.INVALID_CREDENTIALS()
+
     const user = await this.userManagment.create({user: credentials})
 
-    const userParse = await userSchema.parseAsync(user)
-    if(!userParse) CreateCustomError.INVALID_CREDENTIALS()
 
-    const {id: idParse, username: usernameParse, email: emailParse} = userParse
+    const {id: idParse, username: usernameParse, email: emailParse} = user
 
     return {id: idParse, username: usernameParse, email: emailParse}
   }
@@ -40,8 +42,7 @@ export class AuthUserService {
     const user = await this.userManagment.findByUsername({username})
     if(!user) CreateCustomError.INVALID_CREDENTIALS()
 
-    const userParse = await userSchema.parseAsync(user)
-    const {id: idParse, username: usernameParse, email: emailParse} = userParse
+    const {id: idParse, username: usernameParse, email: emailParse} = user
 
     return {id: idParse, username: usernameParse, email: emailParse}
   }

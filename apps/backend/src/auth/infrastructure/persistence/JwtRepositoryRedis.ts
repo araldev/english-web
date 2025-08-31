@@ -3,6 +3,7 @@ import {REDIS_CONFIG} from '@config/serverConfig.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import type { JwtRepositoryDto } from '@src/auth/application/port/JwtRepositoryDto.js'
 import type { JwtCacheRepoDto, JwtIdDto } from '@src/auth/domain/repositories/JwtDto.js'
+import type { UserIdDto } from '@src/user/domain/repositories/UserModel.d.ts'
 
 export class JwtRepositoryRedis implements JwtRepositoryDto {
   private redis: ReturnType<typeof createClient>
@@ -40,26 +41,40 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     }
   }
 
-  async findById({jwtId}: {jwtId: JwtIdDto}) {
-    return await this.redis.get(jwtId)
+  async findById({userId, jwtId}: {userId: UserIdDto, jwtId: JwtIdDto}) {
+    return await this.redis.hGet(`userId:${userId}`, jwtId)
   }
 
-  async create({jwtId, refreshToken}: JwtCacheRepoDto) {
-    const isCreated = await this.redis.set(jwtId, refreshToken)
+  async findAllById({userId}: {userId: UserIdDto}) {
+    const data = await this.redis.hGetAll(`userId:${userId}`)
+
+    return Object.entries(data || {}).map(([jwtId, refreshToken]) => ({
+      jwtId,
+      refreshToken
+    }))
+  }
+
+  async insert({jwtId, userId, refreshToken}: JwtCacheRepoDto) {
+    const isCreated = await this.redis.hSet(`userId:${userId}`, { [jwtId]: refreshToken })
     if(!isCreated) CreateCustomError.INTERNAL_ERROR()
 
-    return {jwtId, refreshToken}
+    return {jwtId, userId, refreshToken}
   }
 
-  async update({jwtId, refreshToken}: JwtCacheRepoDto) {
-    const isCreated = await this.redis.set(jwtId, refreshToken)
+  async update({jwtId, userId, refreshToken}: JwtCacheRepoDto) {
+    const isCreated = await this.redis.hSet(`userId:${userId}`, { [jwtId]: refreshToken })
     if(!isCreated) CreateCustomError.INTERNAL_ERROR()
 
-    return {jwtId, refreshToken}
+    return {jwtId, userId, refreshToken}
   }
 
-  async delete({jwtId}: {jwtId: JwtIdDto}) {
-    const isDeleted = await this.redis.del(jwtId)
+  async delete({userId, jwtId}: {userId: UserIdDto, jwtId: JwtIdDto}) {
+    const isDeleted = await this.redis.hDel(`userId:${userId}`, jwtId)
+    return isDeleted !== 0 ? true : false
+  }
+
+  async deleteAll({userId}: {userId: UserIdDto}) {
+    const isDeleted = await this.redis.del(`userId:${userId}`)
     return isDeleted !== 0 ? true : false
   }
 }
