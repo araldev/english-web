@@ -26,10 +26,7 @@ export class CreateAuthMiddleware {
   async authMiddleware(req: Request, res: Response, next: NextFunction) {
     const {accessToken} = req.cookies
 
-    // Inicializa la sesión si no existe
-    if (!req.session) {
-      req.session = { user: null }
-    }
+    req.session = { user: null }
 
     // Continúa con el siguiente middleware
     if (!accessToken) return next()
@@ -47,13 +44,13 @@ export class CreateAuthMiddleware {
         
       try {
         const dataRefreshToken = await JwtFactory.validateRefresh({token: refreshToken})
-        const {jwtId} = dataRefreshToken
-        const refreshTokenDB = await this.JwtRepository.findById({jwtId})
+        const {jwtId, id: userId} = dataRefreshToken
+        const refreshTokenDB = await this.JwtRepository.findById({jwtId, userId})
         if(!refreshTokenDB) return next()
 
         const dataRefreshTokenDB = await JwtFactory.validateRefresh({token: refreshTokenDB})
         
-        if(!dataRefreshTokenDB || !dataRefreshTokenDB.revoke) return next()
+        if(!dataRefreshTokenDB || dataRefreshTokenDB.revoke) return next()
         
         
         const {id, username, email}: AuthUserSession = dataRefreshTokenDB
