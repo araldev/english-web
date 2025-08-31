@@ -1,0 +1,21 @@
+### Register
+POST http://localhost:2341/login
+Content-Type: application/json
+
+{
+  "username": "araldev",
+  "password": "123456",
+  "email": "araldev@gmail.com"
+}
+
+### Login
+POST http://localhost:2341/login
+Content-Type: application/json
+
+{
+  "username": "araldev",
+  "password": "123456"
+}
+
+### Logout
+POST http://localhost:2341/login
