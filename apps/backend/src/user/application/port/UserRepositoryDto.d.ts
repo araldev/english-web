@@ -7,4 +7,5 @@ export interface UserRepositoryDto {
   create({user}: {user: AuthUserCredentialRegister}): Promise<UserModel>
   update({userId, userUpdates}: {userId: UserIdDto, userUpdates:UserModelUpdate}): Promise<UserModel> 
   delete({userId}: {userId: UserIdDto}): Promise<boolean>
+  disconnect(): Promise<boolean>
 }

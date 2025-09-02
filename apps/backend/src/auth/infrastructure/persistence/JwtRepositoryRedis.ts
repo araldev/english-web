@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-import {REDIS_CONFIG} from '@config/serverConfig.js'
+import {REDIS_CONFIG} from '@/config/redisServerConfig.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import type { JwtRepositoryDto } from '@src/auth/application/port/JwtRepositoryDto.js'
 import type { JwtCacheRepoDto, JwtIdDto } from '@src/auth/domain/repositories/JwtDto.js'

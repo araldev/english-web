@@ -15,7 +15,8 @@ export enum Subscription {
 export enum Permission {
   all = "all",
   write = "write",
-  read = "read"
+  read = "read",
+  none = "none"
 }
 
 /* -------- Esquemas -------- */
@@ -52,11 +53,12 @@ export const roleSchema = z.union([
   z.literal(Role.guest)
 ])
 
-// 7. Subscription
+// 7. Permissions
 export const permissionSchema = z.union([
   z.literal(Permission.all),
   z.literal(Permission.read),
-  z.literal(Permission.write)
+  z.literal(Permission.write),
+  z.literal(Permission.none),
 ])
 
 /* -------- Esquemas usuario base -------- */
@@ -77,7 +79,7 @@ export const userSchema = z.discriminatedUnion("role", [
 ])
 
 export const userUpdateSchema = z.discriminatedUnion("role", [
-  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.admin), permission: permissionSchema.optional() }),
-  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
-  baseUserSchema.partial().extend({ id: userIdSchema, role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+  baseUserSchema.partial().extend({ role: z.literal(Role.admin), permission: permissionSchema.optional() }),
+  baseUserSchema.partial().extend({ role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
+  baseUserSchema.partial().extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
 ])
