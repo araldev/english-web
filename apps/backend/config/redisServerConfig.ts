@@ -18,3 +18,5 @@ export const REDIS_CONFIG = {
     port: REDIS_PORT
   }
 }
+
+export const ttlSeconds = 30 * 24 * 60 * 60 // 30 días refreshToken

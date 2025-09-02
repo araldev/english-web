@@ -13,9 +13,10 @@ POST http://localhost:1234/auth/login
 Content-Type: application/json
 
 {
-  "username": "araldev",
+  "username": "Berto",
   "password": "123456"
 }
 
 ### Logout
 POST http://localhost:1234/auth/logout
+Content-Type: application/json

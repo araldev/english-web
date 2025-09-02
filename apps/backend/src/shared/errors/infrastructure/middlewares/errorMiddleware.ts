@@ -15,6 +15,6 @@ export function errorMiddleware(err: CustomErrorInterface | Error, req: Request,
 
   return res.status( 400 ).json({
       error: true,
-      message: err.message,
+      message: err,
   })
 }

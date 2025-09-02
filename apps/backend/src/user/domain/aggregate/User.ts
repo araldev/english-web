@@ -31,7 +31,7 @@ export class User implements ClassBaseUserDto {
     }
   }
 
-  static async create({user}: {user: AuthUserCredentialRegister}): Promise<User> {
+  static create = async ({user}: {user: AuthUserCredentialRegister}): Promise<User> => {
     if(!user) CreateCustomError.USER_NOT_FOUND()
 
     const newUser = {

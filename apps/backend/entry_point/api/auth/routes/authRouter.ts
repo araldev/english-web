@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import {AuthController} from '@api/auth/controllers/authController.js'
+import {AuthController} from '@/entry_point/api/auth/controllers/AuthController.js'
 import type { UserRepositoryDto } from '@src/user/application/port/UserRepositoryDto.js'
 import { AuthUserService } from '@/src/auth/application/use-cases/AuthUserService.js'
 import type { JwtRepositoryDto } from '@/src/auth/application/port/JwtRepositoryDto.d.ts'
@@ -17,7 +17,6 @@ export function authRouter(
   const authRouter = Router()
 
   const authUserService = new AuthUserService({userClientRepository})
-  console.log(authUserService)
   const authController = new AuthController({authUserService, tokenClientRepository})
 
   authRouter.post('/login', authController.login)

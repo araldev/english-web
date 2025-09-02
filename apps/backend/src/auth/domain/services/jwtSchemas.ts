@@ -26,6 +26,6 @@ export const jwtModelSchema = z.object({
 /* -------------- Enums -------------- */
 
 export enum Token {
-  access_token = "access_token",
-  refresh_token = "refresh_token"
+  access_token = "accessToken",
+  refresh_token = "refreshToken"
 }

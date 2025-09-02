@@ -7,7 +7,7 @@ import {User} from '@src/user/domain/aggregate/User.js'
 import type { AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
 
 export class UserManagment implements UserManagmentDto {
-  private userClientRepository: UserRepositoryDto
+  private readonly userClientRepository: UserRepositoryDto
 
   constructor(
     {
@@ -20,7 +20,7 @@ export class UserManagment implements UserManagmentDto {
     this.userClientRepository = userClientRepository
   }
   
-  async findById({userId}: {userId: UserIdDto}): Promise<UserModel> {
+  findById = async ({userId}: {userId: UserIdDto}): Promise<UserModel | null> => {
     if(!userId) CreateCustomError.USER_NOT_FOUND()
 
     const idParse = await userIdSchema.parseAsync(userId)
@@ -29,10 +29,10 @@ export class UserManagment implements UserManagmentDto {
 
     if(user != null) return user
     
-    CreateCustomError.USER_NOT_FOUND()
+    return null
   }
 
-  async findByUsername({username}: {username: UsernameDto}): Promise<UserModel> {
+  findByUsername = async ({username}: {username: UsernameDto}): Promise<UserModel | null> => {
     if(!username) CreateCustomError.USER_NOT_FOUND()
 
     const userParse = await usernameSchema.parseAsync(username)
@@ -41,13 +41,13 @@ export class UserManagment implements UserManagmentDto {
 
     if(user != null) return user
     
-    CreateCustomError.USER_NOT_FOUND()
+    return null
   }
 
-  async create({user}: {user: AuthUserCredentialRegister}): Promise<UserModel> {
+  create = async ({user}: {user: AuthUserCredentialRegister}): Promise<UserModel> => {
     if(!user)CreateCustomError.USER_NOT_FOUND()
 
-    const newUser = User.create({user})
+    const newUser = await User.create({user})
 
     const userParse = await userSchema.parseAsync(newUser)
 
@@ -56,12 +56,12 @@ export class UserManagment implements UserManagmentDto {
     return await this.userClientRepository.create({user: userParse})
   }
 
-  async update({user}:{user: UserModelUpdate}): Promise<UserModel> {
+  update = async ({user}:{user: UserModelUpdate}): Promise<UserModel> => {
       if(!user || !user.id) CreateCustomError.USER_NOT_FOUND()
 
       const userParse = await userUpdateSchema.parseAsync(user)
 
-      if(!userParse) CreateCustomError.USER_NOT_FOUND()
+      if(!userParse || !userParse.id) CreateCustomError.USER_NOT_FOUND()
   
       const userInDb = await this.userClientRepository.findById({userId: userParse.id})
   
@@ -70,7 +70,7 @@ export class UserManagment implements UserManagmentDto {
       return await this.userClientRepository.update({userId: userInDb.id, userUpdates: userParse})
     }
 
-  async delete({userId}: {userId: UserIdDto}): Promise<true |false> {
+  delete = async ({userId}: {userId: UserIdDto}): Promise<true |false> => {
     if(!userId || !this.userClientRepository) CreateCustomError.USER_NOT_FOUND()
 
     const idParse = await userIdSchema.parseAsync(userId)

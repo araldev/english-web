@@ -1,6 +1,7 @@
 import {CodeError } from '@/src/shared/errors/domain/services/CustomErrorsEnums.js'
 
 export type TypeCode =
+  | CodeError.USER_ALREADY_EXISTS
   | CodeError.USER_NOT_FOUND
   | CodeError.UNSECURE_PASSWORD
   | CodeError.INVALID_CREDENTIALS

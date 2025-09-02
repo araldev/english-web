@@ -5,6 +5,8 @@ import type { UserManagmentDto } from '@src/user/application/port/UserManagmentD
 import type { JwtPayloadDto } from '@src/auth/domain/repositories/JwtDto.d.ts'
 import { UserManagment } from '@src/user/application/uses_cases/UserManagment.js'
 import type { UserRepositoryDto } from '@src/user/application/port/UserRepositoryDto.d.ts'
+import bcrypt from 'bcrypt'
+import { SALTROUND } from '@/config/globalConfig.js'
 
 export class AuthUserService {
    private readonly userManagment: UserManagmentDto
@@ -19,13 +21,14 @@ export class AuthUserService {
     this.userManagment = new UserManagment({userClientRepository})
   }
 
-  async register({username, password, email}: AuthUserCredentialRegister): Promise<JwtPayloadDto> {
-    const credentials = await authUserCredentialRegisterSchema.parseAsync({username, password, email})
+  register = async ({username, password, email}: AuthUserCredentialRegister): Promise<JwtPayloadDto> => {
+    const passwordHashed = await bcrypt.hash(password , SALTROUND)
+    const credentials = await authUserCredentialRegisterSchema.parseAsync({username, password: passwordHashed, email})
     if(!credentials) CreateCustomError.INVALID_CREDENTIALS()
 
     const userExists = await this.userManagment.findByUsername({username: credentials.username})
 
-    if (userExists) CreateCustomError.INVALID_CREDENTIALS()
+    if (userExists) CreateCustomError.USER_ALREADY_EXISTS()
 
     const user = await this.userManagment.create({user: credentials})
 
@@ -35,19 +38,22 @@ export class AuthUserService {
     return {id: idParse, username: usernameParse, email: emailParse}
   }
 
-  async login({username, password}: AuthUserCredential): Promise<JwtPayloadDto> {
+  login = async ({username, password}: AuthUserCredential): Promise<JwtPayloadDto> => {
     const credential = await authUserCredentialSchema.parseAsync({username, password})
     if(!credential) CreateCustomError.INVALID_CREDENTIALS()
-    
+
     const user = await this.userManagment.findByUsername({username})
     if(!user) CreateCustomError.INVALID_CREDENTIALS()
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    if(!isPasswordValid ) CreateCustomError.INVALID_CREDENTIALS()
 
     const {id: idParse, username: usernameParse, email: emailParse} = user
 
     return {id: idParse, username: usernameParse, email: emailParse}
   }
 
-  async logout(): Promise<boolean> {
+  logout = async (): Promise<boolean> => {
     
     return  true
   }

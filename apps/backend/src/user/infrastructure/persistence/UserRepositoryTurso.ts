@@ -19,7 +19,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     this.prisma = clientTursoPrisma
   }
 
-  static async connect() {
+  static connect = async () => {
     const adapter = new PrismaLibSQL({
       url: TURSO_DATABASE_URL,
       authToken: TURSO_AUTH_TOKEN,
@@ -29,7 +29,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return new UserRepositoryTursoPrisma({ clientTursoPrisma: prisma})
   }
 
-  async findById( {userId}: {userId: UserIdDto} ): Promise<UserModel | null> {
+  findById = async ( {userId}: {userId: UserIdDto} ): Promise<UserModel | null> => {
     const userDb = await this.prisma.user.findUnique({
       where: { id: userId }
     })
@@ -43,7 +43,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
   return user
   }
 
-  async findByUserName( {username}: {username: UsernameDto} ) {
+  findByUserName = async ( {username}: {username: UsernameDto} ) => {
     const userDb = await this.prisma.user.findUnique({
       where: { username }
     })
@@ -57,7 +57,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
   return user
   }
 
-  async create({user}: {user: AuthUserCredentialRegister}) {
+  create = async ({user}: {user: AuthUserCredentialRegister}) => {
     const userDb = await this.prisma.user.create({
       data: user
     }) as UserModel
@@ -65,7 +65,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return userDb
   }
 
-  async update({userId, userUpdates}: {userId: UserIdDto, userUpdates:UserModelUpdate}) {
+  update = async ({userId, userUpdates}: {userId: UserIdDto, userUpdates:UserModelUpdate}) => {
     const userDbUpdated = await this.prisma.user.update({
       where: {
         id: userId
@@ -76,7 +76,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return userDbUpdated
   }
 
-  async delete({userId}: {userId: UserIdDto}) {
+  delete = async ({userId}: {userId: UserIdDto}) => {
     const isDeleted = await this.prisma.user.delete({
       where: { id: userId }
     })
@@ -84,7 +84,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return isDeleted != null ? true : false
   }
 
-  async disconnect() {
+  disconnect = async () => {
   try {    
     await this.prisma.$disconnect()
     console.log("⚡ Prisma se ha desconectado...")

@@ -26,23 +26,22 @@ export class AuthController {
     this.tokenClientRepository= tokenClientRepository
   }  
   
-  async register(
+  register = async (
     req: Request<unknown, unknown, AuthUserCredentialRegister>, 
     res: Response,
     next: NextFunction
-  ) {
+  ) => {
     try {
       const {username, password, email} = req.body
       const userSession = await this.authUserService.register({username, password, email})
       const {id} = userSession
   
       const refreshToken = await JwtFactory.createRefresh(userSession)
-      if(!refreshToken) CreateCustomError.INVALID_CREDENTIALS()
       const {jwtId} = await JwtFactory.validateRefresh({token: refreshToken})
       this.tokenClientRepository.insert({jwtId, userId: id, refreshToken})
   
       const accessToken = await JwtFactory.createAccess(userSession)
-      if(!accessToken) CreateCustomError.INVALID_CREDENTIALS()
+      if(!refreshToken || !accessToken) CreateCustomError.INVALID_CREDENTIALS()
   
       res
       .cookie(Token.refresh_token, refreshToken, cookieConfig.refreshToken )
@@ -53,19 +52,21 @@ export class AuthController {
     }
   }
 
-  async login(
+  login = async (
     req: Request<unknown, unknown, AuthUserCredential>, 
     res: Response,
     next: NextFunction
-  ) {
+  ) => {
     try {
       const {username, password} = req.body
       const userSession = await this.authUserService.login({username, password})
       const {email, id} = userSession
   
-      const refreshToken = await JwtFactory.createAccess({id, username, email})
+      const refreshToken = await JwtFactory.createRefresh(userSession)
+      const {jwtId} = await JwtFactory.validateRefresh({token: refreshToken})
+      this.tokenClientRepository.insert({jwtId, userId: id, refreshToken})
       const accessToken = await JwtFactory.createAccess(userSession)
-      if(!accessToken || refreshToken) CreateCustomError.INVALID_CREDENTIALS()
+      if(!accessToken || !refreshToken) CreateCustomError.INVALID_CREDENTIALS()
   
       res
       .cookie(Token.refresh_token, refreshToken, cookieConfig.refreshToken )
@@ -76,11 +77,11 @@ export class AuthController {
     }
   }
 
-  async logout(
+  logout = async (
     req: Request & {cookies: JwtModelDto},
     res: Response,
     next: NextFunction
-  ) {
+  ) => {
     try {
       const {refreshToken} = req.cookies
       const {jwtId, id: userId, username} = await JwtFactory.validateRefresh({token: refreshToken})
@@ -89,7 +90,7 @@ export class AuthController {
   
       res
       .clearCookie(Token.refresh_token)
-      .clearCookie(Token.refresh_token)
+      .clearCookie(Token.access_token)
       .json({username, message: "Succesful logout"})
     } catch (error) {
       next(error)

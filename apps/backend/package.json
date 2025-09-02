@@ -25,6 +25,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
+    "@types/bcrypt": "6.0.0",
     "prisma": "6.15.0",
     "tsc-alias": "1.8.16",
     "tsx": "4.20.4"

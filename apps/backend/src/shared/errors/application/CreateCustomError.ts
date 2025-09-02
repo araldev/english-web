@@ -10,6 +10,14 @@ export class CreateCustomError {
       })
     }
 
+    static USER_ALREADY_EXISTS(): never {
+      throw new CustomError({
+        code: CodeError.USER_ALREADY_EXISTS,
+        message: "User already exists",
+        statusCode: 400
+      })
+    }
+
     static USER_NOT_FOUND(): never {
       throw new CustomError({
         code: CodeError.USER_NOT_FOUND,
