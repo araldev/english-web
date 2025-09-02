@@ -1,5 +1,5 @@
 import type { CookieOptions } from "express"
-import { NODE_ENV } from "@config/serverConfig.js"
+import { NODE_ENV } from "@/config/globalConfig.js"
 
 export const cookieConfig: {
   refreshToken: CookieOptions,

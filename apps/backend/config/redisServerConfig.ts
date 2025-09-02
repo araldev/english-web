@@ -3,8 +3,6 @@ import "dotenv/config"
 /* ---------------  REDIS SETUP --------------- */
 
 export const {
-  PORT = 1234,
-  NODE_ENV = 'development',
   REDIS_USERNAME = 'default',
   REDIS_PASSWORD = '',
   REDIS_HOST = 'localhost',
