@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import { CreateAuthMiddleware } from '@api/auth/middlewares/CreateAuthMiddleware.js'
 import type { JwtRepositoryDto } from '@src/auth/application/port/JwtRepositoryDto.js'
 import type { UserRepositoryDto } from '@/src/user/application/port/UserRepositoryDto.d.ts'
+import { errorMiddleware } from '@src/shared/errors/infrastructure/middlewares/errorMiddleware.js'
 
 export function createApp(
   {
@@ -22,7 +23,9 @@ export function createApp(
   app.use(cookieParser())
   app.use(authMiddleware.authMiddleware)
   
-  app.post('/auth', authRouter({userClientRepository, tokenClientRepository}))
+  app.use('/auth', authRouter({userClientRepository, tokenClientRepository}))
+
+  app.use(errorMiddleware)
 
   return app
 }
