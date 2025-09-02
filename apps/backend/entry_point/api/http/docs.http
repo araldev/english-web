@@ -1,5 +1,5 @@
 ### Register
-POST http://localhost:2341/login
+POST http://localhost:1234/auth/register
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### Login
-POST http://localhost:2341/login
+POST http://localhost:1234/auth/login
 Content-Type: application/json
 
 {
@@ -18,4 +18,4 @@ Content-Type: application/json
 }
 
 ### Logout
-POST http://localhost:2341/login
+POST http://localhost:1234/auth/logout
