@@ -11,6 +11,8 @@
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "dependencies": {
+    "@prisma/adapter-libsql": "6.15.0",
+    "@prisma/client": "6.15.0",
     "@types/cookie-parser": "1.4.9",
     "@types/jsonwebtoken": "9.0.10",
     "bcrypt": "6.0.0",
