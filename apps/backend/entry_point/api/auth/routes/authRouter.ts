@@ -14,14 +14,15 @@ export function authRouter(
     userClientRepository: UserRepositoryDto
   }
  ) {
-  return () => {
-    const authRouter = Router()
+  const authRouter = Router()
 
-    const authUserService = new AuthUserService({userClientRepository})
-    const authController = new AuthController({authUserService, tokenClientRepository})
+  const authUserService = new AuthUserService({userClientRepository})
+  console.log(authUserService)
+  const authController = new AuthController({authUserService, tokenClientRepository})
+
+  authRouter.post('/login', authController.login)
+  authRouter.post('/register', authController.register)
+  authRouter.post('/logout', authController.logout)
   
-    authRouter.post('/login', authController.login)
-    authRouter.post('/register', authController.register)
-    authRouter.post('/logout', authController.logout)
-  }
+  return authRouter
 }
