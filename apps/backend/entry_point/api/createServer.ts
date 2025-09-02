@@ -1,4 +1,4 @@
-import {PORT} from "@config/serverConfig.js"
+import {PORT} from "@/config/globalConfig.js"
 import createApp from '@api/createApp.js'
 import type { JwtRepositoryDto } from "@src/auth/application/port/JwtRepositoryDto.js"
 import type { UserRepositoryDto } from "@/src/user/application/port/UserRepositoryDto.d.ts"
