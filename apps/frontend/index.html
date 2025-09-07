@@ -14,10 +14,69 @@
     <script defer type="module" src="./src/js/components/section-grid.js"></script>
     <script defer type="module" src="./src/js/components/sidebar.js"></script>
     <script defer type="module" src="./src/js/components/nav-subir.js"></script>
+    <base href=".">
 </head>
 <body id="home">
-    <dialog>
+    <dialog id="auth-register" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
 
+      <form class="auth-form" id="form-register" action="http://localhost:1234/auth/register" method="post" autocomplete="on">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">          
+        </label>
+
+        <label >
+          <h2>Email</h2>
+          <input name="email" type="email">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <label>
+          <h2>Confirm Password</h2>
+          <input name="confirm-password" type="password">
+        </label>
+
+        <button type="submit">Sign up</button>
+      </form>
+      <small>Click here if you have an account <button id="inner-sign-in">Go Login</button></small>
+    </dialog>
+
+    <dialog id="auth-login" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-login" action="http://localhost:1234/auth/login" method="post">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">          
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <!-- <div id="g_id_onload"
+          data-client_id="TU_CLIENT_ID"
+          data-login_uri="TU_URL_DE_REDIRECCION">
+      </div>
+
+      <div class="g_id_signin"></div>
+
+      <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+
+      <small>Click here if you haven't an account <button id="inner-sign-up">Go Sign up</button></small>
     </dialog>
 
     <aside id="sidebar" class="sidebar minimize">
@@ -103,11 +162,16 @@
                 <li class="nav-item">
                     <a href="exercises.html" class="nav-link">Interactive Exercises</a>
                 </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Sign In</a>
+                <li class="nav-item nav-login">
+                    <button id="sign-up" class="nav-link">Sign Up</button>
+                    <button id="sign-in" class="nav-link">Sign In</button>
                 </li>
 
-                <img src="./public/images/close.svg" alt="Close menu" class="nav-close">
+                <li class="nav-item nav-logout" >
+                  <button id="logout" class="nav-link">Logout</button>
+                </li>
+
+                <img id="close-menu" src="./public/images/close.svg" alt="Close menu" class="nav-close">
             </ul>
 
             <div class="nav-menu">
