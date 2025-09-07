@@ -1,5 +1,5 @@
-import {z} from 'zod'
-import {passwordSchema, usernameSchema, userIdSchema, emailSchema} from '@src/user/domain/services/userSchema.js'
+import { z } from 'zod'
+import { passwordSchema, usernameSchema, userIdSchema, emailSchema } from '@src/user/domain/services/userSchema.js'
 
 export const authUserCredentialRegisterSchema = z.object({
   username: usernameSchema,
