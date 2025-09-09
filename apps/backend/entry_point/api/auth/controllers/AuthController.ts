@@ -41,7 +41,7 @@ export class AuthController {
       this.tokenClientRepository.insert({ jwtId, userId: id, refreshToken })
   
       const accessToken = await JwtFactory.createAccess(userSession)
-      if(!refreshToken || !accessToken) CreateCustomError.INVALID_CREDENTIALS()
+      if(!refreshToken || !accessToken) CreateCustomError.INTERNAL_ERROR()
   
       res
         .cookie(Token.refresh_token, refreshToken, cookieConfig.refreshToken)
@@ -66,7 +66,7 @@ export class AuthController {
       const { jwtId } = await JwtFactory.validateRefresh({ token: refreshToken })
       this.tokenClientRepository.insert({ jwtId, userId: id, refreshToken })
       const accessToken = await JwtFactory.createAccess(userSession)
-      if(!accessToken || !refreshToken) CreateCustomError.INVALID_CREDENTIALS()
+      if(!accessToken || !refreshToken) CreateCustomError.INTERNAL_ERROR()
   
       res
         .cookie(Token.refresh_token, refreshToken, cookieConfig.refreshToken)
