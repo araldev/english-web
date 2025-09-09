@@ -1,22 +1,22 @@
-import {z} from 'zod'
+import { z } from 'zod'
 
 /* ------------ Enums ------------ */
 export enum Role {
-  admin = "admin",
-  user = "user",
-  guest = "guest"
+  admin = 'admin',
+  user = 'user',
+  guest = 'guest'
 }
 
 export enum Subscription {
-  premium = "premium",
-  basic = "basic"
+  premium = 'premium',
+  basic = 'basic'
 }
 
 export enum Permission {
-  all = "all",
-  write = "write",
-  read = "read",
-  none = "none"
+  all = 'all',
+  write = 'write',
+  read = 'read',
+  none = 'none'
 }
 
 /* -------- Esquemas -------- */
@@ -72,13 +72,13 @@ export const baseUserSchema = z.object({
 
 /* -------- Esquemas usuario final -------- */
 
-export const userSchema = z.discriminatedUnion("role", [
+export const userSchema = z.discriminatedUnion('role', [
   baseUserSchema.extend({ role: z.literal(Role.admin), permission: permissionSchema }),
   baseUserSchema.extend({ role: z.literal(Role.user), subscription: subscriptionSchema }),
   baseUserSchema.extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
 ])
 
-export const userUpdateSchema = z.discriminatedUnion("role", [
+export const userUpdateSchema = z.discriminatedUnion('role', [
   baseUserSchema.partial().extend({ role: z.literal(Role.admin), permission: permissionSchema.optional() }),
   baseUserSchema.partial().extend({ role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
   baseUserSchema.partial().extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
