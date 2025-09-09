@@ -12,14 +12,14 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     this.redis = clientRedis
   }
 
-  static async create () {
+  static create = async () => {
     const client = createClient(REDIS_CONFIG)
 
     return new JwtRepositoryRedis({ clientRedis: client })
   }
 
   /* ------------------ Conexión con reintentos y timeout ------------------ */ 
-  async connect({ retries = 5, delay = 2000 }) {
+  connect = async ({ retries = 5, delay = 2000 }) => {
     let attempts = 0
 
     while (!this.redis.isOpen && attempts < retries) {
@@ -46,7 +46,7 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     }
   }
 
-  async disconnect() {
+  disconnect = async () => {
     try {
       await this.redis.quit()
       return true
@@ -55,11 +55,11 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     }
   }
 
-  async findById({ userId, jwtId }: {userId: UserIdDto, jwtId: JwtIdDto}) {
+  findById = async ({ userId, jwtId }: {userId: UserIdDto, jwtId: JwtIdDto}) => {
     return await this.redis.get(`userId:${userId}:${jwtId}`)
   }
 
-  async findAllById({ userId }: {userId: UserIdDto}) {
+  findAllById = async ({ userId }: {userId: UserIdDto}) => {
     // Busca todas las keys que empiecen con "userId:<userId>:"
     const keysJwtId = await this.redis.keys(`userId:${userId}:*`)
 
@@ -76,7 +76,7 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     return tokensParse
   }
 
-  async insert({ jwtId, userId, refreshToken }: JwtCacheRepoDto) {
+  insert = async ({ jwtId, userId, refreshToken }: JwtCacheRepoDto) => {
     const isCreated = await this.redis.set(`userId:${userId}:${jwtId}`, refreshToken, { EX: ttlSeconds })
 
     if(!isCreated) CreateCustomError.INTERNAL_ERROR()
@@ -84,19 +84,19 @@ export class JwtRepositoryRedis implements JwtRepositoryDto {
     return { jwtId, userId, refreshToken }
   }
 
-  async update({ jwtId, userId, refreshToken }: JwtCacheRepoDto) {
+  update = async ({ jwtId, userId, refreshToken }: JwtCacheRepoDto) => {
     const isCreated = await this.redis.set(`userId:${userId}:${jwtId}`, refreshToken, { EX: ttlSeconds })
     if(!isCreated) CreateCustomError.INTERNAL_ERROR()
 
     return { jwtId, userId, refreshToken }
   }
 
-  async delete({ userId, jwtId }: {userId: UserIdDto, jwtId: JwtIdDto}) {
+  delete = async ({ userId, jwtId }: {userId: UserIdDto, jwtId: JwtIdDto}) => {
     const isDeleted = await this.redis.del(`userId:${userId}:${jwtId}`)
     return isDeleted !== 0 ? true : false
   }
 
-  async deleteAll({ userId }: {userId: UserIdDto}) {
+  deleteAll = async ({ userId }: {userId: UserIdDto}) => {
     const keysJwtId = await this.redis.keys(`userId:${userId}:*`)
 
     if (keysJwtId.length === 0) return false
