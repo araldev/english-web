@@ -1,4 +1,4 @@
-import {CodeError } from '@/src/shared/errors/domain/services/CustomErrorsEnums.js'
+import { CodeError } from '@/src/shared/errors/domain/services/CustomErrorsEnums.js'
 
 export type TypeCode =
   | CodeError.USER_ALREADY_EXISTS
