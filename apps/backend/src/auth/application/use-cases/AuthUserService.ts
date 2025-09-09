@@ -25,13 +25,14 @@ export class AuthUserService {
     const passwordHashed = await bcrypt.hash(password , SALTROUND)
     const credentials = await authUserCredentialRegisterSchema.parseAsync({ username, password: passwordHashed, email })
     if(!credentials) CreateCustomError.INVALID_CREDENTIALS()
-
+      
     const userExists = await this.userManagment.findByUsername({ username: credentials.username })
-
+    const emailExist = await this.userManagment.findByEmail({ email: credentials.email })
+    
     if (userExists) CreateCustomError.USER_ALREADY_EXISTS()
+    if (emailExist) CreateCustomError.INVALID_EMAIL()
 
     const user = await this.userManagment.create({ user: credentials })
-
 
     const { id: idParse, username: usernameParse, email: emailParse } = user
 
