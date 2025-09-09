@@ -23,51 +23,46 @@ export class CreateAuthMiddleware {
     this.JwtRepository = JwtRepository
   }
     
-  async authMiddleware(req: Request, res: Response, next: NextFunction) {
-    const { accessToken } = req.cookies
+  authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const { accessToken, refreshToken } = req.cookies
 
     req.session = { user: null }
 
-    // Continúa con el siguiente middleware
-    if (!accessToken) return next()
-
     try {
-      const dataAccessToken = await JwtFactory.validateAccess({ token: accessToken })
-      const { id, username, email }: AuthUserSession = dataAccessToken
-      req.session = { user: { id, username, email } }
+      if(!refreshToken) return next() 
 
-      next()
-    } catch (error) {
-      const { refreshToken } = req.cookies
-      if(!refreshToken) return next()
-        
-      try {
-        const dataRefreshToken = await JwtFactory.validateRefresh({ token: refreshToken })
-        const { jwtId, id: userId } = dataRefreshToken
-        const refreshTokenDB = await this.JwtRepository.findById({ jwtId, userId })
-        if(!refreshTokenDB) return next()
-
-        const dataRefreshTokenDB = await JwtFactory.validateRefresh({ token: refreshTokenDB })
-        
-        if(!dataRefreshTokenDB || dataRefreshTokenDB.revoke) return next()
-        
-        
-        const { id, username, email }: AuthUserSession = dataRefreshTokenDB
-
-        const newAccesToken = await JwtFactory.createAccess({ id, username, email })
-
-        res
-          .cookie(Token.access_token, newAccesToken, cookieConfig.accessToken)
-
+      if (accessToken) {
+        const dataAccessToken = await JwtFactory.validateAccess({ token: accessToken })
+        const { id, username, email }: AuthUserSession = dataAccessToken
         req.session = { user: { id, username, email } }
 
-        next()
-      } catch (refreshError) {
-        if(refreshError instanceof Error) {
-          console.log('❌ Error con refresh token:', refreshError.message)
-        }
-        next()
+        return next()
       }
+
+      const dataRefreshToken = await JwtFactory.validateRefresh({ token: refreshToken })
+      const { jwtId, id: userId } = dataRefreshToken
+      const refreshTokenDB = await this.JwtRepository.findById({ jwtId, userId })
+      if(!refreshTokenDB) return next()
+
+      const dataRefreshTokenDB = await JwtFactory.validateRefresh({ token: refreshTokenDB })
+        
+      if(!dataRefreshTokenDB || dataRefreshTokenDB.revoke) return next()
+        
+        
+      const { id, username, email }: AuthUserSession = dataRefreshTokenDB
+
+      const newAccesToken = await JwtFactory.createAccess({ id, username, email })
+
+      res.cookie(Token.access_token, newAccesToken, cookieConfig.accessToken)
+
+      req.session = { user: { id, username, email } }
+      
+      return next()
+    } catch (refreshError) {
+      if(refreshError instanceof Error) {
+        console.log('❌ Error con refresh token:', refreshError.message)
+      }
+      return next()
     }
   }
 }
