@@ -21,18 +21,20 @@ export function createServer(
   })
   
   // detener servidor con Ctrl+C o señales
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     console.log('🛑 Servidor detenido manualmente (Ctrl+C)')
-    tokenClientRepository.disconnect()
+    await tokenClientRepository.disconnect()
+    await userClientRepository.disconnect()
     server.close(() => {
       console.log('Servidor cerrado correctamente')
       process.exit(0)
     })
   })
   
-  process.on('SIGTERM', () => {
+  process.on('SIGTERM', async () => {
     console.log('🛑 Servidor detenido por señal SIGTERM')
-    tokenClientRepository.disconnect()
+    await tokenClientRepository.disconnect()
+    await userClientRepository.disconnect()
     server.close(() => {
       console.log('Servidor cerrado correctamente')
       process.exit(0)
