@@ -25,7 +25,7 @@
       <form class="auth-form" id="form-register" action="http://localhost:1234/auth/register" method="post" autocomplete="on">
         <label >
           <h2>Username</h2>
-          <input name="username" type="text">          
+          <input name="username" type="text">
         </label>
 
         <label >
@@ -66,6 +66,8 @@
 
         <button type="submit">Login</button>
       </form>
+
+      <button id="auth_google">Sign in with Google</button>
 
       <!-- <div id="g_id_onload"
           data-client_id="TU_CLIENT_ID"
@@ -128,20 +130,20 @@
         </ul>
 
         <section class="sidebar-user">
-            <div class="user-data">
+            <a class="user-data">
                 <h4 class="user-tittle">Arturo Alba</h4>
                 <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
-            </div>
+            </a>
 
-            <div class="user-sections">
+            <a class="user-sections">
                 <h4 class="user-tittle">Notifications</h4>
                 <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
-            </div>
+            </a>
 
-            <div class="user-sections">
+            <a href="./user_profile.html" class="user-sections">
                 <h4 class="user-tittle">Settings</h4>
                 <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
-            </div>
+            </a>
         </section>
     </aside>
 

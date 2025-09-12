@@ -17,7 +17,6 @@ export async function checkUserSession() {
     console.log('check session', userSession)
     return  setUserSession(userSession.error ? null : userSession)
   } catch (error) {
-    console.error(error)
     return setUserSession(null)
   }
 }

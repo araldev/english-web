@@ -3,7 +3,7 @@ import { CreateCustomError } from '@src/shared/errors/application/CreateCustomEr
 import type { UserModel, ClassBaseUserDto } from '@src/user/domain/repositories/UserModel.d.ts'
 import { Role, Subscription } from '@src/user/domain/services/userSchema.js'
 import { userSchema } from '@src/user/domain/services/userSchema.js'
-import type {RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto} from '@src/user/domain/repositories/UserModel.js'
+import type { RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, PasswordDto, PermissionDto } from '@src/user/domain/repositories/UserModel.js'
 
 export class User implements ClassBaseUserDto {
   id: UserIdDto
@@ -31,7 +31,7 @@ export class User implements ClassBaseUserDto {
     }
   }
 
-  static create = async ({user}: {user: AuthUserCredentialRegister}): Promise<User> => {
+  static create = async ({ user }: {user: AuthUserCredentialRegister}): Promise<User> => {
     if(!user) CreateCustomError.USER_NOT_FOUND()
 
     const newUser = {

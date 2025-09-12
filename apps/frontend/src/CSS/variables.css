@@ -16,4 +16,8 @@
     --size-tittle: clamp(1.5rem, 4vw, 2.5rem);
     --size-subtittle: clamp(1rem, 3vw, 1.5rem);
     --size-paragraph: clamp(0.8rem, 2vw, 1rem);
+    --content-width: 1200px;
+    --filter-white: brightness(0) invert(1);
+    --filter-black: brightness(0);
+    --filter-orange: filter: invert(58%) sepia(68%) saturate(466%) hue-rotate(324deg) brightness(93%) contrast(91%);
 };

@@ -1,16 +1,20 @@
-import type { AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
-import type { EmailDto, UserIdDto, UserModel, UserModelUpdate, UsernameDto } from '@src/user/domain/repositories/UserModel.js'
+import type { AuthUserCredentialProvider, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
+import type { EmailDto, UserIdDto, UserModel, UserModelFromProvider, UserModelUpdate, UsernameDto } from '@src/user/domain/repositories/UserModel.js'
 
 export interface UserManagmentDto {
-  findByEmail({ email }: {email: EmailDto}): Promise<UserModel | null>
+  findByProviderId({ providerId }: {providerId: string}): Promise<UserModelFromProvider | null>
 
-  findById({ userId }: {userId: UserIdDto}): Promise<UserModel | null>
+  createWithProvider({ user }: {user: AuthUserCredentialProvider}): Promise< UserModelFromProvider>
 
-  findByUsername({ username }: {username: UsernameDto}): Promise<UserModel | null>
+  findByEmail({ email }: {email: EmailDto}): Promise<UserModel | UserModelFromProvider | null>
+
+  findById({ userId }: {userId: UserIdDto}): Promise<UserModel | UserModelFromProvider | null>
+
+  findByUsername({ username }: {username: UsernameDto}): Promise<UserModel| UserModelFromProvider | null>
   
   create({ user }: {user: AuthUserCredentialRegister}): Promise<UserModel> 
   
-  update({ user }:{user: UserModelUpdate}): Promise<UserModel> 
+  update({ user }:{user: UserModelUpdate}): Promise<UserModel | UserModelFromProvider> 
 
   delete({ userId }: {userId: UserIdDto}): Promise<true |false> 
 }

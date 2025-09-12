@@ -1,21 +1,21 @@
-import {z} from 'zod'
-import {userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, userIdSchema, usernameSchema, passwordSchema} from '@src/user/domain/services/userSchema.js'
+import { z } from 'zod'
+import { userSchema, userUpdateSchema, emailSchema, permissionSchema, roleSchema, subscriptionSchema, userIdSchema, usernameSchema, passwordSchema } from '@src/user/domain/services/userSchema.js'
 
 // Interfaz para usuario admin
 export interface AdminUserModel extends BaseUserModel {
-  role: "admin";
+  role: 'admin';
   permission: string[];
 }
 
 // Interfaz para usuario normal
 export interface NormalUserModel extends BaseUserModel {
-  role: "user";
+  role: 'user';
   subscription: SubscriptionDto;
 }
 
 // Interfaz para usuario invitado
 export interface GuestUserModel extends BaseUserModel {
-  role: "guest";
+  role: 'guest';
   invitedBy?: UsernameDto;
 }
 
@@ -23,7 +23,9 @@ export interface GuestUserModel extends BaseUserModel {
 
 export type UserModel = z.infer<typeof userSchema>
 export type UserModelUpdate = z.infer<typeof userUpdateSchema>
-
+interface UserModelFromProvider extends Omit<UserModel, 'password'> {
+  password: null
+}
 
 /* -------- Tipos inferidos Value_Objects -------- */
 

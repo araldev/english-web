@@ -4,7 +4,7 @@ import type { UserRepositoryDto } from '@src/user/application/port/UserRepositor
 import type { UserManagmentDto } from '@src/user/application/port/UserManagmentDto.d.ts'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import { User } from '@src/user/domain/aggregate/User.js'
-import type { AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
+import type { AuthUserCredentialProvider, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.js'
 
 export class UserManagment implements UserManagmentDto {
   private readonly userClientRepository: UserRepositoryDto
@@ -18,6 +18,21 @@ export class UserManagment implements UserManagmentDto {
   ) {
     if(!userClientRepository) CreateCustomError.INTERNAL_ERROR()
     this.userClientRepository = userClientRepository
+  }
+
+  createWithProvider = async ({ user }: {user: AuthUserCredentialProvider}) => {
+    if(!user) CreateCustomError.INVALID_CREDENTIALS()
+    const userFromProvider = await this.userClientRepository.createWithProvider({ user })
+
+    return userFromProvider
+  }
+
+  findByProviderId = async ({ providerId }: {providerId: string}) => {
+    const user = await this.userClientRepository.findByProviderId({ providerId })
+    await this.userClientRepository.disconnect()
+    
+    if (user != null) return user
+    return null
   }
 
   findByEmail = async ({ email }: {email: EmailDto}) => {
@@ -34,7 +49,7 @@ export class UserManagment implements UserManagmentDto {
     return null
   }
   
-  findById = async ({ userId }: {userId: UserIdDto}): Promise<UserModel | null> => {
+  findById = async ({ userId }: {userId: UserIdDto}) => {
     if(!userId) CreateCustomError.INVALID_CREDENTIALS()
 
     const idParse = await userIdSchema.parseAsync(userId)
@@ -48,7 +63,7 @@ export class UserManagment implements UserManagmentDto {
     return null
   }
 
-  findByUsername = async ({ username }: {username: UsernameDto}): Promise<UserModel | null> => {
+  findByUsername = async ({ username }: {username: UsernameDto}) => {
     if(!username) CreateCustomError.INVALID_CREDENTIALS()
 
     const userParse = await usernameSchema.parseAsync(username)
@@ -73,12 +88,14 @@ export class UserManagment implements UserManagmentDto {
 
     const userCreated = await this.userClientRepository.create({ user: userParse })
 
+    if(!userCreated.password) CreateCustomError.INVALID_CREDENTIALS()
+
     await this.userClientRepository.disconnect()
 
     return userCreated
   }
 
-  update = async ({ user }:{user: UserModelUpdate}): Promise<UserModel> => {
+  update = async ({ user }:{user: UserModelUpdate}) => {
     if(!user || !user.id) CreateCustomError.INVALID_CREDENTIALS()
 
     const userParse = await userUpdateSchema.parseAsync(user)

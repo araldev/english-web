@@ -19,6 +19,8 @@ export function authRouter(
   const authUserService = new AuthUserService({ userClientRepository })
   const authController = new AuthController({ authUserService, tokenClientRepository })
 
+  authRouter.get('/google', authController.authGoogle)
+  authRouter.get('/oauth2callback', authController.oauth2callback)
   authRouter.post('/login', authController.login)
   authRouter.post('/register', authController.register)
   authRouter.post('/logout', authController.logout)

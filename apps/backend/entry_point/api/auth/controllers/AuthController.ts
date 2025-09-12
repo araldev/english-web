@@ -7,10 +7,15 @@ import { Token } from '@src/auth/domain/services/jwtSchemas.js'
 import { JwtFactory } from '@src/auth/infrastructure/integrations/JwtFactory.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import type { NextFunction, Request, Response } from 'express'
+import { OAuth2Client, type VerifyIdTokenOptions } from 'google-auth-library'
+import { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET_KEY } from '@/config/googleAuthConfi.js'
+import { storeGoogle } from '@/config/googleAuthConfi.js' 
+import { ref } from 'node:process'
 
 export class AuthController {
   private readonly authUserService: AuthUserService
   private readonly tokenClientRepository: JwtRepositoryDto
+  private readonly oAuth2Client: OAuth2Client
 
   constructor (
     {
@@ -23,8 +28,87 @@ export class AuthController {
     }
   ) {
     this.authUserService = authUserService
-    this.tokenClientRepository= tokenClientRepository
+    this.tokenClientRepository = tokenClientRepository
+    this.oAuth2Client = new OAuth2Client({
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_SECRET_KEY,
+      redirectUri: GOOGLE_REDIRECT_URI,
+    })
   }  
+
+  authGoogle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {    
+    try {
+      storeGoogle.authorizeUrl = this.oAuth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: [
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/userinfo.email'
+        ],
+        prompt: 'consent' // 🔹 fuerza a mostrar el modal de selección de cuenta
+      })
+  
+      res.redirect(storeGoogle.authorizeUrl)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  oauth2callback = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const code = req.query.code as string
+      const { tokens } = await this.oAuth2Client.getToken(code)
+      this.oAuth2Client.setCredentials(tokens)
+
+      const { id_token: idToken } = tokens
+
+      if(!idToken) CreateCustomError.INVALID_CREDENTIALS()
+
+      const ticket = await this.oAuth2Client.verifyIdToken({
+        idToken,
+        audience: GOOGLE_CLIENT_ID
+      })
+
+      const payload = ticket.getPayload()
+      console.log(payload)
+
+      if(!payload) CreateCustomError.INVALID_CREDENTIALS()
+      const {
+        sub: providerId,
+        name: username,
+        picture,
+        email
+      } = payload
+      const provider = 'google'
+
+      if(!providerId || !username || !email || !provider) CreateCustomError.INVALID_CREDENTIALS()
+
+      const user = await this.authUserService.providerLogin({ username, provider, providerId, email })
+      const { id } = user
+  
+      const refreshToken = await JwtFactory.createRefresh({ email, id, username })
+      const { jwtId } = await JwtFactory.validateRefresh({ token: refreshToken })
+      this.tokenClientRepository.insert({ jwtId, userId: id, refreshToken })
+      
+      const accessToken = await JwtFactory.createAccess({ email, id, username })
+
+      if(!refreshToken || !accessToken) CreateCustomError.INTERNAL_ERROR()
+
+      res
+        .cookie(Token.refresh_token ,refreshToken, cookieConfig.accessToken)
+        .cookie(Token.access_token ,accessToken, cookieConfig.accessToken)
+        .redirect('http://localhost:5500/apps/frontend')
+    } catch (error) {
+      next(error)
+    }
+  }
   
   register = async (
     req: Request<unknown, unknown, AuthUserCredentialRegister>, 

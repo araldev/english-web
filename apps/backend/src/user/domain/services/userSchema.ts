@@ -31,7 +31,7 @@ export const userIdSchema = z
 export const usernameSchema = z
   .string()
   .min(3, 'Mínimo 3 carácteres')
-  .max(20, 'Máximo 20 carácteres')
+  .max(30, 'Máximo 30 carácteres')
   .regex(/^[a-zA-Z0-9_]+$/, 'Solo letras, números y guión bajo')
 
 // 3. email: formato válido
@@ -64,6 +64,8 @@ export const permissionSchema = z.union([
 /* -------- Esquemas usuario base -------- */
 
 export const baseUserSchema = z.object({
+  providerId: z.string().optional(),
+  provider: z.string().optional(),
   id: userIdSchema,
   username: usernameSchema,
   email: emailSchema,

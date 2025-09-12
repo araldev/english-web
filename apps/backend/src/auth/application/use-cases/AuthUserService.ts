@@ -1,4 +1,4 @@
-import type { AuthUserCredential, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.d.ts'
+import type { AuthUserCredential, AuthUserCredentialProvider, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto.d.ts'
 import { authUserCredentialSchema, authUserCredentialRegisterSchema } from '@src/auth/domain/services/authSessionSchemas.js'
 import { CreateCustomError } from '@src/shared/errors/application/CreateCustomError.js'
 import type { UserManagmentDto } from '@src/user/application/port/UserManagmentDto.d.ts'
@@ -19,6 +19,16 @@ export class AuthUserService {
     }
   ) {
     this.userManagment = new UserManagment({ userClientRepository })
+  }
+
+  providerLogin = async ({ providerId, provider, username, email }: AuthUserCredentialProvider) => {
+    const userExists = await this.userManagment.findByProviderId({ providerId })
+
+    if(userExists) return userExists
+
+    const newUser = await this.userManagment.createWithProvider({ user: { providerId, provider, username, email } })
+
+    return newUser
   }
 
   register = async ({ username, password, email }: AuthUserCredentialRegister): Promise<JwtPayloadDto> => {
@@ -44,7 +54,7 @@ export class AuthUserService {
     if(!credential) CreateCustomError.INVALID_CREDENTIALS()
 
     const user = await this.userManagment.findByUsername({ username })
-    if(!user) CreateCustomError.INVALID_CREDENTIALS()
+    if(!user ||!user.password) CreateCustomError.INVALID_CREDENTIALS()
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if(!isPasswordValid) CreateCustomError.INVALID_CREDENTIALS()

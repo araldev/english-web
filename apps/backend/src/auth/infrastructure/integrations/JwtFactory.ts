@@ -53,7 +53,7 @@ export class JwtFactory  {
       }
     )
   
-    return token      
+    return token
   }
 
   static async validateAccess({ token }: {token: JwtDto}) {
@@ -64,7 +64,7 @@ export class JwtFactory  {
       token,
       ACCESS_TOKEN_SECRET
     )
-      
+
     return await jwtModelSchema.parseAsync(tokenVerified)
   }
 }

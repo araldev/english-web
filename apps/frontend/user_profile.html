@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn English B1</title>
+  <link rel="shortcut icon" href="./public/images/favicon.webp" type="image/x-icon">
+  <link rel="stylesheet" href="./src/CSS/variables.css">
+  <link rel="stylesheet" href="./src/CSS/normalize.css">
+  <link rel="stylesheet" href="./src/CSS/components.css">
+  <link rel="stylesheet" href="./src/CSS/styles.css">
+  <link rel="preload" as="image" href="./public/images/hero-img.webp">
+  <script defer type="module" src="./src/js/components/menu.js"></script>
+  <script defer type="module" src="./src/js/components/section-grid.js"></script>
+  <script defer type="module" src="./src/js/components/sidebar.js"></script>
+  <script defer type="module" src="./src/js/components/nav-subir.js"></script>
+  <base href="."> 
+</head>
+<body id="user_profile">
+   <dialog id="auth-register" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-register" action="http://localhost:1234/auth/register" method="post" autocomplete="on">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">
+        </label>
+
+        <label >
+          <h2>Email</h2>
+          <input name="email" type="email">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <label>
+          <h2>Confirm Password</h2>
+          <input name="confirm_password" type="password">
+        </label>
+
+        <button type="submit">Sign up</button>
+      </form>
+      <small id="auth_redirect">Click here if you have an account <button id="inner-sign-in">Go Login</button></small>
+    </dialog>
+
+    <dialog id="auth-login" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-login" action="http://localhost:1234/auth/login" method="post">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">          
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <button id="auth_google">Sign in with Google</button>
+
+      <!-- <div id="g_id_onload"
+          data-client_id="TU_CLIENT_ID"
+          data-login_uri="TU_URL_DE_REDIRECCION">
+      </div>
+
+      <div class="g_id_signin"></div>
+
+      <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+
+      <small>Click here if you haven't an account <button id="inner-sign-up">Go Sign up</button></small>
+    </dialog>
+
+    <aside id="sidebar" class="sidebar minimize">
+      <img id="sidebar-size-btn" class="sidebar-size-btn" src="./public/images/arrow-minimize.svg"></img>
+      <div class="sidebar-logo">
+          <img class="logo" src="./public/images/icon-sin-fondo.webp" alt="Logo">
+          <h2 class="logo-tittle">English B1</h2>
+      </div>
+
+      <ul class="sidebar-menu">
+          <li class="sidebar-links menu-item-static">
+              <a href="index.html" class="sidebar-link">
+                  <img src="./public/images/home.svg" alt="Home" class="sidebar-link-icon">
+                  <span>Home</span>
+              </a>
+          </li>
+
+          <li class="sidebar-links menu-item-dropdown">
+              <a href="lessons.html" class="sidebar-link">
+                  <img src="./public/images/lessons.svg" alt="Lessons" class="sidebar-link-icon">
+                  <span>Lessons</span>
+                  <img src="./public/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+              </a>
+              <ul class="sidebar-submenu">
+                  <li class="submenu-links">
+                      <a href="lessons.html#verb-tenses" class="submenu-link">Verb Tenses</a>
+                  </li>
+                  <li class="submenu-links">
+                      <a href="lessons.html#modals-auxiliary-verbs" class="submenu-link">Modal & Auxiliary Verbs</a>
+                  </li>
+                  <li class="submenu-links">
+                      <a href="lessons.html#conditionals-passive-voice" class="submenu-link">Conditional & Passive Voice</a>
+                  </li>
+              </ul>
+          </li>
+
+          <li class="sidebar-links menu-item-dropdown">
+              <a href="" class="sidebar-link">
+                  <img src="./public/images/interactive-exercises.svg" alt="Interactive Exercises" class="sidebar-link-icon">
+                  <span>Interactive Exercises</span>
+                  <img src="./public/images/info-down-arrow.svg" alt="Open or Close" class="sidebar-links-open">
+              </a>
+              <ul class="sidebar-submenu">
+                  <li class="submenu-links">
+                      <a href="exercises.html#game-container" class="submenu-link">Listening Maze</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+
+      <section class="sidebar-user">
+          <div class="user-data">
+              <h4 class="user-tittle">Arturo Alba</h4>
+              <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
+          </div>
+
+          <div class="user-sections">
+              <h4 class="user-tittle">Notifications</h4>
+              <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
+          </div>
+
+          <div class="user-sections">
+              <h4 class="user-tittle">Settings</h4>
+              <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
+          </div>
+      </section>
+  </aside>
+
+  <header class="hero">
+    <nav class="nav container">
+        <div class="nav-logo">
+            <img class="logo" src="./public/images/icon-sin-fondo.webp" alt="Logo">
+            <h2 class="nav-tittle">English B1</h2>
+        </div>
+
+        <ul class="nav-links nav-links-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="lessons.html" class="nav-link">Lessons</a>
+            </li>
+            <li class="nav-item">
+                <a href="exercises.html" class="nav-link">Interactive Exercises</a>
+            </li>
+            <li class="nav-item nav-login">
+              <button id="sign-up" class="nav-link">Sign Up</button>
+              <button id="sign-in" class="nav-link">Sign In</button>
+            </li>
+
+            <li class="nav-item nav-logout" >
+              <button id="logout" class="nav-link">Logout</button>
+            </li>
+
+            <img id="close-menu" src="./public/images/close.svg" alt="Close menu" class="nav-close">
+          </ul>
+
+          <div class="nav-menu">
+              <img src="./public/images/menu-button.svg" alt="Menu button" class="nav-img">
+          </div>
+      </nav>
+  </header>
+
+  <main style="content-visibility: auto;" id="user_settings">
+
+    <h1>User Settings</h1>
+    <small>Manage your account preferences and learning settings</small>
+
+    <section id="setting_container" class="container section">
+      <header>
+        <img src="./public/images/user_profile.svg" alt="Default user image profile">
+        <h2>Profile Information</h2>
+        <small>Update your personal information and profile picture</small>
+      </header>
+
+      <form class="form_setting">
+        <fieldset id="change_photo">
+          <img id="user_profile_image" src="./public/images/user_profile.svg" alt="user_profile_image">
+          <figure>
+            <label >
+              <img src="./public/images/camera.svg" alt="camera icon">
+              <span>Change Photo</span>
+              <input hidden name="profile_image" name="profile_image" type="file" accept="image/*">
+            </label>
+            <legend for="input_user_image">Formato permitido: JPG o PNG. Máx: 2MB.</legend>
+          </figure>
+        </fieldset>
+
+        <label class="label_preferences">
+          <span>Username</span>
+          <input name="username" type="text">
+        </label>
+
+        <label class="label_preferences">
+          <span>Email</span>
+          <input name="email" type="email">
+        </label>
+
+        <button class="save_settings" type="submit">Save Changes</button>
+      </form>
+    </section>
+
+    <section id="setting_container" class="container section">
+      <header>
+        <img src="./public/images/lessons.svg" alt="book icon">
+        <h2>Learning Preferences</h2> 
+        <small>Customize your learning experience</small>
+      </header>
+
+      <form class="form_setting">
+        <fieldset class="fieldset_selects">
+          <label id="current_level">
+            <span>Current Level</span>
+            <select name="current_level" id="options_levels">
+              <option value="A1 Beginner">A1 Beginner</option>
+              <option value="A2 Elementary">A2 Elementary</option>
+              <option value="B1 Intermediate" selected>B1 Intermediate</option>
+              <option value="B2 Upper Intermediate">B2 Upper Intermediate</option>
+              <option value="C1 Advanced">C1 Advanced</option>
+            </select>
+          </label>
+
+          <label id="daily_goal">
+            <span>Daily Goal</span>
+            <select name="daily_goal" id="daily_goal">
+              <option value="15m">15 minutes</option>
+              <option value="30m">30 minutes</option>
+              <option value="45m">45 minutes</option>
+              <option value="1h">1 hour</option>
+              <option value="1.5h">1.5 hours</option>
+              <option value="2h">2 hours</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <label class="label_preferences_checkbox">
+          <span>Audio Pronunciation</span>
+          <small>Enable audio feedback for pronunciation exercises</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <label class="label_preferences_checkbox">
+          <span>Grammar Hints</span>
+          <small>Show helpful grammar tips during exercises</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <label class="label_preferences_checkbox">
+          <span>Vocabulary Reminders</span>
+          <small>Get periodic reminders to review vocabulary</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <button class="save_settings" type="submit">Save Changes</button>
+      </form>
+    </section>
+
+    <section id="setting_container" class="container section">
+      <header>
+        <img src="./public/images/notifications.svg" alt="notifications icon">
+        <h2>Notifications</h2>
+        <small>Choose what notifications you want to receive</small>
+      </header>
+
+      <form class="form_setting">
+        <label class="label_preferences_checkbox">
+          <span>Daily Reminders</span>
+          <small>Get reminded to practice daily</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <label class="label_preferences_checkbox">
+          <span>Progress Updates</span>
+          <small>Weekly progress reports</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+        
+        <label class="label_preferences_checkbox">
+          <span>New Content</span>
+          <small>Notifications about new lessons and exercises</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+        
+        <label class="label_preferences_checkbox">
+          <span>Community Updates</span>
+          <small>Updates from study groups and forums</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <button class="save_settings" type="submit">Save Changes</button>
+      </form>
+    </section>
+
+    <section id="setting_container" class="container section">
+      <header>
+        <img src="./public/images/shield.svg" alt="shield icon">
+        <h2>Privacy & Security </h2>
+        <small>Manage your privacy and security settings</small>
+      </header>
+
+      <form class="form_setting">
+        <label class="label_preferences_checkbox">
+          <span>Profile Visibility</span>
+          <small>Make your profile visible to other learners</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+  
+        <label class="label_preferences_checkbox">
+          <span>Progress Sharing</span>
+          <small>Allow others to see your learning progress</small>
+          <div id="checkbox" role="checkbox">
+            <input hidden type="checkbox">
+            <div id="checkbox_circle"></div>
+          </div>
+        </label>
+
+        <div id="line_divisor"></div>
+
+        <fieldset class="fieldset_buttons">
+          <button>Change Password</button>
+          <button>Two-Factor Authentication</button>
+          <button>Dowload My Data</button>
+        </fieldset>
+
+        <button class="save_settings" type="submit">Save Changes</button>
+      </form>
+    </section>
+  </main>
+
+  <footer id="footer-home">
+        <nav class="nav-footer container">
+            <ul id="n" class="nav-links nav-links-menu">
+                <li class="nav-item">
+                    <a id="home-footer" class="nav-link" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="lessons-footer" class="nav-link" href="lessons.html">Lessons</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="exercises-footer" class="nav-link" href="exercises.html">Interactive Exercises</a>
+                </li>
+            </ul>
+
+            <div onclick="window.scrollTo({top: 0})" class="nav-subir">
+              <svg class="arrow-up-circle-animated" width="40" height="40" viewBox="0 0 100 100">
+                <circle class="circle-border" cx="50" cy="50" r="49" fill="none" stroke="white" stroke-width="1" />
+                <path class="arrow-icon" d="M25 60 L50 30 L75 60" fill="none" stroke="#2ED9FF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+        </nav>
+    </footer>
+</body>
+</html>

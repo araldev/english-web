@@ -22,7 +22,11 @@ const authForms = document.querySelectorAll('.auth-form')
 const logoutButton = document.querySelector('#logout')
 const navLogin = document.querySelector('.nav-login')
 const navLogout = document.querySelector('.nav-logout')
+const buttonGoogle = document.querySelector('#auth_google')
 
+buttonGoogle.addEventListener('click', e => {
+  window.location.href = API_URL + '/auth/google'
+})
 
 function renderNavMenu(fn) {
   return () => {
@@ -275,11 +279,11 @@ async function startNavMenu() {
     nav.style.zIndex = 200
   })
 
-  closeButtonMenu.onclick = (e) => {
+  closeButtonMenu.addEventListener('click',  (e) => {
     navMenu1.classList.remove('nav-links-show')
     nav.style.zIndex = 0
-  }
-
+  })
+  
   // Detecta cuando la ventana cambia de tamaño y resetea el menú en escritorio.
   window.addEventListener('resize', () => {
     if (window.innerWidth > 600) {

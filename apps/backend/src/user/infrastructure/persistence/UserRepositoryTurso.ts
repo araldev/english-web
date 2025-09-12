@@ -1,6 +1,6 @@
-import type { AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto'
+import type { AuthUserCredentialProvider, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto'
 import type { UserRepositoryDto } from '@src/user/application/port/UserRepositoryDto.d.js'
-import type { EmailDto, UserIdDto, UserModel, UserModelUpdate, UsernameDto } from '@src/user/domain/repositories/UserModel.d.js'
+import type { EmailDto, UserIdDto, UserModel, UserModelFromProvider, UserModelUpdate, UsernameDto } from '@src/user/domain/repositories/UserModel.d.js'
 import { PrismaClient } from '@/prisma/generated'
 import { PrismaLibSQL } from '@prisma/adapter-libsql'
 import { TURSO_AUTH_TOKEN, TURSO_DATABASE_URL } from '@/config/prisma-turso-serverConfig.js'
@@ -28,6 +28,28 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     console.log('✅ Conectado a Prisma')
 
     return new UserRepositoryTursoPrisma({ clientTursoPrisma: prisma })
+  }
+
+  findByProviderId = async ({ providerId }: {providerId: string}) => {
+    const userDb = await this.prisma.user.findUnique({
+      where: { providerId }
+    })
+
+    if (!userDb) return null
+    
+    const user = Object.fromEntries(
+      Object.entries(userDb as UserModelFromProvider | UserModel).filter(([key ,value]) => value != null && key !== 'password')
+    ) as UserModelFromProvider
+
+    return user
+  }
+
+  createWithProvider = async ({ user }: {user: AuthUserCredentialProvider}) => {
+    const userDb = await this.prisma.user.create({
+      data: user
+    }) as UserModelFromProvider
+
+    return userDb
   }
 
   findByEmail = async ({ email }:{ email: EmailDto}) => {
