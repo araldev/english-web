@@ -5,6 +5,7 @@ import type { authUserCredentialRegisterSchema, authUserCredentialSchema, authUs
 interface AuthUserCredentialProvider extends Omit<AuthUserCredentialRegister, 'password'> {
   providerId: string
   provider: string
+  picture?: string
 }
 
 export type AuthUserCredentialRegister = z.infer<typeof authUserCredentialRegisterSchema>

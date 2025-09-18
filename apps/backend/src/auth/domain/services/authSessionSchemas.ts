@@ -15,5 +15,6 @@ export const authUserCredentialSchema = z.object({
 export const authUserSessionSchema = z.object({
   id: userIdSchema,
   username: usernameSchema,
-  email: emailSchema
+  email: emailSchema,
+  picture: z.string().optional()
 })
