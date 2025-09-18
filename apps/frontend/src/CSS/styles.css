@@ -215,6 +215,88 @@ body {
     }
   }
 
+  .div_select {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% + 50px);
+    height: 60px;
+    color: white;
+    font-size: var(--size-paragraph);
+    font-weight: 500;
+    position: relative;
+    
+    > img {
+      position:absolute;
+      top: 30px;
+      right: 20px;
+      transform: translateY(-50%);
+      filter: var(--filter-white);
+      width: 40px;
+      height: 40px;
+      transition: transform .15s ease-in-out;
+      cursor: pointer;
+    }
+    &[data-state="open"] > img {
+      transform: rotate(180deg) translateY(50%);
+    }
+
+    .option_selected {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-weight: 500;
+      padding: 20px;
+      background-color: #000;
+      width: 100%;
+      min-height: 100%;
+      height: 100%;
+      border-radius: 10px;
+    }
+  }
+
+  #options_levels,
+  #daily_goal {
+    display: flex;
+    flex-direction: column;
+    background-color: #3576b8;
+    border-radius: 10px;
+    list-style: none;
+    font-size: var(--size-paragraph);
+    width: unset;
+    height: 0;
+    will-change: height;
+    transition: height .3s ease-in-out;
+    z-index: 999;
+
+    > li {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: inherit;
+      height: 60px;
+      padding: 20px;
+      border-radius: 10px;
+      color: #ddd;
+      flex-shrink: 0; /* ✅ evita que se encojan */
+      opacity: 0;
+      transition: opacity .1s ease-in-out;
+
+      &:hover {
+        background-color: #000;
+        color: white;
+      }
+    }
+  }
+
+  .div_select[data-state="open"] #options_levels,
+  .div_select[data-state="open"] #daily_goal {
+    height: 500px;
+
+    > li {
+      opacity: 1;
+    }
+  }
+
   #line_divisor {
     margin: 0 auto;
     width: 80%;
@@ -801,7 +883,8 @@ body {
     overflow: visible;
 }
 .minimize .sidebar-links:hover span,
-.minimize .active .sidebar-link span {
+.minimize .active .sidebar-link span,
+.minimize .sidebar-user .sidebar-link:hover span {
     position: absolute;
     /* height: 5rem; */
     width: max-content;
