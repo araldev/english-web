@@ -40,6 +40,12 @@ export const emailSchema = z.string().email('Email inválido')
 // 4. password: mínimo 6 carácteres
 export const passwordSchema = z.string().min(6, 'Mínimo 6 carácteres')
 
+export const passwordSchemaFromProvider = z.union([
+  z.string().min(6, 'Mínimo 6 carácteres'),
+  z.null(),
+  z.undefined()
+])
+
 // 5. subscription
 export const subscriptionSchema = z.union([
   z.literal(Subscription.premium),
@@ -66,7 +72,28 @@ export const permissionSchema = z.union([
 export const baseUserSchema = z.object({
   providerId: z.string().optional(),
   provider: z.string().optional(),
+  picture: z.string().optional(),
   id: userIdSchema,
+  username: usernameSchema,
+  email: emailSchema,
+  password: passwordSchema
+})
+
+export const baseUserSchemaFromProvider = z.object({
+  providerId: z.string(),
+  provider: z.string(),
+  picture: z.string().optional(),
+  id: userIdSchema,
+  username: usernameSchema,
+  email: emailSchema,
+  password: passwordSchema
+})
+
+export const baseUserUpdateSchema = z.object({
+  providerId: z.string().optional(),
+  provider: z.string().optional(),
+  picture: z.string().optional(),
+  id: z.string().uuid().optional(),
   username: usernameSchema,
   email: emailSchema,
   password: passwordSchema
@@ -81,7 +108,19 @@ export const userSchema = z.discriminatedUnion('role', [
 ])
 
 export const userUpdateSchema = z.discriminatedUnion('role', [
-  baseUserSchema.partial().extend({ role: z.literal(Role.admin), permission: permissionSchema.optional() }),
-  baseUserSchema.partial().extend({ role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
-  baseUserSchema.partial().extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+  baseUserUpdateSchema.partial().extend({ role: z.literal(Role.admin), permission: permissionSchema.optional() }),
+  baseUserUpdateSchema.partial().extend({ role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
+  baseUserUpdateSchema.partial().extend({ role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+])
+
+export const userSchemaFromProvider = z.discriminatedUnion('role', [
+  baseUserSchemaFromProvider.extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.admin), permission: permissionSchema }),
+  baseUserSchemaFromProvider.extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.user), subscription: subscriptionSchema }),
+  baseUserSchemaFromProvider.extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
+])
+
+export const userUpdateSchemaFromProvider = z.discriminatedUnion('role', [
+  baseUserUpdateSchema.partial().extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.admin), permission: permissionSchema.optional() }),
+  baseUserUpdateSchema.partial().extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.user), subscription: subscriptionSchema.optional() }),
+  baseUserUpdateSchema.partial().extend({ password: passwordSchemaFromProvider.optional(), role: z.literal(Role.guest), invitedBy: usernameSchema.optional() }),
 ])
