@@ -8,7 +8,7 @@ import type { RoleDto, SubscriptionDto, UserIdDto, UsernameDto, EmailDto, Passwo
 export class User implements ClassBaseUserDto {
   id: UserIdDto
   username: UsernameDto
-  password: PasswordDto
+  password: PasswordDto | undefined | null
   email: EmailDto
   role: RoleDto
   permission?: PermissionDto
@@ -31,14 +31,14 @@ export class User implements ClassBaseUserDto {
     }
   }
 
-  static create = async ({ user }: {user: AuthUserCredentialRegister}): Promise<User> => {
+  static create = async ({ user }: {user: AuthUserCredentialRegister }): Promise<User> => {
     if(!user) CreateCustomError.USER_NOT_FOUND()
 
     const newUser = {
-      ...user,
       id: crypto.randomUUID().toString(),
       role: Role.user,
-      subscription: Subscription.basic
+      subscription: Subscription.basic,
+      ...user
     }
 
     const userParse = await userSchema.parseAsync(newUser)
