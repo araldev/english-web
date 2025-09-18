@@ -13,6 +13,7 @@
   <script defer type="module" src="./src/js/components/menu.js"></script>
   <script defer type="module" src="./src/js/components/section-grid.js"></script>
   <script defer type="module" src="./src/js/components/sidebar.js"></script>
+  <script defer type="module" src="./src/js/components/user-profile.js"></script>
   <script defer type="module" src="./src/js/components/nav-subir.js"></script>
   <base href="."> 
 </head>
@@ -129,22 +130,22 @@
           </li>
       </ul>
 
-      <section class="sidebar-user">
-          <div class="user-data">
-              <h4 class="user-tittle">Arturo Alba</h4>
-              <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
-          </div>
+      <nav class="sidebar-user">
+            <a class="user-data sidebar-link">
+                <span class="user-tittle">Sign In/Up</span>
+                <img src="./public/images/user_profile.svg" alt="User image" class="user-img">
+            </a>
 
-          <div class="user-sections">
-              <h4 class="user-tittle">Notifications</h4>
-              <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
-          </div>
+            <a class="user-sections sidebar-link">
+                <span class="user-tittle">Notifications</span>
+                <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
+            </a>
 
-          <div class="user-sections">
-              <h4 class="user-tittle">Settings</h4>
-              <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
-          </div>
-      </section>
+            <a href="./user_profile.html" class="user-sections sidebar-link">
+                <span class="user-tittle">Settings</span>
+                <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
+            </a>
+        </nav>
   </aside>
 
   <header class="hero">
@@ -228,29 +229,43 @@
         <small>Customize your learning experience</small>
       </header>
 
-      <form class="form_setting">
+      <form id="form_learning_preferences" class="form_setting">
         <fieldset class="fieldset_selects">
-          <label id="current_level">
+          <label>
             <span>Current Level</span>
-            <select name="current_level" id="options_levels">
-              <option value="A1 Beginner">A1 Beginner</option>
-              <option value="A2 Elementary">A2 Elementary</option>
-              <option value="B1 Intermediate" selected>B1 Intermediate</option>
-              <option value="B2 Upper Intermediate">B2 Upper Intermediate</option>
-              <option value="C1 Advanced">C1 Advanced</option>
-            </select>
+            <input name="current_level" value="" id="input_options_levels" hidden type="text">
+            <div data-state="close" class="div_select">
+              <img src="./public/images/drop-menu.svg" alt="drop menu icon">
+
+              <span id="value_options_levels"  data-value="" class="option_selected">Hola</span>
+
+              <ul id="options_levels">
+                <li data-value="A1 Beginner">A1 Beginner</li>
+                <li data-value="A2 Elementary">A2 Elementary</li>
+                <li data-value="B1 Intermediate" selected>B1 Intermediate</li>
+                <li data-value="B2 Upper Intermediate">B2 Upper Intermediate</li>
+                <li data-value="C1 Advanced">C1 Advanced</li>
+              </ul>
+            </div>
           </label>
 
-          <label id="daily_goal">
+          <label>
             <span>Daily Goal</span>
-            <select name="daily_goal" id="daily_goal">
-              <option value="15m">15 minutes</option>
-              <option value="30m">30 minutes</option>
-              <option value="45m">45 minutes</option>
-              <option value="1h">1 hour</option>
-              <option value="1.5h">1.5 hours</option>
-              <option value="2h">2 hours</option>
-            </select>
+            <input name="daily_goal" value="" id="input_daily_goal" hidden type="text">
+            <div data-state="close" class="div_select">
+              <img src="./public/images/drop-menu.svg" alt="drop menu icon">
+
+              <span id="value_daily_goal" data-value="" class="option_selected">Hola</span>
+
+              <ul id="daily_goal">
+                <li data-value="15 minutes">15 minutes</li>
+                <li data-value="30 minutes">30 minutes</li>
+                <li data-value="45 minutes">45 minutes</li>
+                <li data-value="1 hour">1 hour</li>
+                <li data-value="1.5 hour">1.5 hours</li>
+                <li data-value="2 hours">2 hours</li>
+              </ul>
+            </div>
           </label>
         </fieldset>
 
