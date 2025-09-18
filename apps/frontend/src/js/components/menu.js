@@ -3,7 +3,6 @@ import { API_URL } from '../config/globalConfig.js'
 import { checkUserSession } from '../services/checkUserSession.js'
 import { CodeError } from '../store/customErrors.js'
 
-
 const nav = document.querySelector('.nav')
 const navMenus = document.querySelectorAll('.nav-links-menu')
 const navMenu1 = navMenus[0]
