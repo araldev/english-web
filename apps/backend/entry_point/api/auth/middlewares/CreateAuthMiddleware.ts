@@ -33,8 +33,8 @@ export class CreateAuthMiddleware {
 
       if (accessToken) {
         const dataAccessToken = await JwtFactory.validateAccess({ token: accessToken })
-        const { id, username, email }: AuthUserSession = dataAccessToken
-        req.session = { user: { id, username, email } }
+        const { id, username, email, picture }: AuthUserSession = dataAccessToken
+        req.session = { user: { id, username, email, picture } }
 
         return next()
       }
@@ -49,13 +49,13 @@ export class CreateAuthMiddleware {
       if(!dataRefreshTokenDB || dataRefreshTokenDB.revoke) return next()
         
         
-      const { id, username, email }: AuthUserSession = dataRefreshTokenDB
+      const { id, username, email, picture }: AuthUserSession = dataRefreshTokenDB
 
-      const newAccesToken = await JwtFactory.createAccess({ id, username, email })
+      const newAccesToken = await JwtFactory.createAccess({ id, username, email, picture })
 
       res.cookie(Token.access_token, newAccesToken, cookieConfig.accessToken)
 
-      req.session = { user: { id, username, email } }
+      req.session = { user: { id, username, email, picture } }
       
       return next()
     } catch (refreshError) {
