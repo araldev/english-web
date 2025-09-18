@@ -1,6 +1,5 @@
-import type { AuthUserCredentialProvider, AuthUserCredentialRegister } from '@src/auth/domain/repositories/AuthSessionDto'
 import type { UserRepositoryDto } from '@src/user/application/port/UserRepositoryDto.d.js'
-import type { EmailDto, UserIdDto, UserModel, UserModelFromProvider, UserModelUpdate, UsernameDto } from '@src/user/domain/repositories/UserModel.d.js'
+import type { EmailDto, UserIdDto, UserModel, UserModelFromProvider, UserModelUpdate, UserModelUpdateFromProvider, UsernameDto } from '@src/user/domain/repositories/UserModel.d.js'
 import { PrismaClient } from '@/prisma/generated'
 import { PrismaLibSQL } from '@prisma/adapter-libsql'
 import { TURSO_AUTH_TOKEN, TURSO_DATABASE_URL } from '@/config/prisma-turso-serverConfig.js'
@@ -42,14 +41,6 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     ) as UserModelFromProvider
 
     return user
-  }
-
-  createWithProvider = async ({ user }: {user: AuthUserCredentialProvider}) => {
-    const userDb = await this.prisma.user.create({
-      data: user
-    }) as UserModelFromProvider
-
-    return userDb
   }
 
   findByEmail = async ({ email }:{ email: EmailDto}) => {
@@ -94,7 +85,17 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return user
   }
 
-  create = async ({ user }: {user: AuthUserCredentialRegister}) => {
+  createWithProvider = async ({ user }: {user: UserModelFromProvider}) => {
+    console.log('creando userFromProvider en DB',   JSON.stringify(user, null, 2))
+    const userDb = await this.prisma.user.create({
+      data: user
+    }) as UserModelFromProvider
+
+    console.log('despues de crear userFromProvider en DB')
+    return userDb
+  }
+
+  create = async ({ user }: {user: UserModel}) => {
     const userDb = await this.prisma.user.create({
       data: user
     }) as UserModel
@@ -102,7 +103,7 @@ export class UserRepositoryTursoPrisma implements UserRepositoryDto {
     return userDb
   }
 
-  update = async ({ userId, userUpdates }: {userId: UserIdDto, userUpdates:UserModelUpdate}) => {
+  update = async ({ userId, userUpdates }: {userId: UserIdDto, userUpdates:UserModelUpdate | UserModelUpdateFromProvider}) => {
     const userDbUpdated = await this.prisma.user.update({
       where: {
         id: userId
