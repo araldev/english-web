@@ -21,12 +21,19 @@ export class AuthUserService {
     this.userManagment = new UserManagment({ userClientRepository })
   }
 
-  providerLogin = async ({ providerId, provider, username, email }: AuthUserCredentialProvider) => {
+  providerLogin = async ({ providerId, provider, username, email, picture }: AuthUserCredentialProvider) => {
     const userExists = await this.userManagment.findByProviderId({ providerId })
 
-    if(userExists) return userExists
-
-    const newUser = await this.userManagment.createWithProvider({ user: { providerId, provider, username, email } })
+    if(userExists) {
+      const { role } = userExists
+      console.log('antes update auth, role--->', role)
+      const userUpdate = await this.userManagment.updateFromProvider({ user: { role, providerId, provider, username, email, picture } })
+      console.log('despues update auth, role--->', userUpdate)
+      return userUpdate
+    }
+    console.log('antes del this.userManagment.createWithProvider', provider)
+    const newUser = await this.userManagment.createWithProvider({ user: { providerId, provider, username, email, picture } })
+    console.log('despues del this.userManagment.createWithProvider')
 
     return newUser
   }

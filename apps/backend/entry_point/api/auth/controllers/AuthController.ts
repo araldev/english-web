@@ -66,7 +66,6 @@ export class AuthController {
       const code = req.query.code as string
       const { tokens } = await this.oAuth2Client.getToken(code)
       this.oAuth2Client.setCredentials(tokens)
-
       const { id_token: idToken } = tokens
 
       if(!idToken) CreateCustomError.INVALID_CREDENTIALS()
@@ -89,15 +88,17 @@ export class AuthController {
       const provider = 'google'
 
       if(!providerId || !username || !email || !provider) CreateCustomError.INVALID_CREDENTIALS()
-
-      const user = await this.authUserService.providerLogin({ username, provider, providerId, email })
+        
+      console.log('antes y provider --->', provider)
+      const user = await this.authUserService.providerLogin({ username, provider, providerId, email, picture })
+      console.log('despues')
       const { id } = user
   
-      const refreshToken = await JwtFactory.createRefresh({ email, id, username })
+      const refreshToken = await JwtFactory.createRefresh({ email, id, username, picture })
       const { jwtId } = await JwtFactory.validateRefresh({ token: refreshToken })
       this.tokenClientRepository.insert({ jwtId, userId: id, refreshToken })
       
-      const accessToken = await JwtFactory.createAccess({ email, id, username })
+      const accessToken = await JwtFactory.createAccess({ email, id, username, picture })
 
       if(!refreshToken || !accessToken) CreateCustomError.INTERNAL_ERROR()
 
@@ -106,6 +107,7 @@ export class AuthController {
         .cookie(Token.access_token ,accessToken, cookieConfig.accessToken)
         .redirect('http://localhost:5500/apps/frontend')
     } catch (error) {
+      res.redirect('http://localhost:5500/apps/frontend')
       next(error)
     }
   }

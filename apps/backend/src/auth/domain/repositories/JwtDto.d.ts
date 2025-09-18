@@ -1,5 +1,5 @@
-import {z} from 'zod'
-import {jwtPayloadSchema, jwtIdSchema, jwtSchema, jwtIatSchema, jwtExpSchema, jwtModelSchema, JwtCacheRepoSchema, jwtRevokeSchema} from '@src/auth/domain/services/jwtSchemas.js'
+import { z } from 'zod'
+import { jwtPayloadSchema, jwtIdSchema, jwtSchema, jwtIatSchema, jwtExpSchema, jwtModelSchema, JwtCacheRepoSchema, jwtRevokeSchema } from '@src/auth/domain/services/jwtSchemas.js'
 
 /* -------------- Value_Objects Types -------------- */
 export type JwtPayloadDto = z.infer<typeof jwtPayloadSchema>
