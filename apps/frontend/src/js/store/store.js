@@ -6,6 +6,7 @@ const store = {
 }
 
 const userSessionListeners = []
+console.log('userSessionListeners:', userSessionListeners)
 
 export const getUserSession = () => {
   return store.userSession
