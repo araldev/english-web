@@ -1,3 +1,5 @@
+import { getUserSession } from '../store/store.js'
+
 (function() {
   const sidebar = document.getElementById('sidebar')
   const sidebarBtn = document.getElementById('sidebar-size-btn')
@@ -5,6 +7,21 @@
   const menuLinks = document.querySelectorAll('.sidebar-link')
   const allSubmenuContainer = document.querySelectorAll('.sidebar-submenu')
   const allSubmenuLinks = document.querySelectorAll('.submenu-link')
+  const buttonUserSettings = document.querySelector('#sidebar_user_settings')
+
+  const signInModal = document.getElementById('auth-login')
+
+  buttonUserSettings.addEventListener('click', e => {
+    e.preventDefault()
+
+    const userSession = getUserSession()
+
+    if (userSession)  {
+      window.location.href = buttonUserSettings.href
+    } else {
+      signInModal.showModal()
+    }
+  })
 
   window.addEventListener('resize', e => {
     requestAnimationFrame(() => {
