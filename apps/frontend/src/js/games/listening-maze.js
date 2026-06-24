@@ -1,11 +1,4 @@
-// 1. Hay un bug que si clico muchas veces antes de llegar al target cuando el pj se mueve no llega nunca.
-// 2. Añadir una animación de homer al gameOver, mas personajes y cambiarlos dinámicamente.
-// 3. Añadir sonido y animación de win.
-// 4. Poner cronómetro y puntaje: 
-//      - Mientras más rápido contestes te da mas puntos.
-//      - Perder una vida resta puntos.
-// ----------------------------------------------------------------->
-(function() {  
+(function() {
     fetch("./src/assets/games/listening-maze.json")
         .then(res => {
             if(!res.ok) {
@@ -14,51 +7,44 @@
             return res.json();
         })
         .then(data => {
-            maxLevel = getInitialMaxLevel(data);            
-            maxPath = getInitialMaxPath(data);            
+            maxLevel = getInitialMaxLevel(data);
+            maxPath = getInitialMaxPath(data);
             waiting(data);
         })
         .catch(error => {
             console.error("Error al cargar los datos del juego", error)
         });
 
-    //  Get Audio Effects to canvas
     const $startAudio = new Audio("./public/sounds/game-start.ogg");
     const $missAudio = new Audio("./public/sounds/electrical-shock.ogg");
     const $gameOverAudio = new Audio("./public/sounds/game-over-arcade.ogg");
     let currentAudio = null;
 
-    // Get Images to canvas
     const $rock = document.getElementById("rock");
     const $tree = document.getElementById("tree");
     const $fence = document.getElementById("fence");
     const $homer = document.getElementById("homer");
 
-    // Buttons to select mode
     const $btnEasy = document.getElementById("easy");
     const $btnMedium = document.getElementById("medium");
     const $btnHard = document.getElementById("hard");
     const $btnLegend = document.getElementById("legend");
 
-    // Button to start
     const $start = document.getElementById("start");
 
-    // Buttons to play
     const $btnLeft = document.getElementById("btn-left");
     const $btnUp = document.getElementById("btn-up");
     const $btnRight = document.getElementById("btn-right");
 
-    // Game Modal
     const $modalGame = document.getElementById("modal-game");
-    // Button to close Modal
     const $closeModalGame = document.getElementById("close-modal-game-over");
-    // Button to go Waiting Room
     const $closeModaAndWaiting = document.getElementById("reset-waiting-room");
-    // Player info Game Over
     const $lostOrWinInfo = document.getElementById("lost-or-win");
+    const $modalScore = document.getElementById("modal-score");
     const $playerStatistics = document.getElementById("player-statistics");
 
-    // DOM elements and behavior management
+    const $score = document.getElementById("score");
+    const $timer = document.getElementById("timer");
     const $level = document.getElementById("level");
     const $path = document.getElementById("path");
     const $lives = document.getElementById("lives");
@@ -76,21 +62,20 @@
     const revive = () => $lives.setAttribute("data-isalive", "alive");
     
     const container = document.getElementById("game-container");
-    const canvas = document.getElementById("listening-maze");    
+    const canvas = document.getElementById("listening-maze");
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     
     let recWidth;
     const calculateScale = 600;
     let perspective = recWidth / calculateScale;
 
-    // Initial Values
     const initialLevel = 1;
     function getInitialMaxLevel(data) {
-        return Object.entries(data).filter( ([key]) => key.startsWith(`level-`)).length || 10;        
+        return Object.entries(data).filter( ([key]) => key.startsWith(`level-`)).length || 10;
     };
     const initialPath = 1;
     function getInitialMaxPath(data) {
-        return Object.keys(data.paths).length || 10;                
+        return Object.keys(data.paths).length || 10;
     };
     let initialLives = 4;
     const initialRules = `
@@ -102,7 +87,6 @@
     </p>
     `;
 
-    // Game State
     let level = initialLevel;
     let maxLevel;
     let regexLevel;
@@ -126,17 +110,14 @@
             hard: 3,
             legend: 1
         },
-    };    
+    };
 
-    // Pjs
     let CHARACTER;
 
-    // Obstacles
     let ROCK;
     let TREE;
     let FENCE;
 
-    // Auxliliary Variables
     const rockString = "rock";
     const treeString = "tree";
     const fenceString = "fence";
@@ -169,7 +150,6 @@
         right: 450
     };
 
-    // Homer sprite const
     const homer = {
         name: "homer",
         width: 40,
@@ -178,34 +158,26 @@
         walkingY: { x: 0, y: 76, w: 42, h: 80, frames: 8},
         walkingX: { x: 180, y: 0, w: 50, h: 80, frames: 4},
         lost: { x: 10, y: 1940, w: 70, h: 80, frames: 2},
-        // gameOver: { x: 10, y: 1940, w: 70, h: 80, frames: 2} // hacer para modal
     };
 
-    // Animations variables
     const animations = {
         idle: "idle",
         walkingY: "walkingY",
         walkingX: "walkingX",
         lost: "lost",
-        gameOver: "gameOver"
     };
     let currentAnimation;
 
-    // Object SpeechSynthesis, it's to make browser speech a text
     const speakerSettings = {
-        // text,
         lang: "en-US",
-        // rate,
-        // pitch,
         volume: 0.4
     };
 
-    // Varaibles to manage answer and character movement
     let correctPath = [];
     let isAnswered = false;
 
     let previousPath = initialPath - 1;
-    async function triggerAudio() {        
+    async function triggerAudio() {
         if(previousPath >= maxPath && currentAnimation !== animations.lost) previousPath = 0;
 
         if(previousPath < path) {
@@ -221,14 +193,34 @@
 
         if(currentAudio) {
             try {
-                currentAudio.pause();        // Make sure to stop any previous sound
-                currentAudio.currentTime = 0; // Reset the starting point of the audio
-                
-                await currentAudio.play();  // Wait for it to start properly
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                await currentAudio.play();
             } catch (err) {
                 console.error("Audio error:", err);
             };
             currentAudio = null;
+        };
+    };
+
+    function playWinSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [523.25, 659.25, 783.99, 1046.5];
+            notes.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = "sine";
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime + i * 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+                osc.start(audioCtx.currentTime + i * 0.15);
+                osc.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+            });
+        } catch (err) {
+            console.error("Win sound error:", err);
         };
     };
 
@@ -250,6 +242,64 @@
         idsetTimeoutSpeaker = setTimeout(() => speechSynthesis.speak(utterance), 1000);
     };
 
+    let score = 0;
+    let timeLeft = 0;
+    let timerInterval = null;
+    let scoreMultiplier = 1;
+
+    function startTimer() {
+        stopTimer();
+        timeLeft = 10;
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if(timeLeft <= 0) {
+                timeLeft = 0;
+                updateTimerDisplay();
+            };
+        }, 1000);
+    };
+
+    function stopTimer() {
+        if(timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        };
+    };
+
+    function updateTimerDisplay() {
+        $timer.innerHTML = `⏱ <strong>${timeLeft}</strong>s`;
+    };
+
+    function addScore(basePoints) {
+        const earned = basePoints + (timeLeft * 10 * scoreMultiplier);
+        score += earned;
+        updateScoreDisplay();
+        return earned;
+    };
+
+    function subtractScore(points) {
+        score = Math.max(0, score - points);
+        updateScoreDisplay();
+    };
+
+    function updateScoreDisplay() {
+        $score.innerHTML = `Score: <strong>${score}</strong>`;
+    };
+
+    function resetScore() {
+        score = 0;
+        timeLeft = 0;
+        scoreMultiplier = 1;
+        updateScoreDisplay();
+        updateTimerDisplay();
+        if(timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        };
+    };
+
     let eventModeClick = null;
     function settings() {
         if(gameSettings.states.playing === true) return;
@@ -266,20 +316,24 @@
             if(e.currentTarget === $btnEasy) {
                 initialLives = gameSettings.modes.easy;
                 lives = initialLives;
+                scoreMultiplier = 1;
             };
             if(e.currentTarget === $btnMedium) {
                 initialLives = gameSettings.modes.medium;
                 lives = initialLives;
+                scoreMultiplier = 1.5;
             };
             if(e.currentTarget === $btnHard) {
                 initialLives = gameSettings.modes.hard;
                 lives = initialLives;
+                scoreMultiplier = 2;
             };
             if(e.currentTarget === $btnLegend) {
                 initialLives = gameSettings.modes.legend;
                 lives = initialLives;
+                scoreMultiplier = 3;
             };
-            showGameInfo()
+            showGameInfo();
             settings();
         };
 
@@ -299,7 +353,6 @@
                 gameSettings.states[state] = true;
             };
         };
-        console.log("States: ",gameSettings.states);
     };
 
     let currentStartHandler = null;
@@ -308,11 +361,12 @@
         eventResize(data);
 
         eventKeyDown(data, CHARACTER);
-        eventButtonClick(data, CHARACTER); 
+        eventButtonClick(data, CHARACTER);
 
         level = initialLevel;
         path = initialPath;
         lives = initialLives;
+        resetScore();
 
         if($start.classList.contains("hidden")) $start.classList.remove("hidden");
         stateGame(data);
@@ -321,7 +375,7 @@
 
         if(currentStartHandler) {
             $start.removeEventListener("click", currentStartHandler);
-            currentButtonHandler = null;
+            currentStartHandler = null;
         };
 
         currentStartHandler = (e) => {
@@ -350,7 +404,7 @@
             const isEscape = e.key === "Escape";
             if (isEscape && $modalGame.open) {
                 $modalGame.close();
-                waiting(data)
+                waiting(data);
             }
         };
         document.addEventListener("keydown", eventKeyDownModal);
@@ -360,7 +414,6 @@
             handleBackdropClick = null;
         };
         handleBackdropClick = (e) => {
-            // Verificar si el clic fue en el backdrop (no en el contenido del modal)
             const modalRect = $modalGame.getBoundingClientRect();
             const isClickOutside = (
             e.clientY < modalRect.top ||
@@ -371,7 +424,7 @@
 
             if (isClickOutside && $modalGame.open) {
                 $modalGame.close();
-                waiting(data); 
+                waiting(data);
             };
         };
         $modalGame.addEventListener("click", handleBackdropClick);
@@ -399,10 +452,55 @@
         $modalGame.showModal();
     };
 
-    function gameOver(data) {        
+    let particles = [];
+
+    function createParticles(cx, cy) {
+        particles = [];
+        for(let i = 0; i < 60; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2 + Math.random() * 6;
+            particles.push({
+                x: cx,
+                y: cy,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1,
+                decay: 0.008 + Math.random() * 0.015,
+                size: 3 + Math.random() * 6,
+                color: `hsl(${Math.random() * 360}, 80%, 60%)`
+            });
+        };
+    };
+
+    function drawParticles() {
+        if(particles.length === 0) return;
+        ctx.save();
+        for(let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.1;
+            p.life -= p.decay;
+            if(p.life <= 0) {
+                particles.splice(i, 1);
+                continue;
+            };
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            ctx.fill();
+        };
+        ctx.restore();
+        if(particles.length > 0) {
+            requestAnimationFrame(drawParticles);
+        };
+    };
+
+    function gameOver(data) {
+        stopTimer();
         selectState(gameOverString);
 
-        // Delete buttons and keyDown events
         if (currentKeyHandler) {
             document.removeEventListener("keydown", currentKeyHandler);
             currentKeyHandler = null;
@@ -417,7 +515,10 @@
 
         $lostOrWinInfo.innerHTML = `
         <strong>GAME OVER!</strong>
-        `
+        `;
+        $modalScore.innerHTML = `
+        <p>Final Score: <strong>${score}</strong></p>
+        `;
         $playerStatistics.innerHTML = `
         <p>You've reached level <strong>${level}</strong>, next time will be!</p>
         `;
@@ -426,16 +527,24 @@
     };
 
     function youWin(data) {
+        stopTimer();
         selectState(youWinString);
+
+        playWinSound();
+        createParticles(canvas.width / 2, canvas.height / 2);
+        drawParticles();
 
         $lostOrWinInfo.innerHTML = `
         <strong>YOU WIN, CONGRATULATIONS!</strong>
-        `
+        `;
+        $modalScore.innerHTML = `
+        <p>Final Score: <strong>${score}</strong></p>
+        `;
         $playerStatistics.innerHTML = `
         <p>Congratulations, you reached the last level!</p>
         `;
 
-        closeAndShowModal(data);
+        setTimeout(() => closeAndShowModal(data), 1500);
     };
 
     function start(data) {
@@ -446,12 +555,13 @@
         $start.classList.add("hidden");
         
         eventKeyDown(data, CHARACTER);
-        eventButtonClick(data, CHARACTER); 
+        eventButtonClick(data, CHARACTER);
 
         stateGame(data);
         putCorrectPath();
         draw(data);
         showGameInfo();
+        startTimer();
     };
 
     function reset(data) {
@@ -461,11 +571,12 @@
         $start.classList.add("hidden");
 
         eventKeyDown(data, CHARACTER);
-        eventButtonClick(data, CHARACTER); 
+        eventButtonClick(data, CHARACTER);
 
         level = initialLevel;
         path = initialPath;
         lives = initialLives;
+        resetScore();
 
         stateGame(data);
         putCorrectPath();
@@ -484,29 +595,22 @@
 
         currentEventResize = (e) => draw(data);
         window.addEventListener("resize", currentEventResize);
-
-        console.log("Caminos correctos -------------->", correctPath);
     };
 
-    function showGameInfo() {        
-        // Info initial rules.
+    function showGameInfo() {
         $rules.innerHTML = initialRules;
         
-        // Info lvl, path, lives.
         $level.innerHTML = `<strong>Level: ${level}</strong>/${maxLevel}`;
         $path.innerHTML = `<strong>Path: ${path}</strong>/${maxPath}`;
 
         if(gameSettings.states.playing) {
-            // Info each lvl rules
             $audioText.innerHTML = `<b>${CURRENT_LEVEL.audioText}</b>`;
         } else {
             $audioText.innerHTML = "";
         };
 
-        // Averiguar cuantos corazones hay dibujados
         const currentHearts = $lives.querySelectorAll("img").length;
 
-        // Si estamos en modo playing, usar lives, sino usar initialLives
         const targetHearts = gameSettings.states.playing ? lives : initialLives;
         
         if(isAlive()) return;
@@ -527,11 +631,9 @@
     function stateGame(data) {
         regexLevel = `level-${level}`;
         CURRENT_LEVEL = data[regexLevel];
-        console.log("CURRENT_LEVEL: ", CURRENT_LEVEL);
 
         regexPath = `${path}`;
         CURRENT_PATH = data.paths[regexPath];
-        console.log("CURRENT_PATH: ",path, CURRENT_PATH);
     };
 
     function updateStateAndDraw(data) {
@@ -545,11 +647,10 @@
         isAnswered = false;
         currentAnimation = animations.idle;
         characterPlace.goX = null;
-
-        console.log("Caminos correctos -------------->", correctPath);
     };
 
     function handleCorrectPath(e, data) {
+        if(isAnswered) return;
         if (!gameSettings.states.playing) return;
 
         if(![keyDown.arrowLeft, keyDown.arrowUp, keyDown.arrowRight].includes(e.key)) return;
@@ -560,9 +661,12 @@
         
         if(isCorrect) {
             isAnswered = true;
+            stopTimer();
+            addScore(50);
+            startTimer();
             moveCharacterToPath(selectedPath, () => updateStateAndDraw(data));
         } else {
-            isAnswered = false;
+            isAnswered = true;
             handleIncorrectMove(data);
         };
     };
@@ -600,7 +704,6 @@
         const targetY = characterPlace.endY / (perspective * 3.7);
     
         function moveToSplitY() {
-            // console.log("moveToSplitY -----------> CHARACTER.y = ", CHARACTER.y, "splitY = ", splitY);
             characterPlace.goX = null;
             const done = Math.abs(CHARACTER.y - splitY) <= 15;
             if (!done) {
@@ -614,7 +717,6 @@
         };
     
         function moveToTargetX() {
-            // console.log("moveToTargetX ------------> CHARACTER.x = ", CHARACTER.x, "targetX = ", targetX);
             currentAnimation = animations.walkingX;
             const done = Math.abs(CHARACTER.x - targetX) <= 15;
             if (!done) {
@@ -628,7 +730,6 @@
         };
     
         function moveToTargetY() {
-            // console.log("moveToTargetY -----------------> CHARACTER.y = ", CHARACTER.y, "targetX = ", targetY);
             currentAnimation = animations.walkingY;
             const done = Math.abs(CHARACTER.y - targetY) <= 15;
             if (!done) {
@@ -641,7 +742,7 @@
             }
         };
     
-        moveToSplitY(); // Start the movement
+        moveToSplitY();
     };
 
     function advanceToNextPathOrLevel(data) {
@@ -659,39 +760,46 @@
         };
     };
 
+    let isLostAnimating = false;
+
     function handleIncorrectMove(data) {
-        console.error("Movimiento incorrecto!");
         if(lives > 0) {
             currentAnimation = animations.lost;
+            isLostAnimating = true;
             lives--;
             $lives.removeChild($lives.lastChild);
-        }; 
+            subtractScore(50);
+        };
         if(lives === 0) {
             kill();
+            stopTimer();
             gameOver(data);
+            isAnswered = false;
+            isLostAnimating = false;
+            return;
         };
         triggerAudio();
+        setTimeout(() => {
+            isAnswered = false;
+            isLostAnimating = false;
+            currentAnimation = animations.idle;
+        }, 1500);
     };
 
     function putCorrectPath() {
-        correctPath = []; // Reset correct paths
+        correctPath = [];
         let result = 0;
         let index;
         let obstacleIsPresent = false;
         
         if(!gameSettings.states.playing) return;
         
-        CURRENT_LEVEL.if.forEach( (r, i) => {
-            console.log(`Rule Nº${i + 1}:`, r)
-        });
         for (const rule of CURRENT_LEVEL.if) {
             
-            // Management rules
             for(const [key, value] of Object.entries(rule)) {
                 obstacleIsPresent = false;
                 if(key === "go" || key === "else") continue;
 
-                // Handle when all obstacles are drawn
                 if(key === "all") {
                     const areAllObstacle = value.every(obstacle => checkObstaclePosition(obstacle, position.any));
 
@@ -709,7 +817,6 @@
                     continue;
                 };
                 
-                // Handle standar rules
                 obstacleIsPresent = checkObstaclePosition(key, value);   
                 
                 if(obstacleIsPresent) {
@@ -720,7 +827,7 @@
                         if(index !== -1) correctPath.splice(index, 1);
                     };
                     if(correctPath.length > 0) return;
-                }; 
+                };
             };
             
             if(correctPath.length < 1 && rule.else) {
@@ -729,11 +836,9 @@
             };
         };
 
-        // If no paths are defined, use the centre as the default
-        if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);   
+        if(!correctPath.some(num => [1, 2, 3].includes(num)) || correctPath.length === 0) correctPath.push(2);
     };
 
-    // Function to dynamically determine the path based on the object's current position
     function calculatePath(go) {
         return {
             left: -1,
@@ -744,7 +849,7 @@
 
     function checkObstaclePosition(obstacle, positionToCheck) {
         if(positionToCheck === position.any) {
-            let index = Object.values(CURRENT_PATH).findIndex(value => value === obstacle);            
+            let index = Object.values(CURRENT_PATH).findIndex(value => value === obstacle);
             return index === -1 ? false : Object.keys(CURRENT_PATH)[index];
         }
         return CURRENT_PATH[positionToCheck] === obstacle ? positionToCheck : false;
@@ -768,7 +873,7 @@
         if(gameSettings.states.playing !== true) return;
 
         currentKeyHandler = (e) => {
-            if(currentAnimation === animations.lost|| isAnswered) return;
+            if(currentAnimation === animations.lost || isAnswered || isLostAnimating) return;
             handleCorrectPath(e, data, CHARACTER);
             speaker(CURRENT_LEVEL.audioText);
         };
@@ -789,7 +894,7 @@
 
 
         currentButtonHandler = (e) => {
-            if(currentAnimation === animations.lost || isAnswered) return;
+            if(currentAnimation === animations.lost || isAnswered || isLostAnimating) return;
 
             if(e.currentTarget === $btnLeft) {
                 e.key = keyDown.arrowLeft;
@@ -803,7 +908,7 @@
                 e.key = keyDown.arrowRight;
                 handleCorrectPath(e, data, CHARACTER);
                 speaker(CURRENT_LEVEL.audioText);
-            }   
+            };
         };
 
         $btnLeft.addEventListener("click", currentButtonHandler);
@@ -815,10 +920,9 @@
     let currentCharacterWidth;
     let currentCharacterHeight;
     function drawCharacter() {
-        // I retrieve the last image from the canvas before drawing the character
-        lastPhotoCanvas = ctx.getImageData(0, 0, canvas.width, canvas.height); 
+        lastPhotoCanvas = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-        currentCharacterWidth = CHARACTER.width * perspective; 
+        currentCharacterWidth = CHARACTER.width * perspective;
         currentCharacterHeight = CHARACTER.height * perspective;
         if(!isAnswered) {
             CHARACTER.x = (recWidth / 2) - (CHARACTER.width / 2);
@@ -832,20 +936,19 @@
     let isTimeoutFinish = false;
     let isTimeoutCalled = false;
     let frameCount = 0;
-    let frameDelay = 10; // Changes every 10 cycles (~6fps)
+    let frameDelay = 10;
     let frame = 0;
     let animationId = null;
     function animationCharacter() {
-        if(!gameSettings.states.playing) {
+        if(!gameSettings.states.playing && !gameSettings.states.youWin) {
             cancelAnimationFrame(animationId);
             return;
         }
         if(animationId) cancelAnimationFrame(animationId);
 
         homer[currentAnimation].frames < 4 ? frameDelay = 20 : frameDelay = 10;
-        let totalFrames = homer[currentAnimation].frames; // Cambiar homer por template String ${} cuando se pueda elegir el pj dinámicamente.
+        let totalFrames = homer[currentAnimation].frames;
 
-        // I delete the canvas and put the saved image without the character so as not to overwrite the animation images.
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.putImageData(lastPhotoCanvas, 0, 0);
 
@@ -855,10 +958,10 @@
 
         const startX = homer[currentAnimation].x + frame * homer[currentAnimation].w;
         
-        if(characterPlace.goX === position.left.key) {            
+        if(characterPlace.goX === position.left.key) {
             ctx.save();
             ctx.scale(-1, 1);
-            ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, -CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);            
+            ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, -CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);
             ctx.restore();
         }else {
             ctx.drawImage($homer, startX, homer[currentAnimation].y, homer.width, homer.height, CHARACTER.x, CHARACTER.y, currentCharacterWidth, currentCharacterHeight);
@@ -873,7 +976,7 @@
             idTimeOutAnimationLost = setTimeout(() => {
                 isTimeoutFinish = true;
                 isTimeoutCalled = false;
-                currentAnimation = animations.idle
+                currentAnimation = animations.idle;
             }, 1500);
         };
         
@@ -882,33 +985,28 @@
     };
 
     function drawPathToObjects(...obstacles) {
-        if (obstacles.length !== 3) return;        
+        if (obstacles.length !== 3) return;
 
         perspective = recWidth / calculateScale;
 
-        // Main road coordinates
         const startX = recWidth / 2;
         const startY = 500;
         const splitY = 350;
     
-        // Road color and visualize;
         ctx.strokeStyle = "#8B4513";
         ctx.lineWidth = 20;
         ctx.lineCap = "round";
     
-        // Start road
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX, splitY);
         ctx.stroke();
 
-        // Road diversion
         obstacles.forEach(obstacle => {
             drawBranchX(obstacle.x);
             drawBranchY(obstacle.x, obstacle.y);
         })
     
-        // Helper functions for branches to each object
         function drawBranchX(toX) {
             toX = perspective * toX;
     
@@ -921,7 +1019,7 @@
         function drawBranchY(toX, toY) {
             toX = perspective * toX;
             toY /= perspective * 1.9;
-
+    
             ctx.beginPath();
             ctx.moveTo(toX, splitY);
             ctx.lineTo(toX, toY);
@@ -933,7 +1031,7 @@
         if(!Object.values(CURRENT_PATH).includes(rockString)) return;
         if(CURRENT_PATH.left.includes(rockString)) x = position.left.drawX;
         if(CURRENT_PATH.center.includes(rockString)) x = position.center.drawX;
-        if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX;        
+        if(CURRENT_PATH.right.includes(rockString)) x = position.right.drawX;
 
         x = perspective * x * 0.85;
         y /= perspective * 3.5;
@@ -949,12 +1047,12 @@
         if(CURRENT_PATH.center.includes(treeString)) x = position.center.drawX;
         if(CURRENT_PATH.right.includes(treeString)) x = position.right.drawX;
 
-        x = perspective * x  * 0.8;
+        x = perspective * x * 0.8;
         y /= perspective * 5.8;
         width = perspective * width * .8;
         height = perspective * height * .8;
 
-        ctx.drawImage($tree, 0, 0, $tree.width, $tree.height, x, y, width, height);    
+        ctx.drawImage($tree, 0, 0, $tree.width, $tree.height, x, y, width, height);
     };
 
     function drawFence(x, y, width, height) {
@@ -972,13 +1070,13 @@
     };
 
     function draw(data) {
-        CHARACTER = data.character[homer.name]; // Hacer dinámico el selector para cuando haya más personajes
+        CHARACTER = data.character[homer.name];
         ROCK = data.obstacles.rock;
         TREE = data.obstacles.tree;
         FENCE = data.obstacles.fence;
 
         canvas.width = container.clientWidth;
-        recWidth = canvas.width;        
+        recWidth = canvas.width;
 
         if(gameSettings.states.playing !== true) return;
 

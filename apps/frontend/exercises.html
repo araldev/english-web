@@ -18,6 +18,61 @@
     <script defer type="module" src="./src/js/games/listening-maze.js"></script>
 </head>
 <body id="exercises">
+    <dialog id="auth-register" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-register" action="http://localhost:1234/auth/register" method="post" autocomplete="on">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">
+        </label>
+
+        <label >
+          <h2>Email</h2>
+          <input name="email" type="email">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <label>
+          <h2>Confirm Password</h2>
+          <input name="confirm_password" type="password">
+        </label>
+
+        <button type="submit">Sign up</button>
+      </form>
+      <small id="auth_redirect">Click here if you have an account <button id="inner-sign-in">Go Login</button></small>
+    </dialog>
+
+    <dialog id="auth-login" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-login" action="http://localhost:1234/auth/login" method="post">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <button id="auth_google">Sign in with Google</button>
+
+      <small>Click here if you haven't an account <button id="inner-sign-up">Go Sign up</button></small>
+    </dialog>
+
     <img hidden id="rock" src="./public/images/rock.webp" alt="rock">
     <img hidden id="tree" src="./public/images/tree.webp" alt="tree">
     <img hidden id="fence" src="./public/images/fence.webp" alt="fence">
@@ -71,22 +126,35 @@
             </li>
         </ul>
 
-        <section class="sidebar-user">
-            <div class="user-data">
-                <h4 class="user-tittle">Arturo Alba</h4>
-                <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
-            </div>
+        <nav class="sidebar-user">
+            <a class="user-data sidebar-link">
+                <span class="user-tittle">Sign In/Up</span>
+                <img src="./public/images/user_profile.svg" alt="User image" class="user-img">
+            </a>
 
-            <div class="user-sections">
-                <h4 class="user-tittle">Notifications</h4>
+            <a class="user-sections sidebar-link">
+                <span class="user-tittle">Notifications</span>
                 <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
-            </div>
+            </a>
 
-            <div class="user-sections">
-                <h4 class="user-tittle">Settings</h4>
+            <a id="sidebar_user_settings" href="./user_profile.html" class="user-sections sidebar-link">
+                <span class="user-tittle">Settings</span>
                 <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
-            </div>
-        </section>
+            </a>
+        </nav>
+        <script>
+        (function(){
+          try {
+            var m = document.cookie.match(/(?:^|;\s*)accessToken=([^;]*)/);
+            if (!m) return;
+            var p = JSON.parse(atob(m[1].split('.')[1]));
+            var t = document.querySelector('.sidebar-user .user-tittle');
+            var i = document.querySelector('.sidebar-user .user-img');
+            if (t) t.textContent = p.username || 'User';
+            if (i && p.picture) { i.src = p.picture; i.referrerPolicy = 'no-referrer'; }
+          } catch(e){}
+        })();
+        </script>
     </aside>
 
     <header class="hero">
@@ -106,11 +174,16 @@
                 <li class="nav-item">
                     <a href="exercises.html" class="nav-link">Interactive Exercises</a>
                 </li>
-                <li class="nav-item">
-                    <a href="signin.html" class="nav-link">Sign In</a>
+                <li class="nav-item nav-login">
+                    <button id="sign-up" class="nav-link">Sign Up</button>
+                    <button id="sign-in" class="nav-link">Sign In</button>
                 </li>
 
-                <img src="./public/images/close.svg" alt="Close menu" class="nav-close">
+                <li class="nav-item nav-logout" >
+                  <button id="logout" class="nav-link">Logout</button>
+                </li>
+
+                <img id="close-menu" src="./public/images/close.svg" alt="Close menu" class="nav-close">
             </ul>
 
             <div class="nav-menu">
@@ -123,6 +196,7 @@
         <dialog id="modal-game">
             <section>
                 <h2 id="lost-or-win"></h2>
+                <p id="modal-score"></p>
                 <article id="player-statistics"></article>
                 <fieldset>
                     <button id="close-modal-game-over">RESTART</button>
@@ -148,6 +222,8 @@
                 <button id="start">START!</button>
 
                 <div class="current-info">
+                    <p id="score">Score: <strong>0</strong></p>
+                    <p id="timer">⏱ <strong>0</strong>s</p>
                     <p id="level"></p>
                     <p id="path"></p>
                     <span id="lives" data-isalive="dead"></span>
@@ -169,7 +245,15 @@
         <nav class="nav-footer container">
             <ul id="n" class="nav-links nav-links-menu">
                 <li class="nav-item">
-                    <a class="nav-link" href="#game-container">Listening Maze</a>
+                    <a id="home-footer" class="nav-link" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="lessons-footer" class="nav-link" href="lessons.html">Lessons</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="exercises-footer" class="nav-link" href="exercises.html">Interactive Exercises</a>
                 </li>
             </ul>
 

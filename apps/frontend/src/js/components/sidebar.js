@@ -1,6 +1,10 @@
-import { getUserSession } from '../store/store.js'
+import { getUserSession, setUserSession, subscribeUserSession } from '../store/store.js'
+import { decodeSessionFromCookie } from '../services/checkUserSession.js'
 
 (function() {
+  const sessionFromCookie = decodeSessionFromCookie()
+  if (sessionFromCookie) setUserSession(sessionFromCookie)
+
   const sidebar = document.getElementById('sidebar')
   const sidebarBtn = document.getElementById('sidebar-size-btn')
   const allMenuLinks = document.querySelectorAll('.sidebar-links')
@@ -8,8 +12,41 @@ import { getUserSession } from '../store/store.js'
   const allSubmenuContainer = document.querySelectorAll('.sidebar-submenu')
   const allSubmenuLinks = document.querySelectorAll('.submenu-link')
   const buttonUserSettings = document.querySelector('#sidebar_user_settings')
+  const userData = document.querySelector('.sidebar-user .user-data')
+  const userTitle = userData?.querySelector('.user-tittle')
+  const userImg = userData?.querySelector('.user-img')
 
   const signInModal = document.getElementById('auth-login')
+  const signUpModal = document.getElementById('auth-register')
+
+  function renderSidebarUser() {
+    const userSession = getUserSession()
+
+    if (userSession) {
+      if (userTitle) userTitle.textContent = userSession.username || 'User'
+      if (userImg) {
+        userImg.src = userSession.picture || './public/images/user_profile.svg'
+        if (userSession.picture) userImg.referrerPolicy = 'no-referrer'
+      }
+    } else {
+      if (userTitle) userTitle.textContent = 'Sign In/Up'
+      if (userImg) userImg.src = './public/images/user_profile.svg'
+    }
+  }
+
+  subscribeUserSession(renderSidebarUser, true)
+
+  userData?.addEventListener('click', e => {
+    e.preventDefault()
+
+    const userSession = getUserSession()
+
+    if (userSession) {
+      window.location.href = './user_profile.html'
+    } else {
+      signInModal.showModal()
+    }
+  })
 
   buttonUserSettings.addEventListener('click', e => {
     e.preventDefault()

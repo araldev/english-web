@@ -1,6 +1,6 @@
-import { getUserSession, subscribeUserSession } from '../store/store.js'
+import { getUserSession, setUserSession, subscribeUserSession } from '../store/store.js'
 import { API_URL } from '../config/globalConfig.js'
-import { checkUserSession } from '../services/checkUserSession.js'
+import { checkUserSession, decodeSessionFromCookie } from '../services/checkUserSession.js'
 import { CodeError } from '../store/customErrors.js'
 
 const nav = document.querySelector('.nav')
@@ -43,6 +43,9 @@ function renderNavMenu(fn) {
 
 async function startNavMenu() {  
   try {
+    const sessionFromCookie = decodeSessionFromCookie()
+    if (sessionFromCookie) setUserSession(sessionFromCookie)
+
     await checkUserSession()
     const unsubscribeUserSession = subscribeUserSession(renderNavMenu(getUserSession), true)
   } catch (error) {

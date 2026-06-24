@@ -145,6 +145,19 @@
                 <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
             </a>
         </nav>
+        <script>
+        (function(){
+          try {
+            var m = document.cookie.match(/(?:^|;\s*)accessToken=([^;]*)/);
+            if (!m) return;
+            var p = JSON.parse(atob(m[1].split('.')[1]));
+            var t = document.querySelector('.sidebar-user .user-tittle');
+            var i = document.querySelector('.sidebar-user .user-img');
+            if (t) t.textContent = p.username || 'User';
+            if (i && p.picture) { i.src = p.picture; i.referrerPolicy = 'no-referrer'; }
+          } catch(e){}
+        })();
+        </script>
     </aside>
 
     <header class="hero">

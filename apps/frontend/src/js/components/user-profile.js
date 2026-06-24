@@ -1,5 +1,9 @@
 import { $ } from '../utils/docQuerySelector.js'
-import { getUserSession, subscribeUserSession } from '../store/store.js'
+import { getUserSession, setUserSession, subscribeUserSession } from '../store/store.js'
+import { decodeSessionFromCookie } from '../services/checkUserSession.js'
+
+const sessionFromCookie = decodeSessionFromCookie()
+if (sessionFromCookie) setUserSession(sessionFromCookie)
 
 /* ====================  Form Learning Preferences ==================== */
 const $formLearningPreferences = $('#form_learning_preferences')
@@ -88,6 +92,8 @@ function renderUserSession(fn) {
     if(!userSession || !userProfileImage) return null
 
     userProfileImage.src = userSession.picture
+    if (userSession.picture) userProfileImage.referrerPolicy = 'no-referrer'
+    console.log('userSession.picture: ', userSession.picture)
   }
 }
 

@@ -146,6 +146,19 @@
                 <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
             </a>
         </nav>
+        <script>
+        (function(){
+          try {
+            var m = document.cookie.match(/(?:^|;\s*)accessToken=([^;]*)/);
+            if (!m) return;
+            var p = JSON.parse(atob(m[1].split('.')[1]));
+            var t = document.querySelector('.sidebar-user .user-tittle');
+            var i = document.querySelector('.sidebar-user .user-img');
+            if (t) t.textContent = p.username || 'User';
+            if (i && p.picture) { i.src = p.picture; i.referrerPolicy = 'no-referrer'; }
+          } catch(e){}
+        })();
+        </script>
   </aside>
 
   <header class="hero">
@@ -193,6 +206,7 @@
         <img src="./public/images/user_profile.svg" alt="Default user image profile">
         <h2>Profile Information</h2>
         <small>Update your personal information and profile picture</small>
+        <span class="coming-soon">Próximamente</span>
       </header>
 
       <form class="form_setting">
@@ -227,6 +241,7 @@
         <img src="./public/images/lessons.svg" alt="book icon">
         <h2>Learning Preferences</h2> 
         <small>Customize your learning experience</small>
+        <span class="coming-soon">Próximamente</span>
       </header>
 
       <form id="form_learning_preferences" class="form_setting">
@@ -237,7 +252,7 @@
             <div data-state="close" class="div_select">
               <img src="./public/images/drop-menu.svg" alt="drop menu icon">
 
-              <span id="value_options_levels"  data-value="" class="option_selected">Hola</span>
+              <span id="value_options_levels" data-value="A1 Beginner" class="option_selected">A1 Beginner</span>
 
               <ul id="options_levels">
                 <li data-value="A1 Beginner">A1 Beginner</li>
@@ -255,7 +270,7 @@
             <div data-state="close" class="div_select">
               <img src="./public/images/drop-menu.svg" alt="drop menu icon">
 
-              <span id="value_daily_goal" data-value="" class="option_selected">Hola</span>
+              <span id="value_daily_goal" data-value="15 minutes" class="option_selected">15 minutes</span>
 
               <ul id="daily_goal">
                 <li data-value="15 minutes">15 minutes</li>
@@ -273,7 +288,7 @@
           <span>Audio Pronunciation</span>
           <small>Enable audio feedback for pronunciation exercises</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -282,7 +297,7 @@
           <span>Grammar Hints</span>
           <small>Show helpful grammar tips during exercises</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -291,7 +306,7 @@
           <span>Vocabulary Reminders</span>
           <small>Get periodic reminders to review vocabulary</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -305,6 +320,7 @@
         <img src="./public/images/notifications.svg" alt="notifications icon">
         <h2>Notifications</h2>
         <small>Choose what notifications you want to receive</small>
+        <span class="coming-soon">Próximamente</span>
       </header>
 
       <form class="form_setting">
@@ -312,7 +328,7 @@
           <span>Daily Reminders</span>
           <small>Get reminded to practice daily</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -321,7 +337,7 @@
           <span>Progress Updates</span>
           <small>Weekly progress reports</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -330,7 +346,7 @@
           <span>New Content</span>
           <small>Notifications about new lessons and exercises</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -339,7 +355,7 @@
           <span>Community Updates</span>
           <small>Updates from study groups and forums</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -353,6 +369,7 @@
         <img src="./public/images/shield.svg" alt="shield icon">
         <h2>Privacy & Security </h2>
         <small>Manage your privacy and security settings</small>
+        <span class="coming-soon">Próximamente</span>
       </header>
 
       <form class="form_setting">
@@ -360,7 +377,7 @@
           <span>Profile Visibility</span>
           <small>Make your profile visible to other learners</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>
@@ -369,7 +386,7 @@
           <span>Progress Sharing</span>
           <small>Allow others to see your learning progress</small>
           <div id="checkbox" role="checkbox">
-            <input hidden type="checkbox">
+            <input class="visually-hidden" type="checkbox">
             <div id="checkbox_circle"></div>
           </div>
         </label>

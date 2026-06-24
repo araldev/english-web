@@ -7,7 +7,7 @@
   "author": "araldev",
   "license": "ISC",
   "scripts": {
-    "dev": "npx tsx watch ./entry_point/api/servers/redisServer",
+    "dev": "tsx watch ./entry_point/api/servers/redisServer",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "dependencies": {

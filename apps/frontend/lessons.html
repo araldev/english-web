@@ -16,6 +16,61 @@
     <script defer type="module" src="./src/js/components/nav-subir.js"></script>
 </head>
 <body id="lessons">
+    <dialog id="auth-register" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-register" action="http://localhost:1234/auth/register" method="post" autocomplete="on">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">
+        </label>
+
+        <label >
+          <h2>Email</h2>
+          <input name="email" type="email">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <label>
+          <h2>Confirm Password</h2>
+          <input name="confirm_password" type="password">
+        </label>
+
+        <button type="submit">Sign up</button>
+      </form>
+      <small id="auth_redirect">Click here if you have an account <button id="inner-sign-in">Go Login</button></small>
+    </dialog>
+
+    <dialog id="auth-login" class="auth-modal">
+      <button class="close-modal">
+        <img src="./public/images/close.svg" alt="Close menu">
+      </button>
+
+      <form class="auth-form" id="form-login" action="http://localhost:1234/auth/login" method="post">
+        <label >
+          <h2>Username</h2>
+          <input name="username" type="text">
+        </label>
+
+        <label >
+          <h2>Password</h2>
+          <input name="password" type="password">
+        </label>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <button id="auth_google">Sign in with Google</button>
+
+      <small>Click here if you haven't an account <button id="inner-sign-up">Go Sign up</button></small>
+    </dialog>
+
     <aside id="sidebar" class="sidebar minimize">
         <img id="sidebar-size-btn" class="sidebar-size-btn" src="./public/images/arrow-minimize.svg"></img>
         <div class="sidebar-logo">
@@ -64,22 +119,22 @@
             </li>
         </ul>
 
-        <section class="sidebar-user">
-            <div class="user-data">
-                <h4 class="user-tittle">Arturo Alba</h4>
-                <img src="./public/images/icon-sin-fondo.webp" alt="User image" class="user-img">
-            </div>
+        <nav class="sidebar-user">
+            <a class="user-data sidebar-link">
+                <span class="user-tittle">Sign In/Up</span>
+                <img src="./public/images/user_profile.svg" alt="User image" class="user-img">
+            </a>
 
-            <div class="user-sections">
-                <h4 class="user-tittle">Notifications</h4>
+            <a class="user-sections sidebar-link">
+                <span class="user-tittle">Notifications</span>
                 <img src="./public/images/notifications.svg" alt="Notifications" class="user-icons">
-            </div>
+            </a>
 
-            <div class="user-sections">
-                <h4 class="user-tittle">Settings</h4>
+            <a id="sidebar_user_settings" href="./user_profile.html" class="user-sections sidebar-link">
+                <span class="user-tittle">Settings</span>
                 <img src="./public/images/settings.svg" alt="Settings" class="user-icons">
-            </div>
-        </section>
+            </a>
+        </nav>
     </aside>
 
     <header class="hero">
@@ -99,11 +154,16 @@
                 <li class="nav-item">
                     <a href="exercises.html" class="nav-link">Interactive Exercises</a>
                 </li>
-                <li class="nav-item">
-                    <a href="signin.html" class="nav-link">Sign In</a>
+                <li class="nav-item nav-login">
+                    <button id="sign-up" class="nav-link">Sign Up</button>
+                    <button id="sign-in" class="nav-link">Sign In</button>
                 </li>
 
-                <img src="./public/images/close.svg" alt="Close menu" class="nav-close">
+                <li class="nav-item nav-logout" >
+                  <button id="logout" class="nav-link">Logout</button>
+                </li>
+
+                <img id="close-menu" src="./public/images/close.svg" alt="Close menu" class="nav-close">
             </ul>
 
             <div class="nav-menu">
@@ -118,27 +178,27 @@
             <p class="section-paragraph">Master the essential rules of English grammar with clear explanations and practical examples.<br><br> Improve your understanding of sentence structure, verb tenses, and more to communicate effectively and confidently.</p>
 
             <div class="section-main">
-                <a class="example-row" style="text-decoration: none;" href="#verb-tenses">
+                <a style="text-decoration: none;" href="#verb-tenses">
                     <article class="section-icons">
-                        <img class="section-icon" src="./public/images/verb-tenses.svg" alt="Verb tenses">
+                        <img class="section-icon" src="./public/images/verb-tenses.svg" alt="Verb Tenses">
                         <h3 class="section-tittle">Verb Tenses</h3>
-                        <p class="section-paragraph">Learn to use past, present, and future tenses correctly with clear explanations and examples.</p>
+                        <p class="section-paragraph">Master the different verb tenses in English: Present, Past, Future, and their perfect and continuous forms.</p>
                     </article>
                 </a>
 
                 <a style="text-decoration: none;" href="#modals-auxiliary-verbs">
                     <article class="section-icons">
-                        <img class="section-icon" src="./public/images/modal-verbs.svg" alt="Modals & Auxiliary Verbs">
-                        <h3 class="section-tittle">Modals & Auxiliary Verbs</h3>
-                        <p class="section-paragraph">Understand how modals and auxiliary verbs shape meaning and help form questions, negatives.
+                        <img class="section-icon" src="./public/images/modal-verbs.svg" alt="Modal & Auxiliary Verbs">
+                        <h3 class="section-tittle">Modal & Auxiliary Verbs</h3>
+                        <p class="section-paragraph">Learn how to use modal verbs like can, must, should, and auxiliary verbs like do, be, and have correctly.</p>
                     </article>
                 </a>
 
-                <a class="last-row" style="text-decoration: none;" href="#conditionals-passive-voice">
+                <a style="text-decoration: none;" href="#conditionals-passive-voice">
                     <article class="section-icons">
-                        <img class="section-icon" src="./public/images/passive-voice.svg" alt="Conditionals & Passive Voice">
-                        <h3 class="section-tittle">Conditionals & Passive Voice</h3>
-                        <p class="section-paragraph">Master how conditionals and passive voice transform sentences to express possibilities, hypothetical situations, and focus on actions rather than subjects.</p>
+                        <img class="section-icon" src="./public/images/passive-voice.svg" alt="Conditional & Passive Voice">
+                        <h3 class="section-tittle">Conditional & Passive Voice</h3>
+                        <p class="section-paragraph">Understand conditionals (if-clauses) and passive voice constructions to express more complex ideas.</p>
                     </article>
                 </a>
             </div>
@@ -225,12 +285,12 @@
         </section>
 
         <section id="modals-auxiliary-verbs" class="container section">
-            <h2 class="blur">Modals & Auxiliary Verbs</h2>
+            <h2 class="subtittle blur">Modal & Auxiliary Verbs</h2>
 
-            <h3 class="blur">Modals Verbs</h3>
+            <h3 class="blur">Modal Verbs</h3>
 
-            <p class="section-paragraph">Modals verbs are special verbs that work with a main verb to express ability, possibility, permission, advice, obligation, or necessity.<br>
-            They don’t change with subjects and are followed by the base form of the verb.<br><br> 
+            <p class="section-paragraph">Modal verbs are special verbs that work with a main verb to express ability, possibility, permission, advice, obligation, or necessity.<br>
+            They don't change with subjects and are followed by the base form of the verb.<br><br> 
             <strong>Structure:</strong>
             Subject + Modal Verb + Base Verb
             </p>
@@ -349,7 +409,7 @@
                             <h4>Do</h4>
                             <p><strong>Examples:</strong><br>
                                 -<strong>Do</strong> you like music?<br>
-                                -I <strong>don’t</strong> understand.<br>
+                                -I <strong>don't</strong> understand.<br>
                                 -I <strong>do</strong> want to go!
                             </p>
                         </div>
@@ -375,47 +435,31 @@
         </section>
 
         <section id="conditionals-passive-voice" class="container section">
-            <h2 class="blur">Conditionals & Passive Voice</h2>
-
-            <h3 class="blur">Conditionals</h3>
+            <h2 class="subtittle blur">Conditional & Passive Voice</h2>
+            <p class="section-paragraph">Conditional sentences (if-clauses) express real or unreal situations. Passive voice shifts the focus from who does the action to the action itself.</p>
             
-            <section class="card-sections">
-                <article class="conditionals-container">
-                    <h4>Zero Conditional</h4>
-                    <p>Used for general facts or universal truths.</p>
-                    <p><strong>Structure:</strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + present simple, present simple</code></p>
-                    <p><strong>Example: </strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;-If you heat water to 100ºC, it boils.</p>
-                </article>
-
-                <article class="conditionals-container">
-                    <h4>First Conditional</h4>
-                    <p>Used for real or possible situations in the future.</p>
-                    <p><strong>Structure:</strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + present simple, will + verb</code></p>
-                    <p><strong>Example: </strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;-If it rains tomorrow, we will stay at home.</p>
-                </article>
-
-                <article class="conditionals-container">
-                    <h4>Second Conditional</h4>
-                    <p>Used for hypothetical or unlikely situations in the present or future.</p>
-                    <p><strong>Structure:</strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + past simple, would + verb</code></p>
-                    <p><strong>Example: </strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;-If I had more time, I would learn French.</p>
-                </article>
-
-                <article class="conditionals-container">
-                    <h4>Third Conditional</h4>
-                    <p>Used for imaginary situations in the past (things that didn’t happen).</p>
-                    <p><strong>Structure:</strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<code>If + past perfect, would have + past participle</code></p>
-                    <p><strong>Example: </strong><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;-If she had studied, she would have passed the exam.</p>
-                </article>
-            </section>
+            <div class="card-sections">
+                <div class="conditionals-container">
+                    <h3>Zero Conditional</h3>
+                    <p><strong>If + Present Simple, Present Simple</strong></p>
+                    <p>General truths: If you <em>heat</em> ice, it <em>melts</em>.</p>
+                </div>
+                <div class="conditionals-container">
+                    <h3>First Conditional</h3>
+                    <p><strong>If + Present Simple, will + verb</strong></p>
+                    <p>Real future possibility: If I <em>study</em>, I <em>will pass</em> the exam.</p>
+                </div>
+                <div class="conditionals-container">
+                    <h3>Second Conditional</h3>
+                    <p><strong>If + Past Simple, would + verb</strong></p>
+                    <p>Unreal or hypothetical present: If I <em>had</em> more money, I <em>would travel</em> the world.</p>
+                </div>
+                <div class="conditionals-container">
+                    <h3>Third Conditional</h3>
+                    <p><strong>If + Past Perfect, would have + past participle</strong></p>
+                    <p>Unreal past (impossible to change): If I <em>had studied</em>, I <em>would have passed</em>.</p>
+                </div>
+            </div>
 
             <h3 class="blur">Passive Voice</h3>
 

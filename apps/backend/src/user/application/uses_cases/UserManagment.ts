@@ -23,7 +23,6 @@ export class UserManagment implements UserManagmentDto {
 
   findByProviderId = async ({ providerId }: {providerId: string}) => {
     const user = await this.userClientRepository.findByProviderId({ providerId })
-    await this.userClientRepository.disconnect()
     
     if (user != null) return user
     return null
@@ -35,8 +34,6 @@ export class UserManagment implements UserManagmentDto {
     const emailParse = await emailSchema.parseAsync(email)
 
     const user = await this.userClientRepository.findByEmail({ email: emailParse })
-
-    await this.userClientRepository.disconnect()
 
     if(user != null) return user
     
@@ -50,8 +47,6 @@ export class UserManagment implements UserManagmentDto {
 
     const user = await this.userClientRepository.findById({ userId: idParse })
 
-    await this.userClientRepository.disconnect()
-
     if(user != null) return user
     
     return null
@@ -63,8 +58,6 @@ export class UserManagment implements UserManagmentDto {
     const userParse = await usernameSchema.parseAsync(username)
 
     const user = await this.userClientRepository.findByUserName({ username: userParse })
-
-    await this.userClientRepository.disconnect()
 
     if(user != null) return user
     
@@ -98,8 +91,6 @@ export class UserManagment implements UserManagmentDto {
 
     if(!userCreated.password) CreateCustomError.INVALID_CREDENTIALS()
 
-    await this.userClientRepository.disconnect()
-
     return userCreated
   }
 
@@ -116,8 +107,6 @@ export class UserManagment implements UserManagmentDto {
     if(!userInDb) CreateCustomError.USER_NOT_FOUND()
   
     const userUpdated = await this.userClientRepository.update({ userId: userInDb.id, userUpdates: userParse }) as UserModelFromProvider
-
-    await this.userClientRepository.disconnect()
 
     return  userUpdated 
   }
@@ -136,8 +125,6 @@ export class UserManagment implements UserManagmentDto {
   
     const userUpdated = await this.userClientRepository.update({ userId: userInDb.id, userUpdates: userParse })
 
-    await this.userClientRepository.disconnect()
-
     return  userUpdated as UserModel
   }
 
@@ -151,8 +138,6 @@ export class UserManagment implements UserManagmentDto {
     if(!userFinded) CreateCustomError.USER_NOT_FOUND()
 
     const isDeleted = await this.userClientRepository.delete({ userId })
-
-    await this.userClientRepository.disconnect()
 
     return isDeleted
   }

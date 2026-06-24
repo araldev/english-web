@@ -46,7 +46,7 @@ export class AuthController {
         access_type: 'offline',
         scope: [
           'https://www.googleapis.com/auth/userinfo.profile',
-          'https://www.googleapis.com/auth/userinfo.email'
+          'https://www.googleapis.com/auth/userinfo.email',
         ],
         prompt: 'consent' // 🔹 fuerza a mostrar el modal de selección de cuenta
       })
@@ -81,7 +81,7 @@ export class AuthController {
       if(!payload) CreateCustomError.INVALID_CREDENTIALS()
       const {
         sub: providerId,
-        name: username,
+        given_name: username,
         picture,
         email
       } = payload
@@ -103,12 +103,13 @@ export class AuthController {
       if(!refreshToken || !accessToken) CreateCustomError.INTERNAL_ERROR()
 
       res
-        .cookie(Token.refresh_token ,refreshToken, cookieConfig.accessToken)
+        .cookie(Token.refresh_token ,refreshToken, cookieConfig.refreshToken)
         .cookie(Token.access_token ,accessToken, cookieConfig.accessToken)
         .redirect('http://localhost:5500/apps/frontend')
     } catch (error) {
-      res.redirect('http://localhost:5500/apps/frontend')
-      next(error)
+      console.error('❌ Error CRÍTICO en oauth2callback:', error)
+
+      return res.redirect('http://localhost:5500/apps/frontend')
     }
   }
   

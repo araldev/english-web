@@ -5,3 +5,10 @@ dist
 .env
 dist
 TODO.md
+
+# Agent/IA config files
+.atl/
+.opencode/
+.claude/
+.agents/
+*.code-workspace
