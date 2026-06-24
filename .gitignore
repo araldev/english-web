@@ -1,9 +1,9 @@
 package-lock.json
 node_modules
+pnpm-lock.yaml
 dist
 *.yaml
 .env
-dist
 TODO.md
 
 # Agent/IA config files

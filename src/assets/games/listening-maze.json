@@ -1,0 +1,132 @@
+{
+  "character": {
+    "homer": {
+      "x": 1,
+      "y": 430,
+      "width": 50,
+      "height": 100
+    }
+  },
+  "obstacles": {
+    "rock": {
+      "type": "rock",
+      "x": 280,
+      "y": 200,
+      "width": 100,
+      "height": 100
+    },
+    "tree": {
+      "type": "tree",
+      "x": 450,
+      "y": 200,
+      "width": 180,
+      "height": 180
+    },
+    "fence": {
+      "type": "fence",
+      "x": 100,
+      "y": 200,
+      "width": 50,
+      "height": 50
+    }
+  },
+  "paths": {
+    "1": { "left": "", "center": "rock", "right": "" },
+    "2": { "left": "rock", "center": "", "right": "fence" },
+    "3": { "left": "tree", "center": "rock", "right": "" },
+    "4": { "left": "rock", "center": "fence", "right": "" },
+    "5": { "left": "", "center": "rock", "right": "" },
+    "6": { "left": "tree", "center": "", "right": "rock" },
+    "7": { "left": "fence", "center": "tree", "right": "" },
+    "8": { "left": "", "center": "fence", "right": "rock" },
+    "9": { "left": "rock", "center": "", "right": "tree" },
+    "10": { "left": "tree", "center": "fence", "right": "rock" }
+  },
+  "level-1": {
+    "level": 1,
+    "audioText": "If there is a rock in the center, go toward the rock. Otherwise, go to the left.",
+    "if": [
+      { "rock": "center", "go": "center" },
+      { "else": "left" }
+    ]
+  },
+  "level-2": {
+    "level": 2,
+    "audioText": "If you see a tree, go to the tree's right side. If there's a fence, go to the fence's left side. Otherwise, go to the center.",
+    "if": [
+      { "tree": "any", "go": "right" },
+      { "fence": "any", "go": "left" },
+      { "else": "center" }
+    ]
+  },
+  "level-3": {
+    "level": 3,
+    "audioText": "If there's a fence on the right, go toward the fence. Otherwise, go to the left.",
+    "if": [
+      { "fence": "right", "go": "center" },
+      { "else": "left" }
+    ]
+  },
+  "level-4": {
+    "level": 4,
+    "audioText": "If there is a fence, go toward the fence. If there is a rock, go to the rock's left side. Otherwise, go to the center.",
+    "if": [
+      { "fence": "any", "go": "center" },
+      { "rock": "any", "go": "left" },
+      { "else": "center" }
+    ]
+  },
+  "level-5": {
+    "level": 5,
+    "audioText": "If there is a rock, go to the rock's right side. Otherwise, go to the center.",
+    "if": [
+      { "rock": "any", "go": "right" },
+      { "else": "center" }
+    ]
+  },
+  "level-6": {
+    "level": 6,
+    "audioText": "If there is a tree, go to the tree's left side. If there is a rock, go to the rock's right side. Otherwise, go to the center.",
+    "if": [
+      { "tree": "any", "go": "left" },
+      { "rock": "any", "go": "right" },
+      { "else": "center" }
+    ]
+  },
+  "level-7": {
+    "level": 7,
+    "audioText": "If there is a tree in the center, go toward the tree. If there is a fence, go to the fence's left side. Otherwise, go to the center.",
+    "if": [
+      { "tree": "center", "go": "center" },
+      { "fence": "any", "go": "left" },
+      { "else": "center" }
+    ]
+  },
+  "level-8": {
+    "level": 8,
+    "audioText": "If there is a fence in the center, go toward the fence. If there is a rock to the right, go to the rock's left side. Otherwise, go to the center.",
+    "if": [
+      { "fence": "center", "go": "center" },
+      { "rock": "right", "go": "left" },
+      { "else": "center" }
+    ]
+  },
+  "level-9": {
+    "level": 9,
+    "audioText": "If there is a rock on the left, go toward the rock. If there is a tree, go to the tree's right side. Otherwise, go to the center.",
+    "if": [
+      { "rock": "left", "go": "center" },
+      { "tree": "any", "go": "right" },
+      { "else": "center" }
+    ]
+  },
+  "level-10": {
+    "level": 10,
+    "audioText": "If there is a rock, tree, and fence together, go toward the fence. If there is only a tree, go to the tree's left side. Otherwise, go to the center.",
+    "if": [
+      { "all": ["rock", "tree", "fence"],"choose": "fence", "go": "center" },
+      { "tree": "any", "go": "left" },
+      { "else": "center" }
+    ]
+  }
+}
