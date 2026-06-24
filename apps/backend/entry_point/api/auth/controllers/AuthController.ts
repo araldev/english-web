@@ -10,7 +10,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { OAuth2Client, type VerifyIdTokenOptions } from 'google-auth-library'
 import { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET_KEY } from '@/config/googleAuthConfi.js'
 import { storeGoogle } from '@/config/googleAuthConfi.js' 
-import { ref } from 'node:process'
+import { FRONTEND_URL } from '@config/globalConfig.js'
 
 export class AuthController {
   private readonly authUserService: AuthUserService
@@ -105,11 +105,11 @@ export class AuthController {
       res
         .cookie(Token.refresh_token ,refreshToken, cookieConfig.refreshToken)
         .cookie(Token.access_token ,accessToken, cookieConfig.accessToken)
-        .redirect('http://localhost:5500/apps/frontend')
+        .redirect(FRONTEND_URL)
     } catch (error) {
       console.error('❌ Error CRÍTICO en oauth2callback:', error)
 
-      return res.redirect('http://localhost:5500/apps/frontend')
+      return res.redirect(FRONTEND_URL)
     }
   }
   
