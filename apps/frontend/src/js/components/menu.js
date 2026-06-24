@@ -113,8 +113,10 @@ async function startNavMenu() {
         throw Error('The passwords must be the same')
       }
     
-      const res = await fetch(e.target.action, {
-        method: e.target.method,
+      const endpoint = eachForm.id === 'form-register' ? '/auth/register' : '/auth/login'
+
+      const res = await fetch(API_URL + endpoint, {
+        method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
